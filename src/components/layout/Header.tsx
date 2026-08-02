@@ -3,8 +3,9 @@ import * as React from "react"
 import Image from "next/image"
 import { ChevronDown } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
-import { Language } from "@/lib/translations"
+import { translations, Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
+import { siteConfig } from "@/config/site"
 
 const rimButton = "bg-white/5 border border-transparent [border-image:linear-gradient(135deg,rgba(200,158,88,0.3),rgba(255,255,255,0.05))_1]";
 
@@ -20,23 +21,24 @@ export const Header: React.FC<HeaderProps> = ({
   setIsLangMenuOpen,
 }) => {
   const { setLang } = useCart();
+  const t = translations[safeLang] || translations.en;
 
   return (
     <header className="max-w-5xl mx-auto relative z-[100] mb-6">
-      <div className="flex items-center justify-between px-1 mb-4">
-        <div className="flex items-center gap-3">
-          <Image src="/images/logo.svg" priority width={72} height={72} className="w-14 h-14 sm:w-16 sm:h-16 object-contain relative z-10 shrink-0" alt="MPG StorePhuket" />
-          <div className="flex flex-col">
-            <span className="text-[12px] sm:text-[14px] font-black uppercase tracking-tight text-brand-light leading-tight">
-              Marijuana Premium Grade
+      <div className="flex items-center justify-between gap-3 px-1 mb-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <Image src="/images/logo.svg" priority width={72} height={72} className="w-14 h-14 sm:w-16 sm:h-16 object-contain relative z-10 shrink-0" alt={siteConfig.name} />
+          <div className="flex flex-col min-w-0">
+            <span className="text-[12px] sm:text-[14px] font-black uppercase tracking-tight text-brand-light leading-tight truncate">
+              {siteConfig.name}
             </span>
-            <span className="text-[11px] sm:text-[11px] font-extrabold uppercase tracking-wide text-brand-secondary">
-              MPG StorePhuket
+            <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide text-brand-secondary leading-snug line-clamp-2">
+              {t.heroTagline}
             </span>
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             onClick={() => { triggerHaptic('light'); setIsLangMenuOpen(!isLangMenuOpen); }}
             className={`h-[42px] px-3 flex items-center justify-center rounded-button ${rimButton} font-black text-[11px] text-brand-secondary active:scale-90 transition-all gap-1 shadow-lg`}

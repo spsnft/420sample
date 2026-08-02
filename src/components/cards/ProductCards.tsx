@@ -63,7 +63,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
 
       <div className="relative z-10 px-4 py-3 pb-0 flex-1 flex flex-col min-h-0">
         <div className="min-w-0 pr-6">
-          <h3 className="text-[12px] font-black uppercase tracking-tight leading-tight text-brand-light group-hover:text-brand-secondary transition-colors truncate">
+          <h3 className="text-[12px] font-black uppercase tracking-tight leading-tight text-brand-light group-hover:text-brand-secondary transition-colors line-clamp-2">
             {item.name}
           </h3>
         </div>

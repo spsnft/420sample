@@ -50,7 +50,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "Start New Order",
 
     // Home page
-    heroTagline: "Marijuana Premium Grade",
+    heroTagline: "Presence, Compliance, Ordering — One Platform",
     addressLabel: "Address",
     hoursLabel: "Working hours",
     viewMenuCta: "View Menu",
@@ -78,7 +78,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "Новый заказ",
 
     // Home page
-    heroTagline: "Marijuana Premium Grade",
+    heroTagline: "Presence, Compliance, Ordering — One Platform",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     viewMenuCta: "Открыть меню",
@@ -106,7 +106,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "เริ่มคำสั่งซื้อใหม่",
 
     // Home page
-    heroTagline: "Marijuana Premium Grade",
+    heroTagline: "Presence, Compliance, Ordering — One Platform",
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     viewMenuCta: "ดูเมนู",
