@@ -1,0 +1,14 @@
+{
+  "name": "MPS Phuket",
+  "short_name": "MPS Phuket",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#161819",
+  "background_color": "#161819",
+  "display": "standalone"
+}
