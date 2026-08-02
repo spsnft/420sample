@@ -8,8 +8,7 @@ export const siteConfig = {
   themeColor: "#161819",
   locale: "en_US",
 
-  // TODO: confirm exact address before going live
-  address: "Patong, Phuket, Thailand",
+  address: "Phuket, Thailand",
   workingHours: "12:00 — 00:00",
 
   contacts: {
