@@ -1,7 +1,7 @@
 export const siteConfig = {
-  name: "MPS Phuket",
-  tagline: "Marijuana Premium Grade",
-  description: "Digital menu & on-site medical consultation — MPS Phuket",
+  name: "420 Store",
+  tagline: "Presence, Compliance, Ordering — One Platform",
+  description: "Digital menu & on-site medical consultation — 420 Store",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://buds.digital",
   apiUrl: process.env.NEXT_PUBLIC_API_URL || "",
   currencySymbol: "฿",

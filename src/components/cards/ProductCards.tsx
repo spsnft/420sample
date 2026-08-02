@@ -62,8 +62,8 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
       <div className="absolute inset-0 opacity-30 pointer-events-none transition-opacity duration-500 group-hover:opacity-50" style={{ background: `radial-gradient(ellipse at 50% 80%, ${accentColor}15, transparent 70%)` }} />
 
       <div className="relative z-10 px-4 py-3 pb-0 flex-1 flex flex-col min-h-0">
-        <div className="min-w-0 pr-6">
-          <h3 className="text-[12px] font-black uppercase tracking-tight leading-tight text-brand-light group-hover:text-brand-secondary transition-colors truncate">
+        <div className="min-w-0 pr-6 min-h-[30px]">
+          <h3 className="text-[12px] font-black uppercase tracking-tight leading-tight text-brand-light group-hover:text-brand-secondary transition-colors line-clamp-2">
             {item.name}
           </h3>
         </div>

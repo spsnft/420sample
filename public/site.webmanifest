@@ -1,9 +1,9 @@
 {
-  "name": "MPS Phuket",
-  "short_name": "MPS Phuket",
+  "name": "420 Store",
+  "short_name": "420 Store",
   "icons": [
     {
-      "src": "/icon.png",
+      "src": "/favicon.png",
       "sizes": "32x32",
       "type": "image/png"
     }

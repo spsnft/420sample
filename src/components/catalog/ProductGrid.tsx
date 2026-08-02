@@ -43,9 +43,9 @@ function getCategoryConfig(category: string, t: TranslationDictionary): Category
 
 function gridClass(layout: "list" | "grid2" | "grid4"): string {
   switch (layout) {
-    case "list": return "grid-cols-1";
-    case "grid2": return "grid-cols-2 md:grid-cols-3 gap-3";
-    case "grid4": return "grid-cols-2 md:grid-cols-4 gap-3";
+    case "list": return "grid grid-cols-1";
+    case "grid2": return "grid grid-cols-2 md:grid-cols-3 gap-3";
+    case "grid4": return "grid grid-cols-2 md:grid-cols-4 gap-3";
   }
 }
 
