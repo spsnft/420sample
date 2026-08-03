@@ -1,6 +1,6 @@
 import { siteConfig } from "@/config/site"
 
-const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231A2F30'/%3E%3Ccircle cx='50' cy='42' r='14' fill='%23A88444' opacity='0.4'/%3E%3Cpath d='M30 70 C 35 55, 65 55, 70 70' stroke='%23A88444' stroke-width='4' fill='none' opacity='0.4'/%3E%3C/svg%3E";
+const FALLBACK_IMAGE = "/images/logo.svg";
 
 function formatProduct(item: any, index: number) {
   let rawImg = item.image || item.photo || item.Image || item.Photo || '';
