@@ -3,16 +3,14 @@ import type { ClientCardData, ClientSearchResult, StaffProfile } from "./types"
 
 export async function getCurrentStaff(): Promise<StaffProfile | null> {
   const supabase = createClient();
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  console.log("[staff-debug] auth.getUser() ->", { userId: user?.id ?? null, email: user?.email ?? null, error: userError });
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("staff")
     .select("id, name, role")
     .eq("auth_user_id", user.id)
     .single();
-  console.log("[staff-debug] staff table query ->", { data, error });
 
   return data as StaffProfile | null;
 }

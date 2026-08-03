@@ -17,7 +17,8 @@ In the Supabase SQL editor, run `migrations/0001_init.sql`. It creates:
 - `staff`, `clients`, `prescriptions`, `purchases` tables
 - `prescriptions_view` — the derived status (`active` / `expired` / `revoked`)
   and monthly quota usage the app actually queries
-- RLS policies gating everything behind a matching row in `staff`
+- table/view GRANTs for the `authenticated` role and RLS policies gating
+  everything behind a matching row in `staff`
 
 ## 3. Create your first login
 
