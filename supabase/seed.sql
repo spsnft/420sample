@@ -12,7 +12,7 @@
 
 with staff_row as (
   insert into public.staff (auth_user_id, name, role)
-  values ('REPLACE_WITH_AUTH_USER_UUID', 'Demo Owner', 'owner')
+  values ('ca3c264d-8d88-41a5-9699-0916aff5b99b', 'Demo Owner', 'owner')
   returning id
 ),
 
