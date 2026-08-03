@@ -121,6 +121,19 @@ left join lateral (
 ) u on true;
 
 -- ---------------------------------------------------------------------------
+-- GRANTs — table-level privileges are checked before RLS ever runs; without
+-- these, `authenticated` hits "permission denied" on the table/view itself
+-- regardless of how permissive the RLS policies below are. Not something
+-- every Supabase project grants by default for objects created here, so it
+-- has to be explicit for the migration to be self-contained on a fresh project.
+-- ---------------------------------------------------------------------------
+grant select on public.staff to authenticated;
+grant select on public.clients to authenticated;
+grant select, update on public.prescriptions to authenticated;
+grant select, insert on public.purchases to authenticated;
+grant select on public.prescriptions_view to authenticated;
+
+-- ---------------------------------------------------------------------------
 -- RLS — every screen in /staff is behind Supabase Auth; any authenticated
 -- account with a row in `staff` can read the shop's compliance data.
 -- ---------------------------------------------------------------------------
