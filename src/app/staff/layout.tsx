@@ -3,6 +3,10 @@ import { isSupabaseConfigured } from "@/lib/supabase/config"
 import { getCurrentStaff } from "@/lib/staff/queries"
 import { StaffHeader } from "@/components/staff/StaffHeader"
 
+// Every screen under /staff is per-user, RLS-gated data — never let the
+// Full Route Cache serve a prerendered/stale version of it.
+export const dynamic = "force-dynamic"
+
 function SetupNeeded() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
