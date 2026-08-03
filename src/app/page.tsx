@@ -1,6 +1,9 @@
 import type { Metadata } from "next"
 import HomeClient from "@/components/HomeClient"
 import { siteConfig } from "@/config/site"
+import { getPlaceRating } from "@/lib/place"
+
+export const revalidate = 86400; // 24h — rating badge shouldn't hit the API on every visit
 
 export const metadata: Metadata = {
   title: siteConfig.name,
@@ -12,10 +15,12 @@ export const metadata: Metadata = {
   },
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const rating = await getPlaceRating();
+
   return (
     <main>
-      <HomeClient />
+      <HomeClient rating={rating} />
     </main>
   );
 }

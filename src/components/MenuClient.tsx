@@ -25,7 +25,6 @@ export default function MenuClient({
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   const [isOrderOpen, setIsOrderOpen] = React.useState(false);
   const [openSections, setOpenSections] = React.useState<string[]>([]);
-  const [isLangMenuOpen, setIsLangMenuOpen] = React.useState(false);
 
   const { items, getTotal, lang, clearCart } = useCart();
 
@@ -45,7 +44,6 @@ export default function MenuClient({
   const resetSession = React.useCallback(() => {
     setSelectedProduct(null);
     setIsOrderOpen(false);
-    setIsLangMenuOpen(false);
     setOpenSections([]);
     clearCart();
   }, [clearCart]);
@@ -59,11 +57,7 @@ export default function MenuClient({
 
       <AgeGate />
 
-      <Header
-        safeLang={safeLang}
-        isLangMenuOpen={isLangMenuOpen}
-        setIsLangMenuOpen={setIsLangMenuOpen}
-      />
+      <Header safeLang={safeLang} />
 
       <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
       <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
