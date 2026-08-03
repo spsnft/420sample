@@ -21,10 +21,12 @@ export interface TranslationDictionary {
 
   // Home page
   heroTagline: string;
+  ratingReviews: string;
   addressLabel: string;
   hoursLabel: string;
   viewMenuCta: string;
   medTitle: string;
+  medSubtitle: string;
   medDesc: string;
   contactsTitle: string;
 }
@@ -51,11 +53,13 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroTagline: "Presence, Compliance, Ordering — One Platform",
+    ratingReviews: "Google reviews",
     addressLabel: "Address",
     hoursLabel: "Working hours",
     viewMenuCta: "View Menu",
-    medTitle: "Medical Pass PT.33",
-    medDesc: "Visit us in-store for a free consultation and on-site PT.33 certificate issuance with a licensed Thai medical practitioner.",
+    medTitle: "Get your 420-Pass — same day, on site",
+    medSubtitle: "Officially: Medical Pass PT.33",
+    medDesc: "Free consultation with a licensed physician. Certificate issued on the spot — no paperwork needed.",
     contactsTitle: "Contact & Follow",
   },
   ru: {
@@ -79,11 +83,13 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroTagline: "Presence, Compliance, Ordering — One Platform",
+    ratingReviews: "отзывов в Google",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     viewMenuCta: "Открыть меню",
-    medTitle: "Медицинский рецепт PT.33",
-    medDesc: "Приходите к нам — бесплатная консультация и оформление справки PT.33 на месте у лицензированного врача Таиланда.",
+    medTitle: "Получите 420-Pass — в этот же день, на месте",
+    medSubtitle: "Официально: Medical Pass PT.33",
+    medDesc: "Бесплатная консультация лицензированного врача. Справка выдаётся на месте — без бумажной волокиты.",
     contactsTitle: "Контакты и соцсети",
   },
   th: {
@@ -107,11 +113,13 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroTagline: "Presence, Compliance, Ordering — One Platform",
+    ratingReviews: "รีวิวจาก Google",
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     viewMenuCta: "ดูเมนู",
-    medTitle: "ใบรับรองแพทย์ PT.33",
-    medDesc: "แวะมาที่ร้านเพื่อรับคำปรึกษาฟรีและออกใบรับรอง PT.33 ที่ร้านโดยแพทย์ผู้ได้รับใบอนุญาตในประเทศไทย",
+    medTitle: "รับ 420-Pass ของคุณ — วันเดียวจบ ที่ร้านเลย",
+    medSubtitle: "ชื่อทางการ: Medical Pass PT.33",
+    medDesc: "ปรึกษาฟรีกับแพทย์ผู้ได้รับใบอนุญาต ออกใบรับรองทันทีที่ร้าน ไม่ต้องเตรียมเอกสาร",
     contactsTitle: "ติดต่อและติดตามเรา",
   }
 };

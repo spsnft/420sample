@@ -2,29 +2,26 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { MapPin, Clock, ShieldCheck, MessageCircle, Phone, Instagram, ArrowRight } from "lucide-react"
+import { MapPin, Clock, ShieldCheck, Star, Instagram, ArrowRight } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
 import { translations, Language } from "@/lib/translations"
 import { Header } from "@/components/layout/Header"
+import { LineIcon, WhatsAppIcon } from "@/components/icons/BrandIcons"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
+import type { PlaceRating } from "@/lib/place"
 
 const rimBorder = "border border-transparent [border-image:linear-gradient(135deg,rgba(200,158,88,0.3),rgba(255,255,255,0.05))_1]";
 
-export default function HomeClient() {
-  const [isLangMenuOpen, setIsLangMenuOpen] = React.useState(false);
+export default function HomeClient({ rating }: { rating: PlaceRating }) {
   const { lang } = useCart();
   const safeLang = (lang || 'en') as Language;
   const t = translations[safeLang] || translations.en;
 
   return (
     <div className="min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans">
-      <Header
-        safeLang={safeLang}
-        isLangMenuOpen={isLangMenuOpen}
-        setIsLangMenuOpen={setIsLangMenuOpen}
-      />
+      <Header safeLang={safeLang} />
 
       <main className="max-w-xl mx-auto space-y-6">
         <section className="flex flex-col items-center text-center py-6">
@@ -35,11 +32,23 @@ export default function HomeClient() {
           <p className="text-[13px] font-extrabold uppercase tracking-wide text-brand-secondary mt-1">
             {t.heroTagline}
           </p>
+
+          <Link
+            href={rating.url}
+            target="_blank"
+            onClick={() => triggerHaptic('light')}
+            className={`mt-4 h-9 px-4 inline-flex items-center gap-1.5 rounded-full bg-white/5 ${rimBorder} active:scale-95 transition-all shadow-lg`}
+          >
+            <Star size={13} className="text-brand-secondary fill-brand-secondary" />
+            <span className="text-[12px] font-black text-brand-light">{rating.rating.toFixed(1)}</span>
+            <span className="text-[12px] text-brand-light/40">·</span>
+            <span className="text-[12px] font-bold text-brand-light/70">{rating.reviewCount.toLocaleString(safeLang)} {t.ratingReviews}</span>
+          </Link>
         </section>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className={`p-4 rounded-card bg-white/5 ${rimBorder} flex items-start gap-3`}>
-            <div className="w-9 h-9 rounded-badge bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
+            <div className="w-9 h-9 rounded-card bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
               <MapPin size={16} />
             </div>
             <div>
@@ -49,7 +58,7 @@ export default function HomeClient() {
           </div>
 
           <div className={`p-4 rounded-card bg-white/5 ${rimBorder} flex items-start gap-3`}>
-            <div className="w-9 h-9 rounded-badge bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
+            <div className="w-9 h-9 rounded-card bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
               <Clock size={16} />
             </div>
             <div>
@@ -60,14 +69,17 @@ export default function HomeClient() {
         </section>
 
         <section className="p-5 rounded-card bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 shadow-2xl">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-9 h-9 rounded-badge bg-brand-secondary/20 border border-brand-secondary/40 flex items-center justify-center text-brand-secondary shrink-0">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-9 h-9 rounded-card bg-brand-secondary/20 border border-brand-secondary/40 flex items-center justify-center text-brand-secondary shrink-0">
               <ShieldCheck size={18} />
             </div>
             <h2 className="text-base font-black uppercase tracking-tight text-brand-light">
               {t.medTitle}
             </h2>
           </div>
+          <p className="text-[12px] font-bold uppercase tracking-wide text-brand-light/40 mb-3">
+            {t.medSubtitle}
+          </p>
           <p className="text-[13px] text-brand-light/70 leading-relaxed">
             {t.medDesc}
           </p>
@@ -87,13 +99,13 @@ export default function HomeClient() {
             {t.contactsTitle}
           </p>
           <div className="flex items-center justify-center gap-3">
-            <Link href={siteConfig.contacts.line} target="_blank" className={`w-[46px] h-[46px] flex items-center justify-center rounded-button bg-white/5 ${rimBorder} active:scale-90 transition-all shadow-lg`}>
-              <MessageCircle size={20} className="opacity-80" />
+            <Link href={siteConfig.contacts.line} target="_blank" aria-label="LINE" className={`w-[46px] h-[46px] flex items-center justify-center rounded-button bg-white/5 ${rimBorder} active:scale-90 transition-all shadow-lg`}>
+              <LineIcon size={20} className="opacity-80" />
             </Link>
-            <Link href={siteConfig.contacts.whatsapp} target="_blank" className={`w-[46px] h-[46px] flex items-center justify-center rounded-button bg-white/5 ${rimBorder} active:scale-90 transition-all shadow-lg`}>
-              <Phone size={20} className="opacity-80" />
+            <Link href={siteConfig.contacts.whatsapp} target="_blank" aria-label="WhatsApp" className={`w-[46px] h-[46px] flex items-center justify-center rounded-button bg-white/5 ${rimBorder} active:scale-90 transition-all shadow-lg`}>
+              <WhatsAppIcon size={20} className="opacity-80" />
             </Link>
-            <Link href={siteConfig.contacts.instagram} target="_blank" className={`w-[46px] h-[46px] flex items-center justify-center rounded-button bg-white/5 ${rimBorder} active:scale-90 transition-all shadow-lg`}>
+            <Link href={siteConfig.contacts.instagram} target="_blank" aria-label="Instagram" className={`w-[46px] h-[46px] flex items-center justify-center rounded-button bg-white/5 ${rimBorder} active:scale-90 transition-all shadow-lg`}>
               <Instagram size={20} className="opacity-80" />
             </Link>
           </div>
