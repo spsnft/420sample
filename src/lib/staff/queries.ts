@@ -42,6 +42,9 @@ export async function searchClients(query: string): Promise<ClientSearchResult[]
       .limit(20),
   ]);
 
+  if (byName.error) console.error("searchClients (by name):", byName.error.message);
+  if (byPt33.error) console.error("searchClients (by pt33):", byPt33.error.message);
+
   const rows = [...(byName.data ?? []), ...(byPt33.data ?? [])] as ClientSearchResult[];
   const seen = new Set<string>();
   const deduped: ClientSearchResult[] = [];

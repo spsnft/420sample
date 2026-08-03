@@ -26,6 +26,13 @@ export function createClient() {
           }
         },
       },
+      global: {
+        // postgrest-js issues plain fetch() calls with no cache directive, so
+        // Next's App Router Data Cache treats every RLS-gated read as a
+        // cacheable GET and can keep serving an old response (e.g. an empty
+        // result from before login) instead of re-querying Postgres.
+        fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+      },
     }
   );
 }
