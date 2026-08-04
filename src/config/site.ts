@@ -18,6 +18,14 @@ export const siteConfig = {
     instagram: "https://www.instagram.com/mpsphuket",
   },
 
+  // partners.buds.digital (B2B pitch page) — deliberately separate from the
+  // consumer contacts above: a WhatsApp Business line for dispensary owners,
+  // not the personal LINE/WhatsApp used on the public buds.digital.
+  partners: {
+    // TODO: replace with the real WhatsApp Business number — this is a placeholder
+    whatsapp: "https://wa.me/66687654321",
+  },
+
   // Demo shop used to power the social-proof rating badge on the homepage.
   // Chillium — Bang Tao Beach, Phuket. 5.0 rating, 1173+ reviews.
   place: {
