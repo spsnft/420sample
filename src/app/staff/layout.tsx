@@ -33,7 +33,7 @@ export default async function StaffLayout({ children }: { children: ReactNode })
   const staff = await getCurrentStaff();
 
   return (
-    <div className="min-h-screen bg-brand-primary text-brand-light font-sans">
+    <div className="min-h-screen text-brand-light font-sans">
       {staff && <StaffHeader staff={staff} />}
       <main className="max-w-2xl mx-auto p-4">{children}</main>
     </div>

@@ -75,11 +75,12 @@ export function NewSaleModal({ client, prescription, onClose, onSuccess }: NewSa
     <div className="fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="absolute inset-0 bg-black/80" onClick={handleClose} />
 
+      <div className="gradient-ring w-full max-w-md sm:rounded-modal rounded-t-modal shadow-2xl max-h-[90vh]">
       <motion.div
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="relative w-full max-w-md bg-brand-primary rim-border sm:rounded-modal rounded-t-modal p-6 pt-8 shadow-2xl max-h-[90vh] overflow-y-auto"
+        className="relative w-full bg-brand-primary sm:rounded-modal rounded-t-modal p-6 pt-8 max-h-[90vh] overflow-y-auto"
       >
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
@@ -175,6 +176,7 @@ export function NewSaleModal({ client, prescription, onClose, onSuccess }: NewSa
           </form>
         )}
       </motion.div>
+      </div>
     </div>
   );
 }

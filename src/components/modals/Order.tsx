@@ -45,6 +45,7 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
     <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       <div className="absolute inset-0 bg-black/80" onClick={orderId ? undefined : handleClose} />
 
+      <div className="gradient-ring w-full max-w-lg sm:rounded-modal rounded-t-modal shadow-2xl max-h-[90vh]">
       <motion.div
         drag={orderId ? false : "y"}
         dragConstraints={{ top: 0 }}
@@ -55,7 +56,7 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
         initial={{ y: "100%" }}
         animate={{ y: isClosing ? "100%" : 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="relative w-full max-w-lg bg-brand-primary rim-border sm:rounded-modal rounded-t-modal p-6 pt-8 shadow-2xl flex flex-col max-h-[90vh]"
+        className="relative w-full bg-brand-primary sm:rounded-modal rounded-t-modal p-6 pt-8 flex flex-col max-h-[90vh]"
       >
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
@@ -89,12 +90,14 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
 
             <div className="w-full space-y-2 mb-6 text-left">
               {items.map((item) => (
-                <div key={`${item.id}-${item.weight}`} className="p-3 bg-white/5 rim-border rounded-button flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <h4 className="text-xs font-black uppercase text-brand-light truncate">{item.name}</h4>
-                    <span className="text-[11px] font-bold text-brand-secondary">{item.weight}{item.unitLabel}</span>
+                <div key={`${item.id}-${item.weight}`} className="gradient-ring rounded-button">
+                  <div className="p-3 bg-white/5 rounded-button flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-black uppercase text-brand-light truncate">{item.name}</h4>
+                      <span className="text-[11px] font-bold text-brand-secondary">{item.weight}{item.unitLabel}</span>
+                    </div>
+                    <span className="text-xs font-black text-brand-light shrink-0">{item.price}<Baht /></span>
                   </div>
-                  <span className="text-xs font-black text-brand-light shrink-0">{item.price}<Baht /></span>
                 </div>
               ))}
             </div>
@@ -131,21 +134,23 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
                 </div>
               ) : (
                 items.map((item) => (
-                  <div key={`${item.id}-${item.weight}`} className="p-3 bg-white/5 rim-border rounded-button flex items-center justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-black uppercase text-brand-light truncate">{item.name}</h4>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[11px] font-bold text-brand-secondary px-2 py-0.5 bg-brand-secondary/10 rounded-md">{item.weight}{item.unitLabel}</span>
-                        <span className="text-xs font-black text-brand-light">{item.price}<Baht /></span>
+                  <div key={`${item.id}-${item.weight}`} className="gradient-ring rounded-button">
+                    <div className="p-3 bg-white/5 rounded-button flex items-center justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-xs font-black uppercase text-brand-light truncate">{item.name}</h4>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[11px] font-bold text-brand-secondary px-2 py-0.5 bg-brand-secondary/10 rounded-md">{item.weight}{item.unitLabel}</span>
+                          <span className="text-xs font-black text-brand-light">{item.price}<Baht /></span>
+                        </div>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => { triggerHaptic('warning'); removeItem(item.id, item.weight); }}
+                        className="p-2 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 rounded-badge transition-all"
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => { triggerHaptic('warning'); removeItem(item.id, item.weight); }}
-                      className="p-2 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 rounded-badge transition-all"
-                    >
-                      <Trash2 size={16} />
-                    </button>
                   </div>
                 ))
               )}
@@ -169,6 +174,7 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
           </>
         )}
       </motion.div>
+      </div>
     </div>
   );
 };

@@ -11,12 +11,16 @@
     --color-wood: #4A3320;
     --color-dark: #0F1112;
     --color-light: #E3DDD1;
+    --color-bg-from: #0F1011;
   }
 
   body {
     @apply bg-brand-primary text-brand-light antialiased font-sans;
-    background-color: var(--color-primary);
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
+    background-color: var(--color-bg-from);
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E"),
+      radial-gradient(ellipse 120% 60% at 50% 0%, rgba(200, 158, 88, 0.05) 0%, transparent 55%),
+      linear-gradient(165deg, var(--color-bg-from) 0%, var(--color-primary) 100%);
     background-attachment: fixed;
 
     text-rendering: optimizeLegibility;
@@ -74,9 +78,18 @@
     box-shadow: 0 4px 12px rgba(200, 158, 88, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 
-  .rim-border {
-    border: 1px solid transparent;
-    border-image: linear-gradient(135deg, rgba(200, 158, 88, 0.3), rgba(255, 255, 255, 0.05)) 1;
+  /*
+   * Gradient-ring border, safe with border-radius.
+   * `border-image` (the old .rim-border approach) is drawn as a rectangle and
+   * does not clip to border-radius in every browser, which shows up as square
+   * corner artifacts poking out of rounded elements. This wraps the element
+   * in a 1px gradient-filled box instead: always renders a correctly rounded
+   * ring, in every browser, regardless of the child's own background.
+   * Usage: <div className="gradient-ring rounded-card"><div className="rounded-card ...">...
+   */
+  .gradient-ring {
+    background-image: linear-gradient(135deg, rgba(200, 158, 88, 0.35), rgba(255, 255, 255, 0.08));
+    padding: 1px;
   }
 
   .card-premium {

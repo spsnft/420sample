@@ -53,7 +53,7 @@ export default function MenuClient({
   const hasItems = items.length > 0;
 
   return (
-    <div className={`min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans ${hasItems ? 'pb-44' : 'pb-4'}`}>
+    <div className={`min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans ${hasItems ? 'pb-44' : 'pb-4'}`}>
 
       <AgeGate />
 
