@@ -70,7 +70,7 @@ export default function PartnersClient() {
 
   return (
     <div className="min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans">
-      <Header safeLang={safeLang} />
+      <Header safeLang={safeLang} showMenuLink={false} />
       <p className="max-w-xl mx-auto text-center text-[10px] font-black uppercase tracking-[0.2em] text-brand-light/30 -mt-2 mb-4">
         by buds.digital
       </p>
