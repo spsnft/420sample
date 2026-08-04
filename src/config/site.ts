@@ -26,13 +26,14 @@ export const siteConfig = {
     whatsapp: "https://wa.me/66687654321",
   },
 
-  // Demo shop used to power the social-proof rating badge on the homepage.
-  // Chillium — Bang Tao Beach, Phuket. 5.0 rating, 1173+ reviews.
-  place: {
-    id: "ChIJaYrynqo5UDARuwUnDHOzFRg",
-    reviewsUrl: "https://search.google.com/local/reviews?placeid=ChIJaYrynqo5UDARuwUnDHOzFRg",
-    // Fallback shown when the Google Places API key is unset or the fetch fails/is stale.
-    fallbackRating: 5.0,
-    fallbackReviewCount: 1173,
+  // Static, non-clickable trust badge shown on the homepage. Demo instance —
+  // not wired to any real business's Google listing.
+  trustBadge: {
+    rating: "5.0",
+    reviews: "200+ Google reviews",
   },
+
+  // Neutral public landmark used for the homepage map embed — not the exact
+  // coordinates of any specific dispensary.
+  mapEmbedSrc: "https://maps.google.com/maps?q=Boat+Avenue,+Bang+Tao,+Phuket&z=15&output=embed",
 };
