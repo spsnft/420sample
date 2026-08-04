@@ -2,7 +2,7 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { MapPin, Clock, ShieldCheck, Star, Instagram, ArrowRight } from "lucide-react"
+import { MapPin, Clock, ShieldCheck, Star, Instagram, ArrowRight, Image as ImageIcon } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
 import { translations, Language } from "@/lib/translations"
@@ -10,11 +10,10 @@ import { Header } from "@/components/layout/Header"
 import { LineIcon, WhatsAppIcon } from "@/components/icons/BrandIcons"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
-import type { PlaceRating } from "@/lib/place"
 
 const rimBorder = "border border-transparent [border-image:linear-gradient(135deg,rgba(200,158,88,0.3),rgba(255,255,255,0.05))_1]";
 
-export default function HomeClient({ rating }: { rating: PlaceRating }) {
+export default function HomeClient() {
   const { lang } = useCart();
   const safeLang = (lang || 'en') as Language;
   const t = translations[safeLang] || translations.en;
@@ -33,17 +32,25 @@ export default function HomeClient({ rating }: { rating: PlaceRating }) {
             {t.heroTagline}
           </p>
 
-          <Link
-            href={rating.url}
-            target="_blank"
-            onClick={() => triggerHaptic('light')}
-            className={`mt-4 h-9 px-4 inline-flex items-center gap-1.5 rounded-full bg-white/5 ${rimBorder} active:scale-95 transition-all shadow-lg`}
-          >
+          <div className={`mt-4 h-9 px-4 inline-flex items-center gap-1.5 rounded-full bg-white/5 ${rimBorder} shadow-lg`}>
             <Star size={13} className="text-brand-secondary fill-brand-secondary" />
-            <span className="text-[12px] font-black text-brand-light">{rating.rating.toFixed(1)}</span>
+            <span className="text-[12px] font-black text-brand-light">{siteConfig.trustBadge.rating}</span>
             <span className="text-[12px] text-brand-light/40">·</span>
-            <span className="text-[12px] font-bold text-brand-light/70">{rating.reviewCount.toLocaleString(safeLang)} {t.ratingReviews}</span>
-          </Link>
+            <span className="text-[12px] font-bold text-brand-light/70">{siteConfig.trustBadge.reviews}</span>
+          </div>
+        </section>
+
+        <section className={`p-5 rounded-card bg-white/5 ${rimBorder} shadow-xl`}>
+          <div className="w-full aspect-[16/9] rounded-card bg-black/20 border border-dashed border-brand-secondary/25 flex flex-col items-center justify-center gap-2 mb-4 text-brand-light/30">
+            <ImageIcon size={22} />
+            <span className="text-[10px] font-black uppercase tracking-wide">{t.aboutPhotoLabel}</span>
+          </div>
+          <h2 className="text-base font-black uppercase tracking-tight text-brand-light mb-2">
+            {t.aboutTitle}
+          </h2>
+          <p className="text-[13px] text-brand-light/70 leading-relaxed">
+            {t.aboutDesc}
+          </p>
         </section>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -66,6 +73,20 @@ export default function HomeClient({ rating }: { rating: PlaceRating }) {
               <p className="text-[13px] font-bold text-brand-light leading-snug tracking-[0.1em]">{siteConfig.workingHours}</p>
             </div>
           </div>
+        </section>
+
+        <section className={`rounded-card bg-white/5 ${rimBorder} overflow-hidden shadow-xl`}>
+          <div className="w-full aspect-[16/9] bg-black/20 border-b border-dashed border-brand-secondary/25 flex flex-col items-center justify-center gap-2 text-brand-light/30">
+            <ImageIcon size={22} />
+            <span className="text-[10px] font-black uppercase tracking-wide">{t.facadePhotoLabel}</span>
+          </div>
+          <iframe
+            src={siteConfig.mapEmbedSrc}
+            className="w-full h-56 border-0 block"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title={t.addressLabel}
+          />
         </section>
 
         <section className="p-5 rounded-card bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 shadow-2xl">
@@ -94,7 +115,7 @@ export default function HomeClient({ rating }: { rating: PlaceRating }) {
           <ArrowRight size={18} />
         </Link>
 
-        <section className="pb-6">
+        <section>
           <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-3 text-center">
             {t.contactsTitle}
           </p>
@@ -110,6 +131,10 @@ export default function HomeClient({ rating }: { rating: PlaceRating }) {
             </Link>
           </div>
         </section>
+
+        <p className="text-[10px] text-brand-light/30 leading-relaxed text-center pb-6">
+          {t.footerDisclaimer}
+        </p>
       </main>
     </div>
   );
