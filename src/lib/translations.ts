@@ -10,6 +10,7 @@ export interface TranslationDictionary {
   basket: string;
   items: string;
   total: string;
+  navMenu: string;
 
   // Order flow (kiosk)
   orderTitle: string;
@@ -23,19 +24,28 @@ export interface TranslationDictionary {
   heroTagline: string;
   addressLabel: string;
   hoursLabel: string;
+  reviewsLabel: string;
   viewMenuCta: string;
   aboutTitle: string;
   aboutDesc: string[];
   aboutPhotoLabel: string;
   facadePhotoLabel: string;
   medTitle: string;
-  medSubtitle: string;
   medSteps: [string, string, string];
-  medPills: [string, string, string];
+  medPills: [string, string];
   menuTeaserTitle: string;
   menuTeaserCta: string;
   contactsTitle: string;
   footerDisclaimer: [string, string];
+
+  // Free consultation request form
+  consultCta: string;
+  consultNameLabel: string;
+  consultPhoneLabel: string;
+  consultConsentLabel: string;
+  consultSubmitCta: string;
+  consultSuccessMessage: string;
+  consultErrorMessage: string;
 }
 
 export const translations: Record<Language, TranslationDictionary> = {
@@ -49,6 +59,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     basket: "Basket",
     items: "items",
     total: "Total",
+    navMenu: "Menu",
 
     // Order flow (kiosk)
     orderTitle: "Your Order",
@@ -62,6 +73,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     heroTagline: "Your trusted access to medical cannabis",
     addressLabel: "Address",
     hoursLabel: "Working hours",
+    reviewsLabel: "Reviews",
     viewMenuCta: "View Menu",
     aboutTitle: "About Us",
     aboutDesc: [
@@ -72,14 +84,13 @@ export const translations: Record<Language, TranslationDictionary> = {
     ],
     aboutPhotoLabel: "Interior photo coming soon",
     facadePhotoLabel: "Facade photo coming soon",
-    medTitle: "Get your 420-Pass — same day, on site",
-    medSubtitle: "Officially: Medical Pass PT.33",
+    medTitle: "Get your medical certificate",
     medSteps: [
       "Visit the store",
       "Free consultation with a licensed physician",
-      "Certificate issued same day — no paperwork",
+      "Certificate issued, no paperwork required",
     ],
-    medPills: ["Free", "Same-day", "No paperwork"],
+    medPills: ["Legal to purchase & carry", "No fines, no risk"],
     menuTeaserTitle: "What's on the menu",
     menuTeaserCta: "View Full Menu",
     contactsTitle: "Contact & Follow",
@@ -87,6 +98,14 @@ export const translations: Record<Language, TranslationDictionary> = {
       "18+. Medical cannabis is dispensed only with a valid PT.33 medical card.",
       "Information on this site is for reference only and does not constitute cannabis advertising.",
     ],
+
+    consultCta: "Request a Free Consultation",
+    consultNameLabel: "Name",
+    consultPhoneLabel: "Phone",
+    consultConsentLabel: "I agree to the processing of my personal data in accordance with PDPA.",
+    consultSubmitCta: "Send Request",
+    consultSuccessMessage: "Thanks — we'll reach out on LINE to confirm your visit.",
+    consultErrorMessage: "Something went wrong. Please try again or contact us on LINE.",
   },
   ru: {
     // Header & Navigation
@@ -98,6 +117,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     basket: "Корзина",
     items: "тов.",
     total: "Итого",
+    navMenu: "Меню",
 
     // Order flow (kiosk)
     orderTitle: "Ваш заказ",
@@ -111,6 +131,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     heroTagline: "Надёжный доступ к медицинскому каннабису",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
+    reviewsLabel: "Отзывы",
     viewMenuCta: "Открыть меню",
     aboutTitle: "О нас",
     aboutDesc: [
@@ -121,14 +142,13 @@ export const translations: Record<Language, TranslationDictionary> = {
     ],
     aboutPhotoLabel: "Фото интерьера — скоро",
     facadePhotoLabel: "Фото фасада — скоро",
-    medTitle: "Получите 420-Pass — в этот же день, на месте",
-    medSubtitle: "Официально: Medical Pass PT.33",
+    medTitle: "Оформите медицинскую справку",
     medSteps: [
       "Приходите в магазин",
       "Бесплатная консультация лицензированного врача",
-      "Справка выдаётся в тот же день — без бумажной волокиты",
+      "Справка выдаётся сразу — без бумажной волокиты",
     ],
-    medPills: ["Бесплатно", "В тот же день", "Без бумаг"],
+    medPills: ["Законная покупка и хранение", "Без штрафов и рисков"],
     menuTeaserTitle: "Что в меню",
     menuTeaserCta: "Открыть полное меню",
     contactsTitle: "Контакты и соцсети",
@@ -136,6 +156,14 @@ export const translations: Record<Language, TranslationDictionary> = {
       "18+. Медицинский каннабис отпускается только при наличии действующей карты PT.33/гос.образца.",
       "Информация на сайте носит справочный характер и не является рекламой каннабиса.",
     ],
+
+    consultCta: "Запросить бесплатную консультацию",
+    consultNameLabel: "Имя",
+    consultPhoneLabel: "Телефон",
+    consultConsentLabel: "Я согласен(на) на обработку персональных данных в соответствии с PDPA.",
+    consultSubmitCta: "Отправить заявку",
+    consultSuccessMessage: "Спасибо — мы свяжемся с вами в LINE, чтобы подтвердить визит.",
+    consultErrorMessage: "Что-то пошло не так. Попробуйте ещё раз или напишите нам в LINE.",
   },
   th: {
     // Header & Navigation
@@ -147,6 +175,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     basket: "ตะกร้า",
     items: "ชิ้น",
     total: "ยอดรวม",
+    navMenu: "เมนู",
 
     // Order flow (kiosk)
     orderTitle: "รายการสั่งซื้อของคุณ",
@@ -160,6 +189,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     heroTagline: "การเข้าถึงกัญชาทางการแพทย์ที่เชื่อถือได้",
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
+    reviewsLabel: "รีวิว",
     viewMenuCta: "ดูเมนู",
     aboutTitle: "เกี่ยวกับเรา",
     aboutDesc: [
@@ -170,14 +200,13 @@ export const translations: Record<Language, TranslationDictionary> = {
     ],
     aboutPhotoLabel: "ภาพภายในร้าน — เร็วๆ นี้",
     facadePhotoLabel: "ภาพหน้าร้าน — เร็วๆ นี้",
-    medTitle: "รับ 420-Pass ของคุณ — วันเดียวจบ ที่ร้านเลย",
-    medSubtitle: "ชื่อทางการ: Medical Pass PT.33",
+    medTitle: "รับใบรับรองทางการแพทย์ของคุณ",
     medSteps: [
       "มาที่ร้าน",
       "ปรึกษาฟรีกับแพทย์ผู้ได้รับใบอนุญาต",
-      "ออกใบรับรองในวันเดียวกัน — ไม่ต้องเตรียมเอกสาร",
+      "ออกใบรับรองทันที — ไม่ต้องเตรียมเอกสาร",
     ],
-    medPills: ["ฟรี", "วันเดียวจบ", "ไม่ต้องใช้เอกสาร"],
+    medPills: ["ซื้อและพกพาได้อย่างถูกกฎหมาย", "ไม่มีค่าปรับ ไม่มีความเสี่ยง"],
     menuTeaserTitle: "มีอะไรในเมนูบ้าง",
     menuTeaserCta: "ดูเมนูทั้งหมด",
     contactsTitle: "ติดต่อและติดตามเรา",
@@ -185,5 +214,13 @@ export const translations: Record<Language, TranslationDictionary> = {
       "อายุ 18 ปีขึ้นไป กัญชาทางการแพทย์จำหน่ายเฉพาะผู้ที่มีบัตรรับรองทางการแพทย์ (PT.33) ที่ยังไม่หมดอายุเท่านั้น",
       "ข้อมูลบนเว็บไซต์นี้มีไว้เพื่อการอ้างอิงเท่านั้น ไม่ถือเป็นการโฆษณากัญชา",
     ],
+
+    consultCta: "ขอรับคำปรึกษาฟรี",
+    consultNameLabel: "ชื่อ",
+    consultPhoneLabel: "เบอร์โทรศัพท์",
+    consultConsentLabel: "ฉันยินยอมให้ประมวลผลข้อมูลส่วนบุคคลของฉันตาม PDPA",
+    consultSubmitCta: "ส่งคำขอ",
+    consultSuccessMessage: "ขอบคุณ — เราจะติดต่อคุณทาง LINE เพื่อยืนยันการเข้าร้าน",
+    consultErrorMessage: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งหรือติดต่อเราทาง LINE",
   }
 };

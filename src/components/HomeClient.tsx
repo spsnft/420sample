@@ -1,7 +1,6 @@
 "use client"
 import * as React from "react"
 import Link from "next/link"
-import Image from "next/image"
 import {
   MapPin, Clock, ShieldCheck, Star, Instagram, ArrowRight,
   Image as ImageIcon, Stethoscope, BadgeCheck, Leaf, Droplet, Cookie, Package,
@@ -12,6 +11,7 @@ import { translations, Language } from "@/lib/translations"
 import { Header } from "@/components/layout/Header"
 import { LineIcon, WhatsAppIcon } from "@/components/icons/BrandIcons"
 import { BotanicalDecor } from "@/components/decor/BotanicalDecor"
+import { ConsultationRequestForm } from "@/components/forms/ConsultationRequestForm"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
 
@@ -26,6 +26,7 @@ export default function HomeClient() {
   const { lang } = useCart();
   const safeLang = (lang || 'en') as Language;
   const t = translations[safeLang] || translations.en;
+  const [showConsultForm, setShowConsultForm] = React.useState(false);
 
   return (
     <div className="relative min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans overflow-hidden">
@@ -35,23 +36,10 @@ export default function HomeClient() {
       <Header safeLang={safeLang} />
 
       <main className="max-w-xl lg:max-w-4xl mx-auto space-y-6 relative z-10">
-        <section className="flex flex-col items-center text-center py-6">
-          <Image src="/images/logo.svg" priority width={96} height={96} className="w-20 h-20 object-contain mb-4" alt={siteConfig.name} />
-          <h1 className="text-2xl font-black uppercase tracking-tight text-brand-light leading-tight">
-            {siteConfig.name}
-          </h1>
-          <p className="text-[13px] font-extrabold uppercase tracking-wide text-brand-secondary mt-1">
+        <section className="text-center py-3">
+          <p className="text-[12px] font-extrabold uppercase tracking-wide text-brand-secondary">
             {t.heroTagline}
           </p>
-
-          <div className="gradient-ring rounded-full shadow-lg mt-4">
-            <div className="h-9 px-4 inline-flex items-center gap-1.5 rounded-full bg-white/5">
-              <Star size={13} className="text-brand-secondary fill-brand-secondary" />
-              <span className="text-[12px] font-black text-brand-light">{siteConfig.trustBadge.rating}</span>
-              <span className="text-[12px] text-brand-light/40">·</span>
-              <span className="text-[12px] font-bold text-brand-light/70">{siteConfig.trustBadge.reviews}</span>
-            </div>
-          </div>
         </section>
 
         <section className="p-5 lg:p-6 rounded-card bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 shadow-2xl">
@@ -63,11 +51,8 @@ export default function HomeClient() {
               {t.medTitle}
             </h2>
           </div>
-          <p className="text-[12px] font-bold uppercase tracking-wide text-brand-light/40 mb-4">
-            {t.medSubtitle}
-          </p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mt-4 mb-4">
             {[
               { icon: MapPin, text: t.medSteps[0] },
               { icon: Stethoscope, text: t.medSteps[1] },
@@ -92,14 +77,29 @@ export default function HomeClient() {
             ))}
           </div>
 
-          <Link
-            href="/menu"
-            onClick={() => triggerHaptic('medium')}
-            className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
-          >
-            {t.viewMenuCta}
-            <ArrowRight size={18} />
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Link
+              href="/menu"
+              onClick={() => triggerHaptic('medium')}
+              className="flex-1 h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
+            >
+              {t.viewMenuCta}
+              <ArrowRight size={18} />
+            </Link>
+            <button
+              type="button"
+              onClick={() => { triggerHaptic('light'); setShowConsultForm(v => !v); }}
+              className="h-14 px-4 rounded-button border border-brand-secondary/30 text-brand-secondary font-bold uppercase tracking-wide text-[11px] active:scale-95 transition-all hover:bg-brand-secondary/10"
+            >
+              {t.consultCta}
+            </button>
+          </div>
+
+          {showConsultForm && (
+            <div className="mt-5 pt-5 border-t border-white/10">
+              <ConsultationRequestForm t={t} />
+            </div>
+          )}
         </section>
 
         <div className="gradient-ring rounded-card">
@@ -153,7 +153,7 @@ export default function HomeClient() {
           </section>
         </div>
 
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="gradient-ring rounded-card">
             <div className="p-4 rounded-card bg-white/5 flex items-start gap-3">
               <div className="w-9 h-9 rounded-card bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
@@ -174,6 +174,20 @@ export default function HomeClient() {
               <div>
                 <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-0.5">{t.hoursLabel}</p>
                 <p className="text-[13px] font-bold text-brand-light leading-snug tracking-[0.1em]">{siteConfig.workingHours}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="gradient-ring rounded-card">
+            <div className="p-4 rounded-card bg-white/5 flex items-start gap-3">
+              <div className="w-9 h-9 rounded-card bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
+                <Star size={16} />
+              </div>
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-0.5">{t.reviewsLabel}</p>
+                <p className="text-[13px] font-bold text-brand-light leading-snug">
+                  {siteConfig.trustBadge.rating} · {siteConfig.trustBadge.reviews}
+                </p>
               </div>
             </div>
           </div>
