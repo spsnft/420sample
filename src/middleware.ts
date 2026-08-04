@@ -2,6 +2,22 @@ import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // partners.buds.digital serves the B2B pitch page (/partners) at its root.
+  // Host-based rewrite keeps it a separate surface from buds.digital without
+  // a second deployment — the public site never links here and vice versa.
+  const hostname = request.headers.get("host") || "";
+  if (pathname === "/" && hostname.startsWith("partners.")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/partners";
+    return NextResponse.rewrite(url);
+  }
+
+  if (!pathname.startsWith("/staff")) {
+    return NextResponse.next();
+  }
+
   // Supabase isn't configured yet in every environment this branch runs in
   // (see supabase/README.md). Let requests through unguarded rather than
   // 500ing on a missing env var — the /staff layout shows a setup notice.
@@ -35,7 +51,6 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
   const isLoginRoute = pathname === "/staff/login";
 
   if (!user && !isLoginRoute) {
@@ -54,5 +69,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/staff/:path*"],
+  matcher: ["/", "/staff/:path*"],
 };

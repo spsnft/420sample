@@ -46,6 +46,22 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
 Sign in at `/staff/login` with the account from step 3.
 
+## Demo login for partners.buds.digital
+
+The "Live Demo" button on the B2B pitch page (`/partners`, served at
+partners.buds.digital) does not bypass `/staff` auth — it signs in a
+dedicated demo account via a server action. Set in `.env`:
+
+```
+DEMO_STAFF_EMAIL=demo@buds.digital
+DEMO_STAFF_PASSWORD=your-password
+```
+
+This must be the Auth user you created in step 3 above and seeded in step 4
+(`seed.sql`'s "Demo Owner"). Leave both unset on real client instances —
+the button just shows a "not configured" message instead of an auth bypass,
+so this never becomes a code path a real dispensary's deployment depends on.
+
 ## Notes
 
 - **Quota**: 30g/month is a fixed constant (`src/lib/staff/constants.ts`),
