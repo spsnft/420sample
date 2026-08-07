@@ -9,10 +9,28 @@ import { ConsultationRequestForm } from "@/components/forms/ConsultationRequestF
 interface ConsultationProps {
   t: TranslationDictionary;
   onClose: () => void;
+  origin?: { x: number; y: number } | null;
 }
 
-export const Consultation = ({ t, onClose }: ConsultationProps) => {
+export const Consultation = ({ t, onClose, origin }: ConsultationProps) => {
   const [isClosing, setIsClosing] = React.useState(false);
+  const [isDesktop, setIsDesktop] = React.useState(false);
+  const panelRef = React.useRef<HTMLDivElement>(null);
+  const [transformOrigin, setTransformOrigin] = React.useState("50% 50%");
+
+  React.useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  React.useLayoutEffect(() => {
+    if (!isDesktop || !origin || !panelRef.current) return;
+    const rect = panelRef.current.getBoundingClientRect();
+    setTransformOrigin(`${origin.x - rect.left}px ${origin.y - rect.top}px`);
+  }, [isDesktop, origin]);
 
   const handleClose = React.useCallback(() => {
     triggerHaptic('light');
@@ -29,15 +47,17 @@ export const Consultation = ({ t, onClose }: ConsultationProps) => {
 
       <div className="gradient-ring w-full max-w-md sm:rounded-modal rounded-t-modal shadow-2xl">
         <motion.div
-          drag="y"
+          ref={panelRef}
+          drag={isDesktop ? false : "y"}
           dragConstraints={{ top: 0 }}
           dragElastic={0.2}
           onDragEnd={(_: any, info: any) => {
             if (info.offset.y > 100) handleClose();
           }}
-          initial={{ y: "100%" }}
-          animate={{ y: isClosing ? "100%" : 0 }}
-          transition={{ type: "spring", damping: 30, stiffness: 300 }}
+          style={isDesktop ? { transformOrigin } : undefined}
+          initial={isDesktop ? { opacity: 0, scale: 0.3 } : { y: "100%" }}
+          animate={isDesktop ? { opacity: isClosing ? 0 : 1, scale: isClosing ? 0.3 : 1 } : { y: isClosing ? "100%" : 0 }}
+          transition={isDesktop ? { type: "spring", damping: 26, stiffness: 340 } : { type: "spring", damping: 30, stiffness: 300 }}
           className="relative w-full bg-brand-primary sm:rounded-modal rounded-t-modal p-6 pt-8"
         >
           <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
@@ -57,6 +77,15 @@ export const Consultation = ({ t, onClose }: ConsultationProps) => {
             <h2 className="text-lg font-black uppercase tracking-tight text-brand-light leading-tight pr-10">
               {t.consultCta}
             </h2>
+          </div>
+
+          <div className="mb-5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[10px] font-bold uppercase tracking-wide text-brand-light/50">
+            {t.certSteps.map((step, i) => (
+              <React.Fragment key={i}>
+                {i > 0 && <span className="text-brand-secondary/60">→</span>}
+                <span>{step}</span>
+              </React.Fragment>
+            ))}
           </div>
 
           <ConsultationRequestForm t={t} />
