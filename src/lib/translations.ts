@@ -10,7 +10,6 @@ export interface TranslationDictionary {
   basket: string;
   items: string;
   total: string;
-  navMenu: string;
 
   // Order flow (kiosk)
   orderTitle: string;
@@ -25,7 +24,6 @@ export interface TranslationDictionary {
   addressLabel: string;
   hoursLabel: string;
   reviewsLabel: string;
-  viewMenuCta: string;
   aboutTitle: string;
   aboutDesc: string[];
   aboutPhotoLabel: string;
@@ -39,6 +37,7 @@ export interface TranslationDictionary {
   footerDisclaimer: [string, string];
 
   // Free consultation request form
+  navConsultCta: string;
   consultCta: string;
   consultNameLabel: string;
   consultPhoneLabel: string;
@@ -59,7 +58,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     basket: "Basket",
     items: "items",
     total: "Total",
-    navMenu: "Menu",
 
     // Order flow (kiosk)
     orderTitle: "Your Order",
@@ -74,7 +72,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "Address",
     hoursLabel: "Working hours",
     reviewsLabel: "Reviews",
-    viewMenuCta: "View Menu",
     aboutTitle: "About Us",
     aboutDesc: [
       "420 Store is a showcase of what a modern dispensary in Thailand looks like.",
@@ -99,6 +96,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "Information on this site is for reference only and does not constitute cannabis advertising.",
     ],
 
+    navConsultCta: "Get Consultation",
     consultCta: "Request a Free Consultation",
     consultNameLabel: "Name",
     consultPhoneLabel: "Phone",
@@ -117,7 +115,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     basket: "Корзина",
     items: "тов.",
     total: "Итого",
-    navMenu: "Меню",
 
     // Order flow (kiosk)
     orderTitle: "Ваш заказ",
@@ -132,7 +129,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
-    viewMenuCta: "Открыть меню",
     aboutTitle: "О нас",
     aboutDesc: [
       "420 Store — образец современного диспенсари в Таиланде.",
@@ -157,6 +153,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "Информация на сайте носит справочный характер и не является рекламой каннабиса.",
     ],
 
+    navConsultCta: "Получить консультацию",
     consultCta: "Запросить бесплатную консультацию",
     consultNameLabel: "Имя",
     consultPhoneLabel: "Телефон",
@@ -175,7 +172,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     basket: "ตะกร้า",
     items: "ชิ้น",
     total: "ยอดรวม",
-    navMenu: "เมนู",
 
     // Order flow (kiosk)
     orderTitle: "รายการสั่งซื้อของคุณ",
@@ -190,7 +186,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     reviewsLabel: "รีวิว",
-    viewMenuCta: "ดูเมนู",
     aboutTitle: "เกี่ยวกับเรา",
     aboutDesc: [
       "420 Store คือตัวอย่างร้านจำหน่ายกัญชาสมัยใหม่ในประเทศไทย",
@@ -215,6 +210,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "ข้อมูลบนเว็บไซต์นี้มีไว้เพื่อการอ้างอิงเท่านั้น ไม่ถือเป็นการโฆษณากัญชา",
     ],
 
+    navConsultCta: "รับคำปรึกษา",
     consultCta: "ขอรับคำปรึกษาฟรี",
     consultNameLabel: "ชื่อ",
     consultPhoneLabel: "เบอร์โทรศัพท์",

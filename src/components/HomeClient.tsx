@@ -11,7 +11,7 @@ import { translations, Language } from "@/lib/translations"
 import { Header } from "@/components/layout/Header"
 import { LineIcon, WhatsAppIcon } from "@/components/icons/BrandIcons"
 import { BotanicalDecor } from "@/components/decor/BotanicalDecor"
-import { ConsultationRequestForm } from "@/components/forms/ConsultationRequestForm"
+import { Consultation } from "@/components/modals"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
 
@@ -26,14 +26,14 @@ export default function HomeClient() {
   const { lang } = useCart();
   const safeLang = (lang || 'en') as Language;
   const t = translations[safeLang] || translations.en;
-  const [showConsultForm, setShowConsultForm] = React.useState(false);
+  const [showConsultModal, setShowConsultModal] = React.useState(false);
 
   return (
     <div className="relative min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans overflow-hidden">
       <BotanicalDecor className="absolute -top-8 -right-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] z-0" />
       <BotanicalDecor className="absolute -bottom-10 -left-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] rotate-180 z-0" />
 
-      <Header safeLang={safeLang} />
+      <Header safeLang={safeLang} onConsultClick={() => setShowConsultModal(true)} />
 
       <main className="max-w-xl lg:max-w-4xl mx-auto space-y-6 relative z-10">
         <section className="text-center py-3">
@@ -77,29 +77,13 @@ export default function HomeClient() {
             ))}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2">
-            <Link
-              href="/menu"
-              onClick={() => triggerHaptic('medium')}
-              className="flex-1 h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
-            >
-              {t.viewMenuCta}
-              <ArrowRight size={18} />
-            </Link>
-            <button
-              type="button"
-              onClick={() => { triggerHaptic('light'); setShowConsultForm(v => !v); }}
-              className="h-14 px-4 rounded-button border border-brand-secondary/30 text-brand-secondary font-bold uppercase tracking-wide text-[11px] active:scale-95 transition-all hover:bg-brand-secondary/10"
-            >
-              {t.consultCta}
-            </button>
-          </div>
-
-          {showConsultForm && (
-            <div className="mt-5 pt-5 border-t border-white/10">
-              <ConsultationRequestForm t={t} />
-            </div>
-          )}
+          <button
+            type="button"
+            onClick={() => { triggerHaptic('light'); setShowConsultModal(true); }}
+            className="w-full h-14 rounded-button border border-brand-secondary/30 text-brand-secondary font-bold uppercase tracking-wide text-[11px] active:scale-95 transition-all hover:bg-brand-secondary/10"
+          >
+            {t.consultCta}
+          </button>
         </section>
 
         <div className="gradient-ring rounded-card">
@@ -156,7 +140,7 @@ export default function HomeClient() {
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="gradient-ring rounded-card">
             <div className="p-4 rounded-card bg-white/5 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-card bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
+              <div className="w-9 h-9 rounded-full bg-brand-secondary/15 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
                 <MapPin size={16} />
               </div>
               <div>
@@ -168,7 +152,7 @@ export default function HomeClient() {
 
           <div className="gradient-ring rounded-card">
             <div className="p-4 rounded-card bg-white/5 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-card bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
+              <div className="w-9 h-9 rounded-full bg-brand-secondary/15 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
                 <Clock size={16} />
               </div>
               <div>
@@ -180,7 +164,7 @@ export default function HomeClient() {
 
           <div className="gradient-ring rounded-card">
             <div className="p-4 rounded-card bg-white/5 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-card bg-brand-secondary/10 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
+              <div className="w-9 h-9 rounded-full bg-brand-secondary/15 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
                 <Star size={16} />
               </div>
               <div>
@@ -237,6 +221,10 @@ export default function HomeClient() {
           <p className="text-[10px] text-brand-light/30 leading-relaxed">{t.footerDisclaimer[1]}</p>
         </div>
       </main>
+
+      {showConsultModal && (
+        <Consultation t={t} onClose={() => setShowConsultModal(false)} />
+      )}
     </div>
   );
 }
