@@ -57,7 +57,7 @@ export default function MenuClient({
 
       <AgeGate />
 
-      <Header safeLang={safeLang} showMenuLink={false} />
+      <Header safeLang={safeLang} />
 
       <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
       <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
