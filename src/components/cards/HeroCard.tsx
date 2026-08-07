@@ -1,0 +1,128 @@
+"use client"
+import * as React from "react"
+import Link from "next/link"
+import { motion } from "framer-motion"
+import { ChevronRight, LucideIcon } from "lucide-react"
+import { triggerHaptic } from "@/lib/utils"
+
+interface Ripple {
+  id: number;
+  x: number;
+  y: number;
+}
+
+interface HeroCardProps {
+  href?: string;
+  onClick?: () => void;
+  haptic?: "light" | "medium";
+  gradient: string;
+  watermarkIcon: LucideIcon;
+  watermarkColor: string;
+  title: string;
+  titleClassName: string;
+  subtitle: string;
+  subtitleClassName: string;
+  microCta: string;
+  microCtaClassName: string;
+  rippleClassName: string;
+  /** Stagger for the one-shot arrow nudge, so both cards don't nudge in lockstep. */
+  nudgeDelay?: number;
+}
+
+let rippleId = 0;
+
+// Shared shell for the two hero "door" cards — owns the tap-to-click
+// affordances (hover brighten, one-shot arrow nudge, mobile ripple) so both
+// cards behave identically without duplicating the interaction logic.
+export const HeroCard: React.FC<HeroCardProps> = ({
+  href,
+  onClick,
+  haptic = "light",
+  gradient,
+  watermarkIcon: Watermark,
+  watermarkColor,
+  title,
+  titleClassName,
+  subtitle,
+  subtitleClassName,
+  microCta,
+  microCtaClassName,
+  rippleClassName,
+  nudgeDelay = 0,
+}) => {
+  const [ripples, setRipples] = React.useState<Ripple[]>([]);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLElement>) => {
+    if (e.pointerType !== "touch") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const id = rippleId++;
+    setRipples((prev) => [...prev, { id, x: e.clientX - rect.left, y: e.clientY - rect.top }]);
+  };
+
+  const removeRipple = (id: number) => {
+    setRipples((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  const handleClick = () => {
+    triggerHaptic(haptic);
+    onClick?.();
+  };
+
+  const content = (
+    <>
+      <Watermark
+        aria-hidden
+        className="absolute -bottom-12 -right-12 lg:-bottom-14 lg:-right-14 pointer-events-none"
+        style={{ width: 260, height: 260, color: watermarkColor, opacity: 0.11, transform: "rotate(-8deg)" }}
+      />
+      <div className="absolute inset-0 grain-overlay opacity-[0.04] pointer-events-none" />
+
+      {ripples.map((r) => (
+        <motion.span
+          key={r.id}
+          className={`absolute rounded-full pointer-events-none ${rippleClassName}`}
+          style={{ left: r.x, top: r.y, width: 12, height: 12, marginLeft: -6, marginTop: -6 }}
+          initial={{ scale: 0, opacity: 0.4 }}
+          animate={{ scale: 18, opacity: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          onAnimationComplete={() => removeRipple(r.id)}
+        />
+      ))}
+
+      <h2 className={`relative font-black uppercase tracking-tight text-2xl lg:text-3xl leading-tight ${titleClassName}`}>
+        {title}
+      </h2>
+      <p className={`relative text-[12px] font-bold mt-1 ${subtitleClassName}`}>
+        {subtitle}
+      </p>
+      <p className={`relative flex items-center justify-end gap-1 text-[11px] italic font-semibold mt-3 ${microCtaClassName}`}>
+        {microCta}
+        <motion.span
+          initial={{ x: 0 }}
+          animate={{ x: [0, 3, 0, 3, 0] }}
+          transition={{ duration: 1, delay: 0.7 + nudgeDelay, ease: "easeInOut" }}
+          className="inline-flex"
+        >
+          <ChevronRight size={13} strokeWidth={3} />
+        </motion.span>
+      </p>
+    </>
+  );
+
+  const className =
+    "relative w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left p-5 lg:p-6 flex flex-col justify-end cursor-pointer transition-all duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] lg:hover:brightness-105 active:scale-[0.98] shadow-2xl";
+
+  if (href) {
+    return (
+      <Link href={href} onClick={handleClick} onPointerDown={handlePointerDown} className={className} style={{ background: gradient }}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button type="button" onClick={handleClick} onPointerDown={handlePointerDown} className={className} style={{ background: gradient }}>
+      {content}
+    </button>
+  );
+};

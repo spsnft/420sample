@@ -14,6 +14,7 @@ import { BotanicalDecor } from "@/components/decor/BotanicalDecor"
 import { Consultation } from "@/components/modals"
 import { Reveal } from "@/components/motion/Reveal"
 import { InfoCard } from "@/components/cards/InfoCard"
+import { HeroCard } from "@/components/cards/HeroCard"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
 
@@ -21,6 +22,13 @@ import { triggerHaptic } from "@/lib/utils"
 // down from each door's own gradient, not white/accent-gold.
 const GOLD_DOOR_WATERMARK = "#8B6A38";
 const OLIVE_DOOR_WATERMARK = "#142117";
+
+// Google's classic maps iframe embed (no API key) takes `hl`, not the
+// `language` param used by the newer /maps/embed/v1/ endpoint — same idea,
+// different query key. `en`/`th`/`ru` map 1:1 to our Language type.
+function localizedMapSrc(src: string, lang: Language) {
+  return `${src}&hl=${lang}`;
+}
 
 export default function HomeClient() {
   const { lang } = useCart();
@@ -35,7 +43,7 @@ export default function HomeClient() {
 
   return (
     <div className="relative min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans overflow-hidden">
-      <BotanicalDecor className="absolute -top-8 -right-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] z-0" />
+      <BotanicalDecor className="absolute -top-10 -right-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] z-0" />
       <BotanicalDecor className="absolute -bottom-10 -left-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] rotate-180 z-0" />
 
       <Header safeLang={safeLang} sticky />
@@ -43,62 +51,46 @@ export default function HomeClient() {
       <main className="max-w-xl lg:max-w-4xl mx-auto space-y-6 relative z-10 pt-3">
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
           <Reveal>
-            <button
-              type="button"
+            <HeroCard
               onClick={openConsult}
-              className="relative w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left p-5 lg:p-6 flex flex-col justify-end transition-transform duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
-              style={{ background: "linear-gradient(135deg, #D4B67F 0%, #A67F3F 100%)" }}
-            >
-              <ShieldCheck
-                aria-hidden
-                className="absolute -bottom-8 -right-8 lg:-bottom-10 lg:-right-10 pointer-events-none"
-                style={{ width: 220, height: 220, color: GOLD_DOOR_WATERMARK, opacity: 0.08, transform: "rotate(-8deg)" }}
-              />
-              <div className="absolute inset-0 grain-overlay opacity-[0.04] pointer-events-none" />
-
-              <div className="relative w-[52px] h-[52px] rounded-full bg-brand-primary/10 border border-brand-primary/25 flex items-center justify-center text-brand-primary/70 mb-3 shrink-0">
-                <ShieldCheck size={24} />
-              </div>
-              <h2 className="relative text-brand-primary font-black uppercase tracking-tight text-xl lg:text-2xl leading-tight">
-                {t.heroDoorCertTitle}
-              </h2>
-              <p className="relative text-brand-primary/70 text-[12px] font-bold mt-1">
-                {t.heroDoorCertSubtitle}
-              </p>
-            </button>
+              haptic="light"
+              gradient="linear-gradient(135deg, #D4B67F 0%, #A67F3F 100%)"
+              watermarkIcon={ShieldCheck}
+              watermarkColor={GOLD_DOOR_WATERMARK}
+              title={t.heroDoorCertTitle}
+              titleClassName="text-brand-primary"
+              subtitle={t.heroDoorCertSubtitle}
+              subtitleClassName="text-brand-primary/70"
+              microCta={t.heroDoorCertMicroCta}
+              microCtaClassName="text-brand-primary/60"
+              rippleClassName="bg-brand-primary/15"
+            />
           </Reveal>
 
           <Reveal delay={0.08}>
-            <Link
+            <HeroCard
               href="/menu"
-              onClick={() => triggerHaptic('medium')}
-              className="relative w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left p-5 lg:p-6 flex flex-col justify-end transition-transform duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
-              style={{ background: "linear-gradient(135deg, #3A543F 0%, #1E3322 100%)" }}
-            >
-              <Leaf
-                aria-hidden
-                className="absolute -bottom-8 -right-8 lg:-bottom-10 lg:-right-10 pointer-events-none"
-                style={{ width: 220, height: 220, color: OLIVE_DOOR_WATERMARK, opacity: 0.08, transform: "rotate(-8deg)" }}
-              />
-              <div className="absolute inset-0 grain-overlay opacity-[0.04] pointer-events-none" />
-
-              <div className="relative w-[52px] h-[52px] rounded-full bg-brand-light/10 border border-brand-light/25 flex items-center justify-center text-brand-light/80 mb-3 shrink-0">
-                <Leaf size={24} />
-              </div>
-              <h2 className="relative text-brand-light font-black uppercase tracking-tight text-xl lg:text-2xl leading-tight">
-                {t.heroDoorMenuTitle}
-              </h2>
-              <p className="relative text-brand-light/70 text-[12px] font-bold mt-1">
-                {t.heroDoorMenuSubtitle}
-              </p>
-            </Link>
+              haptic="medium"
+              gradient="linear-gradient(135deg, #3A543F 0%, #1E3322 100%)"
+              watermarkIcon={Leaf}
+              watermarkColor={OLIVE_DOOR_WATERMARK}
+              title={t.heroDoorMenuTitle}
+              titleClassName="text-brand-light"
+              subtitle={t.heroDoorMenuSubtitle}
+              subtitleClassName="text-brand-light/70"
+              microCta={t.heroDoorMenuMicroCta}
+              microCtaClassName="text-brand-light/60"
+              rippleClassName="bg-white/20"
+              nudgeDelay={0.15}
+            />
           </Reveal>
         </section>
 
         <Reveal>
           <section className="py-8 lg:py-14 text-center space-y-3">
+            {/* Hardcoded in English across all locales — not translated (see item 7). */}
             <p className="font-serif text-[28px] sm:text-[36px] lg:text-[44px] text-brand-light leading-snug tracking-tight">
-              {t.pullQuote}
+              Cannabis. Done properly.
             </p>
             <p className="text-[15px] sm:text-[17px] font-bold text-brand-light/60">
               {t.aboutLead}
@@ -117,7 +109,7 @@ export default function HomeClient() {
               </div>
               <div className="gradient-ring rounded-card overflow-hidden">
                 <iframe
-                  src={siteConfig.mapEmbedSrc}
+                  src={localizedMapSrc(siteConfig.mapEmbedSrc, safeLang)}
                   className="w-full h-56 lg:h-full lg:min-h-[224px] border-0 block"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -127,7 +119,7 @@ export default function HomeClient() {
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-stretch">
             <Reveal delay={0.16}>
               <InfoCard icon={MapPin} label={t.addressLabel} value={siteConfig.address} />
             </Reveal>
