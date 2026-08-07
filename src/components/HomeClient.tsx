@@ -3,7 +3,7 @@ import * as React from "react"
 import Link from "next/link"
 import {
   MapPin, Clock, ShieldCheck, Star, Instagram, ArrowRight,
-  Image as ImageIcon, Stethoscope, BadgeCheck, Leaf, Droplet, Cookie, Package,
+  Image as ImageIcon, Leaf, Cigarette, Flame,
 } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
@@ -12,21 +12,23 @@ import { Header } from "@/components/layout/Header"
 import { LineIcon, WhatsAppIcon } from "@/components/icons/BrandIcons"
 import { BotanicalDecor } from "@/components/decor/BotanicalDecor"
 import { Consultation } from "@/components/modals"
+import { Reveal } from "@/components/motion/Reveal"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
-
-const MENU_CATEGORIES = [
-  { icon: Leaf, label: "Buds" },
-  { icon: Droplet, label: "Extracts" },
-  { icon: Cookie, label: "Edibles" },
-  { icon: Package, label: "Joints" },
-];
 
 export default function HomeClient() {
   const { lang } = useCart();
   const safeLang = (lang || 'en') as Language;
   const t = translations[safeLang] || translations.en;
   const [showConsultModal, setShowConsultModal] = React.useState(false);
+
+  const openConsult = () => { triggerHaptic('light'); setShowConsultModal(true); };
+
+  const MENU_CATEGORIES = [
+    { icon: Leaf, label: "Flowers" },
+    { icon: Cigarette, label: "Joints" },
+    { icon: Flame, label: t.accessories },
+  ];
 
   return (
     <div className="relative min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans overflow-hidden">
@@ -42,6 +44,42 @@ export default function HomeClient() {
           </p>
         </section>
 
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
+          <Reveal>
+            <button
+              type="button"
+              onClick={openConsult}
+              className="w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left p-5 lg:p-6 flex flex-col justify-end transition-transform duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
+              style={{ background: "linear-gradient(135deg, #D4B67F 0%, #A67F3F 100%)" }}
+            >
+              <ShieldCheck size={26} className="text-brand-primary/60 mb-2" />
+              <h2 className="text-brand-primary font-black uppercase tracking-tight text-xl lg:text-2xl leading-tight">
+                {t.heroDoorCertTitle}
+              </h2>
+              <p className="text-brand-primary/70 text-[12px] font-bold mt-1">
+                {t.heroDoorCertSubtitle}
+              </p>
+            </button>
+          </Reveal>
+
+          <Reveal delay={0.08}>
+            <Link
+              href="/menu"
+              onClick={() => triggerHaptic('medium')}
+              className="w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left p-5 lg:p-6 flex flex-col justify-end transition-transform duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
+              style={{ background: "linear-gradient(135deg, #3A543F 0%, #1E3322 100%)" }}
+            >
+              <Leaf size={26} className="text-brand-light/60 mb-2" />
+              <h2 className="text-brand-light font-black uppercase tracking-tight text-xl lg:text-2xl leading-tight">
+                {t.heroDoorMenuTitle}
+              </h2>
+              <p className="text-brand-light/70 text-[12px] font-bold mt-1">
+                {t.heroDoorMenuSubtitle}
+              </p>
+            </Link>
+          </Reveal>
+        </section>
+
         <section className="p-5 lg:p-6 rounded-card bg-gradient-to-br from-brand-secondary/20 via-black/40 to-black/80 border border-brand-secondary/40 shadow-2xl">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-9 h-9 rounded-card bg-brand-secondary/20 border border-brand-secondary/40 flex items-center justify-center text-brand-secondary shrink-0">
@@ -52,21 +90,38 @@ export default function HomeClient() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mt-4 mb-4">
-            {[
-              { icon: MapPin, text: t.medSteps[0] },
-              { icon: Stethoscope, text: t.medSteps[1] },
-              { icon: BadgeCheck, text: t.medSteps[2] },
-            ].map((step, i) => (
-              <div key={i} className="gradient-ring rounded-button">
-                <div className="p-3 rounded-button bg-black/20 h-full flex items-center gap-3 lg:flex-col lg:text-center lg:gap-2">
-                  <div className="w-9 h-9 rounded-full bg-brand-secondary/15 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
-                    <step.icon size={16} />
-                  </div>
-                  <p className="text-[12px] font-bold text-brand-light/80 leading-snug">{step.text}</p>
-                </div>
+          <div className="mt-5 mb-4">
+            {/* Desktop: horizontal stepper, connecting line spans circle centers */}
+            <div className="hidden lg:block relative">
+              <div className="absolute top-5 left-[16.6%] right-[16.6%] h-px bg-brand-secondary/40" />
+              <div className="relative flex">
+                {t.medSteps.map((step, i) => (
+                  <Reveal key={i} delay={i * 0.12} className="flex-1 flex flex-col items-center text-center gap-2 px-2">
+                    <div className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-black text-[13px] bg-brand-secondary text-brand-primary shadow-lg shadow-brand-secondary/20 shrink-0">
+                      {i + 1}
+                    </div>
+                    <p className="text-[12px] font-bold text-brand-light/80 leading-snug">{step}</p>
+                  </Reveal>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Mobile: vertical stepper, self-sizing connector */}
+            <div className="lg:hidden flex flex-col">
+              {t.medSteps.map((step, i) => (
+                <Reveal key={i} delay={i * 0.12} className="flex gap-3">
+                  <div className="flex flex-col items-center">
+                    <div className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center font-black text-[13px] bg-brand-secondary text-brand-primary shadow-lg shadow-brand-secondary/20">
+                      {i + 1}
+                    </div>
+                    {i < t.medSteps.length - 1 && (
+                      <div className="w-px flex-1 my-1 bg-brand-secondary/30" />
+                    )}
+                  </div>
+                  <p className="text-[12px] font-bold text-brand-light/80 leading-snug pb-5">{step}</p>
+                </Reveal>
+              ))}
+            </div>
           </div>
 
           <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-5">
@@ -79,7 +134,7 @@ export default function HomeClient() {
 
           <button
             type="button"
-            onClick={() => { triggerHaptic('light'); setShowConsultModal(true); }}
+            onClick={openConsult}
             className="w-full h-14 rounded-button border border-brand-secondary/30 text-brand-secondary font-bold uppercase tracking-wide text-[11px] active:scale-95 transition-all hover:bg-brand-secondary/10"
           >
             {t.consultCta}
@@ -92,16 +147,16 @@ export default function HomeClient() {
               {t.menuTeaserTitle}
             </h2>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-              {MENU_CATEGORIES.map((cat) => (
-                <div key={cat.label} className="gradient-ring rounded-button">
-                  <div className="p-4 rounded-button bg-black/20 flex flex-col items-center gap-2 text-center">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-5">
+              {MENU_CATEGORIES.map((cat, i) => (
+                <Reveal key={cat.label} delay={i * 0.08} className="gradient-ring rounded-button">
+                  <div className="p-4 rounded-button bg-black/20 flex flex-col items-center gap-2 text-center transition-transform duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.03]">
                     <div className="w-10 h-10 rounded-full bg-brand-secondary/15 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary">
                       <cat.icon size={18} />
                     </div>
                     <span className="text-[11px] font-black uppercase tracking-wide text-brand-light/80">{cat.label}</span>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
 
@@ -117,6 +172,14 @@ export default function HomeClient() {
             </div>
           </section>
         </div>
+
+        <Reveal>
+          <section className="py-8 lg:py-14 text-center">
+            <p className="font-serif text-[28px] sm:text-[36px] lg:text-[44px] text-brand-light leading-snug tracking-tight">
+              {t.pullQuote}
+            </p>
+          </section>
+        </Reveal>
 
         <div className="gradient-ring rounded-card">
           <section className="p-5 rounded-card bg-white/5 shadow-xl">
@@ -138,7 +201,7 @@ export default function HomeClient() {
         </div>
 
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-          <div className="gradient-ring rounded-card">
+          <Reveal className="gradient-ring rounded-card">
             <div className="p-4 rounded-card bg-white/5 flex items-start gap-3">
               <div className="w-9 h-9 rounded-full bg-brand-secondary/15 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
                 <MapPin size={16} />
@@ -148,9 +211,9 @@ export default function HomeClient() {
                 <p className="text-[13px] font-bold text-brand-light leading-snug">{siteConfig.address}</p>
               </div>
             </div>
-          </div>
+          </Reveal>
 
-          <div className="gradient-ring rounded-card">
+          <Reveal delay={0.08} className="gradient-ring rounded-card">
             <div className="p-4 rounded-card bg-white/5 flex items-start gap-3">
               <div className="w-9 h-9 rounded-full bg-brand-secondary/15 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
                 <Clock size={16} />
@@ -160,9 +223,9 @@ export default function HomeClient() {
                 <p className="text-[13px] font-bold text-brand-light leading-snug tracking-[0.1em]">{siteConfig.workingHours}</p>
               </div>
             </div>
-          </div>
+          </Reveal>
 
-          <div className="gradient-ring rounded-card">
+          <Reveal delay={0.16} className="gradient-ring rounded-card">
             <div className="p-4 rounded-card bg-white/5 flex items-start gap-3">
               <div className="w-9 h-9 rounded-full bg-brand-secondary/15 border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0">
                 <Star size={16} />
@@ -174,7 +237,7 @@ export default function HomeClient() {
                 </p>
               </div>
             </div>
-          </div>
+          </Reveal>
         </section>
 
         <div className="gradient-ring rounded-card overflow-hidden shadow-xl">
