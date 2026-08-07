@@ -2,9 +2,9 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronDown, Calendar } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
-import { Language, translations } from "@/lib/translations"
+import { Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
 import { siteConfig } from "@/config/site"
 
@@ -12,7 +12,7 @@ const LANGUAGES: Language[] = ['en', 'th', 'ru'];
 
 interface HeaderProps {
   safeLang: Language;
-  onConsultClick?: () => void;
+  sticky?: boolean;
 }
 
 const LanguageDropdown: React.FC<{ safeLang: Language; onSelect: (l: Language) => void }> = ({ safeLang, onSelect }) => {
@@ -75,14 +75,13 @@ const LanguageDropdown: React.FC<{ safeLang: Language; onSelect: (l: Language) =
   );
 };
 
-export const Header: React.FC<HeaderProps> = ({ safeLang, onConsultClick }) => {
+export const Header: React.FC<HeaderProps> = ({ safeLang, sticky }) => {
   const { setLang } = useCart();
-  const t = translations[safeLang] || translations.en;
 
   return (
     <header
       className={
-        onConsultClick
+        sticky
           ? "sticky top-0 z-[100] -mx-4 px-4 py-3 mb-4 bg-brand-primary/90 backdrop-blur-xl border-b border-white/5"
           : "relative z-[100] mb-4"
       }
@@ -98,18 +97,6 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, onConsultClick }) => {
 
           <LanguageDropdown safeLang={safeLang} onSelect={setLang} />
         </div>
-
-        {onConsultClick && (
-          <button
-            type="button"
-            onClick={() => { triggerHaptic('light'); onConsultClick(); }}
-            aria-label={t.navConsultCta}
-            className="h-9 pl-3 pr-3 sm:pr-4 flex items-center gap-2 rounded-full border border-brand-secondary text-brand-secondary font-black uppercase tracking-wide text-[11px] active:scale-95 transition-all hover:bg-brand-secondary/10 shrink-0"
-          >
-            <Calendar size={14} className="shrink-0" />
-            <span className="hidden sm:inline whitespace-nowrap">{t.navConsultCta}</span>
-          </button>
-        )}
       </div>
     </header>
   );
