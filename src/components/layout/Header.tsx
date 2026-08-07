@@ -81,15 +81,18 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky }) => {
   return (
     <header
       className={
+        // Fully opaque (not translucent) so decorative background elements —
+        // e.g. the hero corner leaf — tuck cleanly under the header instead
+        // of showing a blurred, uneven smear at the seam.
         sticky
-          ? "sticky top-0 z-[100] -mx-4 px-4 py-3 mb-4 bg-brand-primary/90 backdrop-blur-xl border-b border-white/5"
+          ? "sticky top-0 z-[100] -mx-4 px-4 py-3 mb-4 bg-brand-primary border-b border-white/5"
           : "relative z-[100] mb-4"
       }
     >
       <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
-        <Link href="/" className="flex items-center gap-2 min-w-0 shrink-0">
-          <Image src="/images/logo.svg" priority width={64} height={64} className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0" alt={siteConfig.name} />
-          <span className="text-[13px] sm:text-[15px] font-black uppercase tracking-tight text-brand-light whitespace-nowrap">
+        <Link href="/" className="flex items-center gap-2.5 min-w-0 shrink-0">
+          <Image src="/images/logo.svg" priority width={64} height={64} className="w-auto h-8 sm:h-9 md:h-10 object-contain shrink-0" alt={siteConfig.name} />
+          <span className="text-[18px] sm:text-[21px] font-black uppercase tracking-wide text-brand-light whitespace-nowrap">
             {siteConfig.name}
           </span>
         </Link>

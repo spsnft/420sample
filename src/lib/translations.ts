@@ -22,9 +22,12 @@ export interface TranslationDictionary {
   // Home page
   heroDoorCertTitle: string;
   heroDoorCertSubtitle: string;
+  heroDoorCertMicroCta: string;
   heroDoorMenuTitle: string;
   heroDoorMenuSubtitle: string;
-  pullQuote: string;
+  heroDoorMenuMicroCta: string;
+  // "Cannabis. Done properly." is hardcoded in English across all locales
+  // (not translated) — see HomeClient.
   addressLabel: string;
   hoursLabel: string;
   reviewsLabel: string;
@@ -67,13 +70,14 @@ export const translations: Record<Language, TranslationDictionary> = {
     // Home page
     heroDoorCertTitle: "Get Your Certificate",
     heroDoorCertSubtitle: "Free consultation, issued on the spot",
+    heroDoorCertMicroCta: "Takes 2 minutes",
     heroDoorMenuTitle: "Browse the Menu",
     heroDoorMenuSubtitle: "Flowers, joints & accessories",
-    pullQuote: "Cannabis. Done properly.",
+    heroDoorMenuMicroCta: "See today's stock",
     addressLabel: "Address",
     hoursLabel: "Working hours",
     reviewsLabel: "Reviews",
-    aboutLead: "What a modern dispensary should feel like.",
+    aboutLead: "What a modern dispensary should feel like",
     aboutPhotoLabel: "Interior photo coming soon",
     certSteps: [
       "Visit the store",
@@ -116,13 +120,14 @@ export const translations: Record<Language, TranslationDictionary> = {
     // Home page
     heroDoorCertTitle: "Оформить справку",
     heroDoorCertSubtitle: "Бесплатная консультация, справка сразу на месте",
+    heroDoorCertMicroCta: "Займёт 2 минуты",
     heroDoorMenuTitle: "Смотреть меню",
     heroDoorMenuSubtitle: "Цветы, джойнты и аксессуары",
-    pullQuote: "Каннабис. Как надо.",
+    heroDoorMenuMicroCta: "Смотреть наличие на сегодня",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
-    aboutLead: "Каким должен быть современный диспансер.",
+    aboutLead: "Каким должен быть современный диспансер",
     aboutPhotoLabel: "Фото интерьера — скоро",
     certSteps: [
       "Приходите в магазин",
@@ -165,9 +170,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     // Home page
     heroDoorCertTitle: "ขอใบรับรองของคุณ",
     heroDoorCertSubtitle: "ปรึกษาฟรี ออกใบรับรองทันทีที่ร้าน",
+    heroDoorCertMicroCta: "ใช้เวลาแค่ 2 นาที",
     heroDoorMenuTitle: "ดูเมนู",
     heroDoorMenuSubtitle: "ดอก โจ๊ยท์ และอุปกรณ์เสริม",
-    pullQuote: "กัญชา ทำอย่างถูกต้อง",
+    heroDoorMenuMicroCta: "ดูสต๊อกวันนี้",
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     reviewsLabel: "รีวิว",
