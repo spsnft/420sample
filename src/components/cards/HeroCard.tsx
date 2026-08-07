@@ -73,7 +73,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({
       <Watermark
         aria-hidden
         className="absolute -bottom-12 -right-12 lg:-bottom-14 lg:-right-14 pointer-events-none"
-        style={{ width: 260, height: 260, color: watermarkColor, opacity: 0.11, transform: "rotate(-8deg)" }}
+        style={{ width: 260, height: 260, color: watermarkColor, opacity: 0.12, transform: "rotate(-8deg)" }}
       />
       <div className="absolute inset-0 grain-overlay opacity-[0.04] pointer-events-none" />
 
