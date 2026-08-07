@@ -21,6 +21,11 @@ export interface TranslationDictionary {
 
   // Home page
   heroTagline: string;
+  heroDoorCertTitle: string;
+  heroDoorCertSubtitle: string;
+  heroDoorMenuTitle: string;
+  heroDoorMenuSubtitle: string;
+  pullQuote: string;
   addressLabel: string;
   hoursLabel: string;
   reviewsLabel: string;
@@ -69,6 +74,11 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroTagline: "Your trusted access to medical cannabis",
+    heroDoorCertTitle: "Get Your Certificate",
+    heroDoorCertSubtitle: "Free consultation, issued on the spot",
+    heroDoorMenuTitle: "Browse the Menu",
+    heroDoorMenuSubtitle: "Flowers, joints & accessories",
+    pullQuote: "Cannabis, done properly.",
     addressLabel: "Address",
     hoursLabel: "Working hours",
     reviewsLabel: "Reviews",
@@ -126,6 +136,11 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroTagline: "Надёжный доступ к медицинскому каннабису",
+    heroDoorCertTitle: "Оформить справку",
+    heroDoorCertSubtitle: "Бесплатная консультация, справка сразу на месте",
+    heroDoorMenuTitle: "Смотреть меню",
+    heroDoorMenuSubtitle: "Цветы, джойнты и аксессуары",
+    pullQuote: "Каннабис, сделанный правильно.",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
@@ -183,6 +198,11 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroTagline: "การเข้าถึงกัญชาทางการแพทย์ที่เชื่อถือได้",
+    heroDoorCertTitle: "ขอใบรับรองของคุณ",
+    heroDoorCertSubtitle: "ปรึกษาฟรี ออกใบรับรองทันทีที่ร้าน",
+    heroDoorMenuTitle: "ดูเมนู",
+    heroDoorMenuSubtitle: "ดอก โจ๊ยท์ และอุปกรณ์เสริม",
+    pullQuote: "กัญชา ที่ทำอย่างถูกต้อง",
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     reviewsLabel: "รีวิว",
