@@ -87,16 +87,14 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky }) => {
       }
     >
       <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <Image src="/images/logo.svg" priority width={64} height={64} className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0" alt={siteConfig.name} />
-            <span className="text-[13px] sm:text-[15px] font-black uppercase tracking-tight text-brand-light whitespace-nowrap">
-              {siteConfig.name}
-            </span>
-          </Link>
+        <Link href="/" className="flex items-center gap-2 min-w-0 shrink-0">
+          <Image src="/images/logo.svg" priority width={64} height={64} className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0" alt={siteConfig.name} />
+          <span className="text-[13px] sm:text-[15px] font-black uppercase tracking-tight text-brand-light whitespace-nowrap">
+            {siteConfig.name}
+          </span>
+        </Link>
 
-          <LanguageDropdown safeLang={safeLang} onSelect={setLang} />
-        </div>
+        <LanguageDropdown safeLang={safeLang} onSelect={setLang} />
       </div>
     </header>
   );
