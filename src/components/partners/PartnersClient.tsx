@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import Link from "next/link"
-import { MapPin, Clock, ShieldCheck, Star, ArrowRight, Search } from "lucide-react"
+import { ArrowRight, Search } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
 import type { Language } from "@/lib/translations"
@@ -11,40 +11,12 @@ import { WhatsAppIcon } from "@/components/icons/BrandIcons"
 import { StatusPill } from "@/components/staff/StatusPill"
 import { QuotaBar } from "@/components/staff/QuotaBar"
 import { DemoLoginButton } from "@/components/partners/DemoLoginButton"
+import { DeviceMockup } from "@/components/partners/DeviceMockup"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
 
-// Stylized recreations of the public homepage and the staff panel, built
-// from the same components/tokens as the real screens — not real captures.
-// Swap for the real screen recordings from ТЗ §4 when they're shot.
-function MockClientScreen() {
-  return (
-    <div className="gradient-ring rounded-card mb-4">
-      <div className="p-4 rounded-card bg-black/30 space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-black uppercase tracking-wide text-brand-light/40">buds.digital</span>
-          <span className="h-6 px-2.5 inline-flex items-center gap-1 rounded-full bg-white/5 border border-white/10">
-            <Star size={11} className="text-brand-secondary fill-brand-secondary" />
-            <span className="text-[11px] font-black text-brand-light">5.0</span>
-          </span>
-        </div>
-        <div className="flex items-center gap-2 text-brand-light/60">
-          <MapPin size={13} className="text-brand-secondary shrink-0" />
-          <span className="text-[11px] font-bold truncate">{siteConfig.address}</span>
-        </div>
-        <div className="flex items-center gap-2 text-brand-light/60">
-          <Clock size={13} className="text-brand-secondary shrink-0" />
-          <span className="text-[11px] font-bold">{siteConfig.workingHours}</span>
-        </div>
-        <div className="p-2.5 rounded-button bg-brand-secondary/10 border border-brand-secondary/30 flex items-center gap-2">
-          <ShieldCheck size={14} className="text-brand-secondary shrink-0" />
-          <span className="text-[11px] font-bold text-brand-light">Medical Pass PT.33 — on site</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
+// Stylized recreation of the staff panel, built from the same
+// components/tokens as the real screen — not a real capture.
 function MockStaffScreen() {
   return (
     <div className="gradient-ring rounded-card mb-4">
@@ -72,11 +44,21 @@ export default function PartnersClient() {
     <div className="min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans">
       <Header safeLang={safeLang} />
       <p className="max-w-xl mx-auto text-center text-[10px] font-black uppercase tracking-[0.2em] text-brand-light/30 -mt-2 mb-4">
-        by buds.digital
+        <Link
+          href="https://tsvetkov.site"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-brand-light/60 transition-colors"
+        >
+          by FT.Agency
+        </Link>
       </p>
 
       <main className="max-w-xl mx-auto space-y-6 pb-10">
         <section className="text-center py-4">
+          <span className="inline-flex items-center gap-1.5 h-7 px-3 mb-3 rounded-full bg-brand-secondary/10 border border-brand-secondary/30 text-[11px] font-black uppercase tracking-wide text-brand-secondary">
+            {t.heroBadge}
+          </span>
           <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light">
             {t.heroTitle}
           </h1>
@@ -87,8 +69,8 @@ export default function PartnersClient() {
 
         <div className="gradient-ring rounded-card">
         <section className="p-5 rounded-card bg-white/5">
-          <MockClientScreen />
-          <h2 className="text-base font-black uppercase tracking-tight text-brand-light mb-2">
+          <DeviceMockup />
+          <h2 className="text-base font-black uppercase tracking-tight text-brand-light mb-2 mt-4">
             {t.block1Title}
           </h2>
           <p className="text-[13px] text-brand-light/70 leading-relaxed mb-4">
