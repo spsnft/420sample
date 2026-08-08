@@ -103,8 +103,8 @@ export const HeroCard: React.FC<HeroCardProps> = ({
         />
       ))}
 
-      <div className="relative w-full h-full flex flex-col justify-center gap-1 lg:gap-1.5 p-5 lg:p-6">
-        <h2 className={`font-black uppercase tracking-tight text-2xl lg:text-3xl leading-tight ${titleClassName}`}>
+      <div className="relative w-full flex flex-col justify-center gap-1.5 lg:gap-2 py-7 px-5 lg:py-9 lg:px-7">
+        <h2 className={`font-black uppercase tracking-tight text-3xl lg:text-4xl leading-tight ${titleClassName}`}>
           {title}
         </h2>
         <p className={`flex items-center gap-1 text-[11px] italic font-semibold ${taglineClassName}`}>
@@ -123,7 +123,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({
   );
 
   const className =
-    "relative flex w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left cursor-pointer transition-all duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] lg:hover:brightness-105 active:scale-[0.98] shadow-2xl";
+    "relative flex w-full rounded-card overflow-hidden text-left cursor-pointer transition-all duration-200 border border-white/15 shadow-[0_12px_36px_-8px_rgba(0,0,0,0.55)] lg:hover:-translate-y-1 lg:hover:scale-[1.02] lg:hover:brightness-105 active:scale-[0.98]";
 
   if (href) {
     return (
