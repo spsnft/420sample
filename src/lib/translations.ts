@@ -25,12 +25,11 @@ export interface TranslationDictionary {
   newOrderCta: string;
 
   // Home page
-  heroDoorCertTitle: string;
   heroDoorCertLine: string;
-  heroDoorMenuTitle: string;
   heroDoorMenuLine: string;
   // "Cannabis. Done properly." is hardcoded in English across all locales
-  // (not translated) — see HomeClient.
+  // (not translated) — see HomeClient. Hero card titles ("Get Medical
+  // Certificate" / "Explore The Today's Menu") are hardcoded the same way.
   addressLabel: string;
   hoursLabel: string;
   reviewsLabel: string;
@@ -71,10 +70,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "Start New Order",
 
     // Home page
-    heroDoorCertTitle: "Get Your Certificate",
     heroDoorCertLine: "Free, on the spot — stay legally protected",
-    heroDoorMenuTitle: "Browse the Menu",
-    heroDoorMenuLine: "Fresh stock, updated daily",
+    heroDoorMenuLine: "Full selection, always in stock",
     addressLabel: "Address",
     hoursLabel: "Working hours",
     reviewsLabel: "Reviews",
@@ -83,7 +80,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     certSteps: [
       { title: "Send", description: "your request within a minute" },
       { title: "Confirm", description: "details with our manager" },
-      { title: "Receive", description: "your certificate the next day, valid for 30 days" },
+      { title: "Receive", description: "your certificate the next day" },
     ],
     contactsTitle: "Contact & Follow",
     footerDisclaimer: [
@@ -91,7 +88,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "Information on this site is for reference only and does not constitute cannabis advertising.",
     ],
 
-    consultCta: "Request a Free Consultation",
+    consultCta: "Free Consultation",
     consultNameLabel: "Name",
     consultPhoneLabel: "Phone",
     consultConsentLabel: "I agree to the processing of my personal data in accordance with PDPA.",
@@ -119,19 +116,17 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "Новый заказ",
 
     // Home page
-    heroDoorCertTitle: "Оформить справку",
     heroDoorCertLine: "Бесплатно, на месте — под защитой закона",
-    heroDoorMenuTitle: "Смотреть меню",
-    heroDoorMenuLine: "Свежий товар, обновляем каждый день",
+    heroDoorMenuLine: "Полный ассортимент, всегда в наличии",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
-    aboutLead: "Каким должен быть современный диспансер",
+    aboutLead: "Каким должен быть современный диспенсари",
     aboutPhotoLabel: "Фото интерьера — скоро",
     certSteps: [
-      { title: "Отправить", description: "заявку в течение минуты" },
-      { title: "Подтвердить", description: "детали с нашим менеджером" },
-      { title: "Получить", description: "справку на следующий день, действует 30 дней" },
+      { title: "Отправьте", description: "заявку в течение минуты" },
+      { title: "Подтвердите", description: "детали с нашим менеджером" },
+      { title: "Получите", description: "справку на следующий день" },
     ],
     contactsTitle: "Контакты и соцсети",
     footerDisclaimer: [
@@ -139,7 +134,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "Информация на сайте носит справочный характер и не является рекламой каннабиса.",
     ],
 
-    consultCta: "Запросить бесплатную консультацию",
+    consultCta: "Бесплатная консультация",
     consultNameLabel: "Имя",
     consultPhoneLabel: "Телефон",
     consultConsentLabel: "Я согласен(на) на обработку персональных данных в соответствии с PDPA.",
@@ -167,19 +162,17 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "เริ่มคำสั่งซื้อใหม่",
 
     // Home page
-    heroDoorCertTitle: "ขอใบรับรองของคุณ",
     heroDoorCertLine: "ฟรี ออกทันทีที่ร้าน — อุ่นใจได้ตามกฎหมาย",
-    heroDoorMenuTitle: "ดูเมนู",
-    heroDoorMenuLine: "สต๊อกสดใหม่ อัปเดตทุกวัน",
+    heroDoorMenuLine: "สินค้าครบครัน พร้อมจำหน่ายเสมอ",
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     reviewsLabel: "รีวิว",
     aboutLead: "นี่คือสิ่งที่ร้านกัญชาสมัยใหม่ควรจะเป็น",
     aboutPhotoLabel: "ภาพภายในร้าน — เร็วๆ นี้",
     certSteps: [
-      { title: "ส่งคำขอ", description: "ภายในหนึ่งนาที ใช้แค่ชื่อและเบอร์โทร" },
+      { title: "ส่ง", description: "คำขอของคุณภายในหนึ่งนาที" },
       { title: "ยืนยัน", description: "รายละเอียดกับผู้จัดการของเรา" },
-      { title: "รับใบรับรอง", description: "ในวันถัดไป มีอายุ 30 วัน" },
+      { title: "รับ", description: "ใบรับรองของคุณในวันถัดไป" },
     ],
     contactsTitle: "ติดต่อและติดตามเรา",
     footerDisclaimer: [
@@ -187,7 +180,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "ข้อมูลบนเว็บไซต์นี้มีไว้เพื่อการอ้างอิงเท่านั้น ไม่ถือเป็นการโฆษณากัญชา",
     ],
 
-    consultCta: "ขอรับคำปรึกษาฟรี",
+    consultCta: "คำปรึกษาฟรี",
     consultNameLabel: "ชื่อ",
     consultPhoneLabel: "เบอร์โทรศัพท์",
     consultConsentLabel: "ฉันยินยอมให้ประมวลผลข้อมูลส่วนบุคคลของฉันตาม PDPA",

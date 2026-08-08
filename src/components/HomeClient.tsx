@@ -12,7 +12,6 @@ import { Header } from "@/components/layout/Header"
 import { LineIcon, WhatsAppIcon } from "@/components/icons/BrandIcons"
 import { BotanicalDecor } from "@/components/decor/BotanicalDecor"
 import { Consultation } from "@/components/modals"
-import { Reveal } from "@/components/motion/Reveal"
 import { InfoCard } from "@/components/cards/InfoCard"
 import { HeroCard } from "@/components/cards/HeroCard"
 import { siteConfig } from "@/config/site"
@@ -56,91 +55,77 @@ export default function HomeClient() {
 
         <main className="max-w-xl lg:max-w-4xl mx-auto space-y-6 relative z-10 pt-3">
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
-            <Reveal>
-              <HeroCard
-                onClick={openConsult}
-                haptic="light"
-                gradient="linear-gradient(135deg, #D4B67F 0%, #A67F3F 100%)"
-                watermarkIcon={ShieldCheck}
-                watermarkColor={GOLD_DOOR_WATERMARK}
-                title={t.heroDoorCertTitle}
-                titleClassName="text-brand-primary"
-                tagline={t.heroDoorCertLine}
-                taglineClassName="text-brand-primary/60"
-                rippleClassName="bg-brand-primary/15"
-              />
-            </Reveal>
+            <HeroCard
+              onClick={openConsult}
+              haptic="light"
+              gradient="linear-gradient(135deg, #D4B67F 0%, #A67F3F 100%)"
+              watermarkIcon={ShieldCheck}
+              watermarkColor={GOLD_DOOR_WATERMARK}
+              title={<>GET MEDICAL<br />CERTIFICATE</>}
+              titleClassName="text-brand-primary"
+              tagline={t.heroDoorCertLine}
+              taglineClassName="text-brand-primary/60"
+              rippleClassName="bg-brand-primary/15"
+            />
 
-            <Reveal delay={0.08}>
-              <HeroCard
-                href="/menu"
-                haptic="medium"
-                gradient="linear-gradient(135deg, #3A543F 0%, #1E3322 100%)"
-                watermarkIcon={Leaf}
-                watermarkColor={OLIVE_DOOR_WATERMARK}
-                title={t.heroDoorMenuTitle}
-                titleClassName="text-brand-light"
-                tagline={t.heroDoorMenuLine}
-                taglineClassName="text-brand-light/60"
-                rippleClassName="bg-white/20"
-                nudgeDelay={0.15}
-              />
-            </Reveal>
+            <HeroCard
+              href="/menu"
+              haptic="medium"
+              gradient="linear-gradient(135deg, #3A543F 0%, #1E3322 100%)"
+              watermarkIcon={Leaf}
+              watermarkColor={OLIVE_DOOR_WATERMARK}
+              title={<>EXPLORE THE<br />TODAY&apos;S MENU</>}
+              titleClassName="text-brand-light"
+              tagline={t.heroDoorMenuLine}
+              taglineClassName="text-brand-light/60"
+              rippleClassName="bg-white/20"
+              nudgeDelay={0.15}
+            />
           </section>
 
-          <Reveal>
-            <section className="py-8 lg:py-14 text-center space-y-3">
-              {/* Hardcoded in English across all locales — not translated (see item 7). */}
-              <p className="font-serif text-[28px] sm:text-[36px] lg:text-[44px] text-brand-light leading-snug tracking-tight">
-                Cannabis. Done properly.
-              </p>
-              <p className="text-[15px] sm:text-[17px] font-bold text-brand-light/60">
-                {t.aboutLead}
-              </p>
-            </section>
-          </Reveal>
+          <section className="py-8 lg:py-14 text-center space-y-3">
+            {/* Hardcoded in English across all locales — not translated (see item 7). */}
+            <p className="font-serif text-[28px] sm:text-[36px] lg:text-[44px] text-brand-light leading-snug tracking-tight">
+              Cannabis. Done properly.
+            </p>
+            <p className="text-[15px] sm:text-[17px] font-bold text-brand-light/60">
+              {t.aboutLead}
+            </p>
+          </section>
 
           <section className="space-y-4">
-            <Reveal>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                <div className="gradient-ring rounded-card overflow-hidden">
-                  <div className="w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card bg-black/20 border border-dashed border-brand-secondary/25 flex flex-col items-center justify-center gap-2 text-brand-light/30">
-                    <ImageIcon size={22} />
-                    <span className="text-[10px] font-black uppercase tracking-wide">{t.aboutPhotoLabel}</span>
-                  </div>
-                </div>
-                <div className="gradient-ring rounded-card overflow-hidden">
-                  <iframe
-                    src={localizedMapSrc(siteConfig.mapEmbedSrc, safeLang)}
-                    className="w-full h-56 lg:h-full lg:min-h-[224px] border-0 block"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title={t.addressLabel}
-                  />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <div className="gradient-ring rounded-card overflow-hidden">
+                <div className="w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card bg-black/20 border border-dashed border-brand-secondary/25 flex flex-col items-center justify-center gap-2 text-brand-light/30">
+                  <ImageIcon size={22} />
+                  <span className="text-[10px] font-black uppercase tracking-wide">{t.aboutPhotoLabel}</span>
                 </div>
               </div>
-            </Reveal>
+              <div className="gradient-ring rounded-card overflow-hidden">
+                <iframe
+                  src={localizedMapSrc(siteConfig.mapEmbedSrc, safeLang)}
+                  className="w-full h-56 lg:h-full lg:min-h-[224px] border-0 block"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title={t.addressLabel}
+                />
+              </div>
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-stretch">
-              <Reveal delay={0.16}>
-                <InfoCard icon={MapPin} label={t.addressLabel} value={siteConfig.address} />
-              </Reveal>
+              <InfoCard icon={MapPin} label={t.addressLabel} value={siteConfig.address} />
 
-              <Reveal delay={0.22}>
-                <InfoCard
-                  icon={Clock}
-                  label={t.hoursLabel}
-                  value={<span className="tracking-[0.1em]">{siteConfig.workingHours}</span>}
-                />
-              </Reveal>
+              <InfoCard
+                icon={Clock}
+                label={t.hoursLabel}
+                value={<span className="tracking-[0.1em]">{siteConfig.workingHours}</span>}
+              />
 
-              <Reveal delay={0.28}>
-                <InfoCard
-                  icon={Star}
-                  label={t.reviewsLabel}
-                  value={`${siteConfig.trustBadge.rating} · ${siteConfig.trustBadge.reviews}`}
-                />
-              </Reveal>
+              <InfoCard
+                icon={Star}
+                label={t.reviewsLabel}
+                value={`${siteConfig.trustBadge.rating} · ${siteConfig.trustBadge.reviews}`}
+              />
             </div>
           </section>
 

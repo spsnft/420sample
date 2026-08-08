@@ -22,7 +22,7 @@ interface HeroCardProps {
   backgroundImage?: string;
   watermarkIcon: LucideIcon;
   watermarkColor: string;
-  title: string;
+  title: React.ReactNode;
   titleClassName: string;
   /** Muted italic line under the title, combining what used to be a
    *  separate subtitle and CTA hint — ends with the animated arrow. */
