@@ -4,9 +4,9 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 
 // Composited screenshot of buds.digital (header + hero cards + the
-// "Cannabis. Done properly." tagline), assembled from the live homepage at
-// the iPhone 13/14 logical viewport (390 wide, 2x export) and wrapped in a
-// minimal device frame. Recapture and swap the PNG in
+// "Cannabis. Done properly." tagline, padded out to a true iPhone 13/14
+// screen ratio of 390x844) assembled from the live homepage and wrapped in
+// a minimal device frame. Recapture and swap the PNG in
 // public/images/partners/customer-view.png whenever the live design changes.
 export function DeviceMockup() {
   // Drives the light-sweep off the frame's own viewport entry instead of a
@@ -16,7 +16,7 @@ export function DeviceMockup() {
   const [entered, setEntered] = React.useState(false);
 
   return (
-    <div className="mx-auto w-[90%] -rotate-[5deg]">
+    <div className="mx-auto w-full max-w-[300px] -rotate-[5deg]">
       <motion.div
         initial={{ opacity: 0, y: 12, filter: "drop-shadow(0 0px 0px rgba(0,0,0,0))" }}
         whileInView={{ opacity: 1, y: 0, filter: "drop-shadow(0 22px 38px rgba(0,0,0,0.55))" }}
@@ -30,9 +30,9 @@ export function DeviceMockup() {
             src="/images/partners/customer-view.png"
             alt="buds.digital home screen — hero cards and tagline"
             width={390}
-            height={645}
+            height={844}
             className="w-full h-auto block"
-            sizes="(min-width: 1024px) 260px, 90vw"
+            sizes="300px"
             priority
           />
           <motion.div
