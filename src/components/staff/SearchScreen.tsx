@@ -3,10 +3,18 @@ import * as React from "react"
 import Link from "next/link"
 import { Search } from "lucide-react"
 import { searchClientsAction } from "@/app/staff/actions"
-import type { ClientSearchResult } from "@/lib/staff/types"
+import type { ClientDirectoryEntry, ClientListPage, ClientSearchResult } from "@/lib/staff/types"
 import { StatusPill } from "./StatusPill"
+import { RecentlyViewedRow } from "./RecentlyViewedRow"
+import { ClientDirectoryTable } from "./ClientDirectoryTable"
+import { EmptyClientState } from "./EmptyClientState"
 
-export function SearchScreen() {
+interface SearchScreenProps {
+  recentlyViewed: ClientDirectoryEntry[];
+  clientsList: ClientListPage;
+}
+
+export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps) {
   const [query, setQuery] = React.useState("");
   const [results, setResults] = React.useState<ClientSearchResult[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
@@ -51,29 +59,40 @@ export function SearchScreen() {
         />
       </div>
 
-      {isSearching && (
-        <p className="text-[12px] text-brand-light/40 text-center py-4">Searching…</p>
-      )}
+      {query.trim() ? (
+        <>
+          {isSearching && (
+            <p className="text-[12px] text-brand-light/40 text-center py-4">Searching…</p>
+          )}
 
-      {!isSearching && query.trim() && results.length === 0 && (
-        <p className="text-[12px] text-brand-light/40 text-center py-4">No matches.</p>
-      )}
+          {!isSearching && results.length === 0 && (
+            <p className="text-[12px] text-brand-light/40 text-center py-4">No matches.</p>
+          )}
 
-      <div className="space-y-2">
-        {results.map((r) => (
-          <Link
-            key={`${r.client_id}:${r.pt33_number}`}
-            href={`/staff/clients/${r.client_id}`}
-            className="flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 transition-all"
-          >
-            <div className="min-w-0">
-              <p className="text-[14px] font-bold text-brand-light truncate">{r.client_name}</p>
-              <p className="text-[12px] text-brand-light/40">{r.pt33_number}</p>
-            </div>
-            <StatusPill status={r.status} />
-          </Link>
-        ))}
-      </div>
+          <div className="space-y-2">
+            {results.map((r) => (
+              <Link
+                key={`${r.client_id}:${r.pt33_number}`}
+                href={`/staff/clients/${r.client_id}`}
+                className="flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 transition-all"
+              >
+                <div className="min-w-0">
+                  <p className="text-[14px] font-bold text-brand-light truncate">{r.client_name}</p>
+                  <p className="text-[12px] text-brand-light/40">{r.pt33_number}</p>
+                </div>
+                <StatusPill status={r.status} />
+              </Link>
+            ))}
+          </div>
+        </>
+      ) : clientsList.total === 0 ? (
+        <EmptyClientState />
+      ) : (
+        <div className="space-y-6">
+          <RecentlyViewedRow clients={recentlyViewed} />
+          <ClientDirectoryTable initial={clientsList} />
+        </div>
+      )}
     </div>
   );
 }

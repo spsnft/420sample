@@ -1,5 +1,21 @@
 import { createClient } from "@/lib/supabase/server"
-import type { ClientCardData, ClientSearchResult, StaffProfile } from "./types"
+import type {
+  ClientCardData,
+  ClientDirectoryEntry,
+  ClientListPage,
+  ClientListSort,
+  ClientSearchResult,
+  StaffProfile,
+} from "./types"
+
+const CLIENT_LIST_PAGE_SIZE = 25;
+const RECENTLY_VIEWED_LIMIT = 8;
+
+const SORT_COLUMNS: Record<ClientListSort, { column: string; ascending: boolean }> = {
+  last_visit: { column: "last_visit_at", ascending: false },
+  name: { column: "client_name", ascending: true },
+  created_at: { column: "client_created_at", ascending: false },
+};
 
 export async function getCurrentStaff(): Promise<StaffProfile | null> {
   const supabase = createClient();
@@ -88,4 +104,81 @@ export async function getClientCard(clientId: string): Promise<ClientCardData | 
     prescriptions,
     purchases: (purchases ?? []) as ClientCardData["purchases"],
   };
+}
+
+// Best-effort — a failed view record should never block a staff member from
+// seeing the client card, so errors are logged, not thrown.
+export async function recordClientView(clientId: string): Promise<void> {
+  const staff = await getCurrentStaff();
+  if (!staff) return;
+
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("client_views")
+    .upsert(
+      { staff_id: staff.id, client_id: clientId, viewed_at: new Date().toISOString() },
+      { onConflict: "staff_id,client_id" }
+    );
+
+  if (error) console.error("recordClientView:", error.message);
+}
+
+export async function getRecentlyViewedClients(): Promise<ClientDirectoryEntry[]> {
+  const staff = await getCurrentStaff();
+  if (!staff) return [];
+
+  const supabase = createClient();
+  const { data: views, error: viewsError } = await supabase
+    .from("client_views")
+    .select("client_id")
+    .eq("staff_id", staff.id)
+    .order("viewed_at", { ascending: false })
+    .limit(RECENTLY_VIEWED_LIMIT);
+
+  if (viewsError) {
+    console.error("getRecentlyViewedClients (views):", viewsError.message);
+    return [];
+  }
+  if (!views || views.length === 0) return [];
+
+  const orderedIds = views.map((v) => v.client_id);
+  const { data: rows, error: rowsError } = await supabase
+    .from("clients_directory_view")
+    .select("client_id, client_name, pt33_number, status")
+    .in("client_id", orderedIds);
+
+  if (rowsError) {
+    console.error("getRecentlyViewedClients (rows):", rowsError.message);
+    return [];
+  }
+
+  const byId = new Map((rows ?? []).map((r) => [r.client_id, r as ClientDirectoryEntry]));
+  return orderedIds.map((id) => byId.get(id)).filter((r): r is ClientDirectoryEntry => Boolean(r));
+}
+
+export async function getClientsList(opts: {
+  sort?: ClientListSort;
+  page?: number;
+} = {}): Promise<ClientListPage> {
+  const sort = opts.sort ?? "last_visit";
+  const page = Math.max(0, opts.page ?? 0);
+  const from = page * CLIENT_LIST_PAGE_SIZE;
+  const to = from + CLIENT_LIST_PAGE_SIZE - 1;
+  const { column, ascending } = SORT_COLUMNS[sort];
+
+  const supabase = createClient();
+  const { data, count, error } = await supabase
+    .from("clients_directory_view")
+    .select("client_id, client_name, pt33_number, status, last_visit_at, client_created_at", { count: "exact" })
+    .order(column, { ascending })
+    .range(from, to);
+
+  if (error) {
+    console.error("getClientsList:", error.message);
+    return { rows: [], total: 0, hasMore: false };
+  }
+
+  const rows = (data ?? []) as ClientListPage["rows"];
+  const total = count ?? 0;
+  return { rows, total, hasMore: from + rows.length < total };
 }

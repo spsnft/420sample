@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getClientCard } from "@/lib/staff/queries"
+import { getClientCard, recordClientView } from "@/lib/staff/queries"
 import { ClientCard } from "@/components/staff/ClientCard"
 
 export const metadata: Metadata = {
@@ -9,7 +9,10 @@ export const metadata: Metadata = {
 }
 
 export default async function StaffClientPage({ params }: { params: { clientId: string } }) {
-  const data = await getClientCard(params.clientId);
+  const [data] = await Promise.all([
+    getClientCard(params.clientId),
+    recordClientView(params.clientId),
+  ]);
   if (!data) notFound();
 
   return <ClientCard data={data} />;

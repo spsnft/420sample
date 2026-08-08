@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import { isSupabaseConfigured } from "@/lib/supabase/config"
 import { getCurrentStaff } from "@/lib/staff/queries"
 import { StaffHeader } from "@/components/staff/StaffHeader"
+import { PageBackdrop } from "@/components/layout/PageBackdrop"
 
 // Every screen under /staff is per-user, RLS-gated data — never let the
 // Full Route Cache serve a prerendered/stale version of it.
@@ -33,9 +34,9 @@ export default async function StaffLayout({ children }: { children: ReactNode })
   const staff = await getCurrentStaff();
 
   return (
-    <div className="min-h-screen text-brand-light font-sans">
+    <PageBackdrop>
       {staff && <StaffHeader staff={staff} />}
       <main className="max-w-2xl mx-auto p-4">{children}</main>
-    </div>
+    </PageBackdrop>
   );
 }
