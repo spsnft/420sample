@@ -69,24 +69,25 @@ export default function PartnersClient() {
 
         <div className="gradient-ring rounded-card">
         <section className="p-5 rounded-card bg-white/5">
-          <DeviceMockup />
-          <h2 className="text-base font-black uppercase tracking-tight text-brand-light mb-2 mt-4">
-            {t.block1Title}
-          </h2>
-          <p className="text-[13px] text-brand-light/70 leading-relaxed mb-4">
-            {t.block1Desc}
-          </p>
-          <div className="gradient-ring rounded-button">
-            <Link
-              href="https://buds.digital"
-              target="_blank"
-              rel="noopener"
-              onClick={() => triggerHaptic('light')}
-              className="w-full h-12 bg-white/5 font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              {t.block1Cta}
-              <ArrowRight size={16} />
-            </Link>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-center">
+            <div>
+              <h2 className="text-lg lg:text-xl font-black uppercase tracking-tight text-brand-light mb-4">
+                {t.block1Title}
+              </h2>
+              <div className="gradient-ring rounded-button">
+                <Link
+                  href="https://buds.digital"
+                  target="_blank"
+                  rel="noopener"
+                  onClick={() => triggerHaptic('light')}
+                  className="w-full h-12 bg-white/5 font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  {t.block1Cta}
+                  <ArrowRight size={16} />
+                </Link>
+              </div>
+            </div>
+            <DeviceMockup />
           </div>
         </section>
         </div>

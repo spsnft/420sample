@@ -9,7 +9,6 @@ export interface PartnersDictionary {
   heroSubtitle: string;
 
   block1Title: string;
-  block1Desc: string;
   block1Cta: string;
 
   block2Title: string;
@@ -29,8 +28,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     heroTitle: "Не просто сайт. Система, на которой держится ваш диспенсари.",
     heroSubtitle: "Статус медицинского допуска · Цифровое меню · Адрес, часы работы и отзывы — полностью по законам Таиланда.",
 
-    block1Title: "Вот что видит ваш клиент",
-    block1Desc: "Клиент переходит по ссылке — и сразу видит рейтинг, адрес, часы работы и путь к получению медицинской карты на месте. Никакой рекламы, всё по закону.",
+    block1Title: "Вот что видят ваши клиенты.",
     block1Cta: "Открыть живой пример",
 
     block2Title: "Вот что видит ваш персонал",
@@ -48,8 +46,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     heroTitle: "Not just a website. The system your dispensary runs on.",
     heroSubtitle: "Medical pass status · Digital menu · Address, hours & reviews — fully compliant with Thai law.",
 
-    block1Title: "Here's what your customer sees",
-    block1Desc: "Customers open the link and instantly see your rating, address, working hours, and the path to getting a medical card on site. No advertising — fully compliant.",
+    block1Title: "This is what your customers see.",
     block1Cta: "See the live example",
 
     block2Title: "Here's what your staff sees",
@@ -68,7 +65,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     heroSubtitle: "สถานะบัตรทางการแพทย์ · เมนูดิจิทัล · ที่อยู่ เวลาทำการ และรีวิว — ถูกต้องตามกฎหมายไทยครบถ้วน",
 
     block1Title: "นี่คือสิ่งที่ลูกค้าของคุณเห็น",
-    block1Desc: "ลูกค้ากดลิงก์แล้วเห็นคะแนนรีวิว ที่อยู่ เวลาทำการ และวิธีรับบัตรทางการแพทย์ที่ร้านได้ทันที ไม่มีโฆษณา ถูกต้องตามกฎหมาย",
     block1Cta: "ดูตัวอย่างจริง",
 
     block2Title: "นี่คือสิ่งที่พนักงานของคุณเห็น",
