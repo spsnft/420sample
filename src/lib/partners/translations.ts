@@ -4,6 +4,7 @@ import type { Language } from "@/lib/translations"
 // shop owners. Kept separate from the public-site dictionary in
 // @/lib/translations since none of these keys are shared with buds.digital.
 export interface PartnersDictionary {
+  heroBadge: string;
   heroTitle: string;
   heroSubtitle: string;
 
@@ -24,8 +25,9 @@ export interface PartnersDictionary {
 
 export const partnersTranslations: Record<Language, PartnersDictionary> = {
   ru: {
-    heroTitle: "Готовая система для вашего диспенсари — за один день",
-    heroSubtitle: "Публичная страница, которая продаёт сама. Панель персонала, которая мгновенно проверяет медицинские карты. Всё под ключ, с учётом тайского регулирования.",
+    heroBadge: "⚡ Запуск за 1 день",
+    heroTitle: "Не просто сайт. Система, на которой держится ваш диспенсари.",
+    heroSubtitle: "Статус медицинского допуска · Цифровое меню · Адрес, часы работы и отзывы — полностью по законам Таиланда.",
 
     block1Title: "Вот что видит ваш клиент",
     block1Desc: "Клиент переходит по ссылке — и сразу видит рейтинг, адрес, часы работы и путь к получению медицинской карты на месте. Никакой рекламы, всё по закону.",
@@ -42,8 +44,9 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaButton: "Написать в WhatsApp",
   },
   en: {
-    heroTitle: "A ready-made system for your dispensary — live in one day",
-    heroSubtitle: "A public page that sells itself. A staff panel that verifies medical cards instantly. Fully compliant with Thai regulation, out of the box.",
+    heroBadge: "⚡ Live in 1 day",
+    heroTitle: "Not just a website. The system your dispensary runs on.",
+    heroSubtitle: "Medical pass status · Digital menu · Address, hours & reviews — fully compliant with Thai law.",
 
     block1Title: "Here's what your customer sees",
     block1Desc: "Customers open the link and instantly see your rating, address, working hours, and the path to getting a medical card on site. No advertising — fully compliant.",
@@ -60,8 +63,9 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaButton: "Message on WhatsApp",
   },
   th: {
-    heroTitle: "ระบบพร้อมใช้งานสำหรับร้านกัญชาของคุณ — พร้อมใช้ภายในหนึ่งวัน",
-    heroSubtitle: "หน้าเว็บสาธารณะที่ขายตัวเองได้ พร้อมระบบตรวจสอบใบรับรองแพทย์แบบทันทีสำหรับพนักงาน ถูกต้องตามกฎหมายไทยตั้งแต่ต้น",
+    heroBadge: "⚡ พร้อมใช้งานภายใน 1 วัน",
+    heroTitle: "ไม่ใช่แค่เว็บไซต์ แต่คือระบบที่ร้านกัญชาของคุณใช้ขับเคลื่อนธุรกิจ",
+    heroSubtitle: "สถานะบัตรทางการแพทย์ · เมนูดิจิทัล · ที่อยู่ เวลาทำการ และรีวิว — ถูกต้องตามกฎหมายไทยครบถ้วน",
 
     block1Title: "นี่คือสิ่งที่ลูกค้าของคุณเห็น",
     block1Desc: "ลูกค้ากดลิงก์แล้วเห็นคะแนนรีวิว ที่อยู่ เวลาทำการ และวิธีรับบัตรทางการแพทย์ที่ร้านได้ทันที ไม่มีโฆษณา ถูกต้องตามกฎหมาย",

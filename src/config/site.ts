@@ -21,8 +21,7 @@ export const siteConfig = {
   // consumer contacts above: a WhatsApp Business line for dispensary owners,
   // not the personal LINE/WhatsApp used on the public buds.digital.
   partners: {
-    // TODO: replace with the real WhatsApp Business number — this is a placeholder
-    whatsapp: "https://wa.me/66687654321",
+    whatsapp: "https://wa.me/66650255229",
   },
 
   // Static, non-clickable trust badge shown on the homepage. Demo instance —
