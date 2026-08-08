@@ -3,9 +3,10 @@ import * as React from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
 
-// Real screenshot of buds.digital (hero cards + address/hours/reviews row),
-// captured at the iPhone 13/14 logical viewport (390x844, 2x export) and
-// wrapped in a minimal device frame. Recapture and swap the PNG in
+// Composited screenshot of buds.digital (header + hero cards + the
+// "Cannabis. Done properly." tagline), assembled from the live homepage at
+// the iPhone 13/14 logical viewport (390 wide, 2x export) and wrapped in a
+// minimal device frame. Recapture and swap the PNG in
 // public/images/partners/customer-view.png whenever the live design changes.
 export function DeviceMockup() {
   // Drives the light-sweep off the frame's own viewport entry instead of a
@@ -27,9 +28,9 @@ export function DeviceMockup() {
         <div className="relative rounded-[1.8rem] overflow-hidden">
           <Image
             src="/images/partners/customer-view.png"
-            alt="buds.digital home screen — hero, address, hours and reviews"
+            alt="buds.digital home screen — hero cards and tagline"
             width={390}
-            height={767}
+            height={601}
             className="w-full h-auto block"
             sizes="220px"
             priority
