@@ -3,7 +3,7 @@ import * as React from "react"
 import Link from "next/link"
 import {
   MapPin, Clock, ShieldCheck, Star, Instagram,
-  Image as ImageIcon, Leaf,
+  Image as ImageIcon, Leaf, Award, ClipboardList,
 } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
@@ -63,6 +63,8 @@ export default function HomeClient() {
                 gradient="linear-gradient(135deg, #D4B67F 0%, #A67F3F 100%)"
                 watermarkIcon={ShieldCheck}
                 watermarkColor={GOLD_DOOR_WATERMARK}
+                icon={Award}
+                iconClassName="text-brand-primary/70"
                 title={t.heroDoorCertTitle}
                 titleClassName="text-brand-primary"
                 subtitle={t.heroDoorCertSubtitle}
@@ -80,6 +82,8 @@ export default function HomeClient() {
                 gradient="linear-gradient(135deg, #3A543F 0%, #1E3322 100%)"
                 watermarkIcon={Leaf}
                 watermarkColor={OLIVE_DOOR_WATERMARK}
+                icon={ClipboardList}
+                iconClassName="text-brand-light/70"
                 title={t.heroDoorMenuTitle}
                 titleClassName="text-brand-light"
                 subtitle={t.heroDoorMenuSubtitle}

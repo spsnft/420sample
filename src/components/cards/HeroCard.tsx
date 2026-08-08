@@ -16,8 +16,15 @@ interface HeroCardProps {
   onClick?: () => void;
   haptic?: "light" | "medium";
   gradient: string;
+  /** Optional future-proofing: a real interior/storefront photo. When set, it
+   *  renders behind the card with `gradient` as a tinted overlay instead of
+   *  being the flat fill — swap this in later without touching the card shell. */
+  backgroundImage?: string;
   watermarkIcon: LucideIcon;
   watermarkColor: string;
+  /** Small line-art anchor icon, top-left of the card (32-40px, thin stroke). */
+  icon: LucideIcon;
+  iconClassName: string;
   title: string;
   titleClassName: string;
   subtitle: string;
@@ -39,8 +46,11 @@ export const HeroCard: React.FC<HeroCardProps> = ({
   onClick,
   haptic = "light",
   gradient,
+  backgroundImage,
   watermarkIcon: Watermark,
   watermarkColor,
+  icon: Icon,
+  iconClassName,
   title,
   titleClassName,
   subtitle,
@@ -70,6 +80,17 @@ export const HeroCard: React.FC<HeroCardProps> = ({
 
   const content = (
     <>
+      {backgroundImage && (
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${backgroundImage})` }}
+        />
+      )}
+      {/* Tinted fill: the flat gradient when there's no photo yet, or a
+          colored overlay on top of `backgroundImage` once one is set. */}
+      <div className="absolute inset-0" style={{ background: gradient, opacity: backgroundImage ? 0.82 : 1 }} />
+
       <Watermark
         aria-hidden
         className="absolute -bottom-12 -right-12 lg:-bottom-14 lg:-right-14 pointer-events-none"
@@ -89,39 +110,46 @@ export const HeroCard: React.FC<HeroCardProps> = ({
         />
       ))}
 
-      <h2 className={`relative font-black uppercase tracking-tight text-2xl lg:text-3xl leading-tight ${titleClassName}`}>
-        {title}
-      </h2>
-      <p className={`relative text-[12px] font-bold mt-1 ${subtitleClassName}`}>
-        {subtitle}
-      </p>
-      <p className={`relative flex items-center justify-end gap-1 text-[11px] italic font-semibold mt-3 ${microCtaClassName}`}>
-        {microCta}
-        <motion.span
-          initial={{ x: 0 }}
-          animate={{ x: [0, 3, 0, 3, 0] }}
-          transition={{ duration: 1, delay: 0.7 + nudgeDelay, ease: "easeInOut" }}
-          className="inline-flex"
-        >
-          <ChevronRight size={13} strokeWidth={3} />
-        </motion.span>
-      </p>
+      <div className="relative h-full flex flex-col p-5 lg:p-6">
+        <Icon aria-hidden className={iconClassName} size={36} strokeWidth={1.5} />
+
+        <div className="flex-1 flex flex-col justify-center gap-1 lg:gap-1.5">
+          <h2 className={`font-black uppercase tracking-tight text-2xl lg:text-3xl leading-tight ${titleClassName}`}>
+            {title}
+          </h2>
+          <p className={`text-[12px] font-bold ${subtitleClassName}`}>
+            {subtitle}
+          </p>
+        </div>
+
+        <p className={`flex items-center justify-end gap-1 text-[11px] italic font-semibold ${microCtaClassName}`}>
+          {microCta}
+          <motion.span
+            initial={{ x: 0 }}
+            animate={{ x: [0, 3, 0, 3, 0] }}
+            transition={{ duration: 1, delay: 0.7 + nudgeDelay, ease: "easeInOut" }}
+            className="inline-flex"
+          >
+            <ChevronRight size={13} strokeWidth={3} />
+          </motion.span>
+        </p>
+      </div>
     </>
   );
 
   const className =
-    "relative w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left p-5 lg:p-6 flex flex-col justify-end cursor-pointer transition-all duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] lg:hover:brightness-105 active:scale-[0.98] shadow-2xl";
+    "relative w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left cursor-pointer transition-all duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] lg:hover:brightness-105 active:scale-[0.98] shadow-2xl";
 
   if (href) {
     return (
-      <Link href={href} onClick={handleClick} onPointerDown={handlePointerDown} className={className} style={{ background: gradient }}>
+      <Link href={href} onClick={handleClick} onPointerDown={handlePointerDown} className={className}>
         {content}
       </Link>
     );
   }
 
   return (
-    <button type="button" onClick={handleClick} onPointerDown={handlePointerDown} className={className} style={{ background: gradient }}>
+    <button type="button" onClick={handleClick} onPointerDown={handlePointerDown} className={className}>
       {content}
     </button>
   );

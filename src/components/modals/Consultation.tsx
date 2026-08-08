@@ -78,13 +78,28 @@ export const Consultation = ({ t, onClose }: ConsultationProps) => {
               </h2>
             </div>
 
-            <div className="mb-5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[10px] font-bold uppercase tracking-wide text-brand-light/50">
-              {t.certSteps.map((step, i) => (
-                <React.Fragment key={i}>
-                  {i > 0 && <span className="text-brand-secondary/60">→</span>}
-                  <span>{step}</span>
-                </React.Fragment>
-              ))}
+            <div className="mb-6">
+              {t.certSteps.map((step, i) => {
+                const isLast = i === t.certSteps.length - 1;
+                return (
+                  <div key={i} className="flex gap-3">
+                    <div className="flex flex-col items-center">
+                      <div className="w-7 h-7 rounded-full bg-brand-secondary/15 border border-brand-secondary/50 text-brand-secondary flex items-center justify-center text-[11px] font-black shrink-0">
+                        {i + 1}
+                      </div>
+                      {!isLast && <div className="w-px flex-1 bg-brand-secondary/25 my-1" />}
+                    </div>
+                    <div className={isLast ? "" : "pb-4"}>
+                      <p className="text-[12px] font-black uppercase tracking-wide text-brand-secondary">
+                        {step.title}
+                      </p>
+                      <p className="text-[12px] text-brand-light/50 leading-snug mt-0.5">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
             <ConsultationRequestForm t={t} />
