@@ -69,10 +69,10 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroDoorCertTitle: "Get Your Certificate",
-    heroDoorCertSubtitle: "Free consultation, issued on the spot",
+    heroDoorCertSubtitle: "Free, on the spot — stay legally protected",
     heroDoorCertMicroCta: "Takes 2 minutes",
     heroDoorMenuTitle: "Browse the Menu",
-    heroDoorMenuSubtitle: "Flowers, joints & accessories",
+    heroDoorMenuSubtitle: "What we have in shop",
     heroDoorMenuMicroCta: "See today's stock",
     addressLabel: "Address",
     hoursLabel: "Working hours",
