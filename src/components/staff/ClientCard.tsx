@@ -4,14 +4,11 @@ import { useRouter } from "next/navigation"
 import { setPrescriptionRevoked } from "@/app/staff/actions"
 import { triggerHaptic, Baht } from "@/lib/utils"
 import { MONTHLY_QUOTA_GRAMS } from "@/lib/staff/constants"
+import { formatDate } from "@/lib/staff/format"
 import { StatusPill } from "./StatusPill"
 import { QuotaBar } from "./QuotaBar"
 import { NewSaleModal } from "./NewSaleModal"
 import type { ClientCardData } from "@/lib/staff/types"
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
-}
 
 export function ClientCard({ data }: { data: ClientCardData }) {
   const router = useRouter();

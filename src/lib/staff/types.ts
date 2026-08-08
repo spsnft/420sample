@@ -33,6 +33,29 @@ export interface ClientSearchResult {
   issue_date: string;
 }
 
+// Row shape of public.clients_directory_view — one row per client, used by
+// both the Recently Viewed strip and the full client list. pt33_number/status
+// are null for a client with no prescriptions on file.
+export interface ClientDirectoryEntry {
+  client_id: string;
+  client_name: string;
+  pt33_number: string | null;
+  status: PrescriptionStatus | null;
+}
+
+export interface ClientListRow extends ClientDirectoryEntry {
+  last_visit_at: string;
+  client_created_at: string;
+}
+
+export type ClientListSort = "last_visit" | "name" | "created_at";
+
+export interface ClientListPage {
+  rows: ClientListRow[];
+  total: number;
+  hasMore: boolean;
+}
+
 export interface Purchase {
   id: string;
   date: string;

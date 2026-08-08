@@ -12,11 +12,15 @@ with the Supabase CLI. Note the project URL and anon key
 
 ## 2. Run the migration
 
-In the Supabase SQL editor, run `migrations/0001_init.sql`. It creates:
+In the Supabase SQL editor, run `migrations/0001_init.sql`, then
+`migrations/0002_client_directory.sql`. Together they create:
 
-- `staff`, `clients`, `prescriptions`, `purchases` tables
+- `staff`, `clients`, `prescriptions`, `purchases`, `client_views` tables
 - `prescriptions_view` — the derived status (`active` / `expired` / `revoked`)
   and monthly quota usage the app actually queries
+- `clients_directory_view` — one row per client (latest prescription status +
+  last-visit date) behind the "Recently Viewed" strip and the paginated
+  client list on `/staff`
 - table/view GRANTs for the `authenticated` role and RLS policies gating
   everything behind a matching row in `staff`
 

@@ -3,8 +3,8 @@
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
-import { getCurrentStaff, searchClients } from "@/lib/staff/queries"
-import type { ClientSearchResult } from "@/lib/staff/types"
+import { getClientsList, getCurrentStaff, searchClients } from "@/lib/staff/queries"
+import type { ClientListPage, ClientListSort, ClientSearchResult } from "@/lib/staff/types"
 
 export interface FormActionState {
   error: string | null;
@@ -36,6 +36,10 @@ export async function signOut() {
 
 export async function searchClientsAction(query: string): Promise<ClientSearchResult[]> {
   return searchClients(query);
+}
+
+export async function getClientsListAction(sort: ClientListSort, page: number): Promise<ClientListPage> {
+  return getClientsList({ sort, page });
 }
 
 export async function setPrescriptionRevoked(prescriptionId: string, revoked: boolean) {
