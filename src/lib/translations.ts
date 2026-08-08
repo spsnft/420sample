@@ -88,7 +88,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "Information on this site is for reference only and does not constitute cannabis advertising.",
     ],
 
-    consultCta: "Request a Free Consultation",
+    consultCta: "Free Consultation",
     consultNameLabel: "Name",
     consultPhoneLabel: "Phone",
     consultConsentLabel: "I agree to the processing of my personal data in accordance with PDPA.",
@@ -121,7 +121,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
-    aboutLead: "Каким должен быть современный диспансер",
+    aboutLead: "Каким должен быть современный диспенсари",
     aboutPhotoLabel: "Фото интерьера — скоро",
     certSteps: [
       { title: "Отправьте", description: "заявку в течение минуты" },
@@ -134,7 +134,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "Информация на сайте носит справочный характер и не является рекламой каннабиса.",
     ],
 
-    consultCta: "Запросить бесплатную консультацию",
+    consultCta: "Бесплатная консультация",
     consultNameLabel: "Имя",
     consultPhoneLabel: "Телефон",
     consultConsentLabel: "Я согласен(на) на обработку персональных данных в соответствии с PDPA.",
@@ -180,7 +180,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "ข้อมูลบนเว็บไซต์นี้มีไว้เพื่อการอ้างอิงเท่านั้น ไม่ถือเป็นการโฆษณากัญชา",
     ],
 
-    consultCta: "ขอรับคำปรึกษาฟรี",
+    consultCta: "คำปรึกษาฟรี",
     consultNameLabel: "ชื่อ",
     consultPhoneLabel: "เบอร์โทรศัพท์",
     consultConsentLabel: "ฉันยินยอมให้ประมวลผลข้อมูลส่วนบุคคลของฉันตาม PDPA",
