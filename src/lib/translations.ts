@@ -1,5 +1,10 @@
 export type Language = 'en' | 'ru' | 'th';
 
+export interface CertStep {
+  title: string;
+  description: string;
+}
+
 export interface TranslationDictionary {
   // Header & Navigation
   updates: string;
@@ -33,7 +38,7 @@ export interface TranslationDictionary {
   reviewsLabel: string;
   aboutLead: string;
   aboutPhotoLabel: string;
-  certSteps: [string, string, string];
+  certSteps: [CertStep, CertStep, CertStep];
   contactsTitle: string;
   footerDisclaimer: [string, string];
 
@@ -72,7 +77,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     heroDoorCertSubtitle: "Free, on the spot — stay legally protected",
     heroDoorCertMicroCta: "Takes 2 minutes",
     heroDoorMenuTitle: "Browse the Menu",
-    heroDoorMenuSubtitle: "What we have in shop",
+    heroDoorMenuSubtitle: "Flower, joints & accessories",
     heroDoorMenuMicroCta: "See today's stock",
     addressLabel: "Address",
     hoursLabel: "Working hours",
@@ -80,9 +85,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     aboutLead: "What a modern dispensary should feel like",
     aboutPhotoLabel: "Interior photo coming soon",
     certSteps: [
-      "Visit the store",
-      "Free consultation with a licensed physician",
-      "Certificate issued, no paperwork required",
+      { title: "Send", description: "Send your request: just your name and phone, takes a minute" },
+      { title: "Confirm", description: "Confirmed by our manager, who reaches out to arrange your visit" },
+      { title: "Receive", description: "Receive your certificate the next day, valid for 30 days" },
     ],
     contactsTitle: "Contact & Follow",
     footerDisclaimer: [
@@ -119,7 +124,7 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroDoorCertTitle: "Оформить справку",
-    heroDoorCertSubtitle: "Бесплатная консультация, справка сразу на месте",
+    heroDoorCertSubtitle: "Бесплатно, на месте — оставайтесь под защитой закона",
     heroDoorCertMicroCta: "Займёт 2 минуты",
     heroDoorMenuTitle: "Смотреть меню",
     heroDoorMenuSubtitle: "Цветы, джойнты и аксессуары",
@@ -130,9 +135,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     aboutLead: "Каким должен быть современный диспансер",
     aboutPhotoLabel: "Фото интерьера — скоро",
     certSteps: [
-      "Приходите в магазин",
-      "Бесплатная консультация лицензированного врача",
-      "Справка выдаётся сразу — без бумажной волокиты",
+      { title: "Отправить", description: "Отправьте заявку: только имя и телефон, это займёт минуту" },
+      { title: "Подтвердить", description: "Наш менеджер свяжется с вами, чтобы согласовать визит" },
+      { title: "Получить", description: "Получите справку на следующий день — она действует 30 дней" },
     ],
     contactsTitle: "Контакты и соцсети",
     footerDisclaimer: [
@@ -169,7 +174,7 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroDoorCertTitle: "ขอใบรับรองของคุณ",
-    heroDoorCertSubtitle: "ปรึกษาฟรี ออกใบรับรองทันทีที่ร้าน",
+    heroDoorCertSubtitle: "ฟรี ออกทันทีที่ร้าน — อุ่นใจได้ตามกฎหมาย",
     heroDoorCertMicroCta: "ใช้เวลาแค่ 2 นาที",
     heroDoorMenuTitle: "ดูเมนู",
     heroDoorMenuSubtitle: "ดอก โจ๊ยท์ และอุปกรณ์เสริม",
@@ -180,9 +185,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     aboutLead: "นี่คือสิ่งที่ร้านกัญชาสมัยใหม่ควรจะเป็น",
     aboutPhotoLabel: "ภาพภายในร้าน — เร็วๆ นี้",
     certSteps: [
-      "มาที่ร้าน",
-      "ปรึกษาฟรีกับแพทย์ผู้ได้รับใบอนุญาต",
-      "ออกใบรับรองทันที — ไม่ต้องเตรียมเอกสาร",
+      { title: "ส่งคำขอ", description: "ส่งคำขอของคุณ: แค่ชื่อและเบอร์โทร ใช้เวลาไม่ถึงนาที" },
+      { title: "ยืนยัน", description: "ผู้จัดการของเรายืนยันและติดต่อกลับเพื่อนัดหมายวันเข้าร้าน" },
+      { title: "รับใบรับรอง", description: "รับใบรับรองของคุณในวันถัดไป มีอายุ 30 วัน" },
     ],
     contactsTitle: "ติดต่อและติดตามเรา",
     footerDisclaimer: [

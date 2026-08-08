@@ -13,8 +13,7 @@ export const siteConfig = {
 
   contacts: {
     line: "https://line.me/R/ti/p/@mpsphuket",
-    // TODO: replace with the real WhatsApp number — this is a placeholder
-    whatsapp: "https://wa.me/66612345678",
+    whatsapp: "https://wa.me/66650255229",
     instagram: "https://www.instagram.com/mpsphuket",
   },
 
