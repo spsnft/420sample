@@ -110,7 +110,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({
         />
       ))}
 
-      <div className="relative h-full flex flex-col p-5 lg:p-6">
+      <div className="relative w-full h-full flex flex-col p-5 lg:p-6">
         <Icon aria-hidden className={iconClassName} size={36} strokeWidth={1.5} />
 
         <div className="flex-1 flex flex-col justify-center gap-1 lg:gap-1.5">
@@ -138,7 +138,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({
   );
 
   const className =
-    "relative w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left cursor-pointer transition-all duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] lg:hover:brightness-105 active:scale-[0.98] shadow-2xl";
+    "relative flex w-full h-[170px] lg:h-64 rounded-card overflow-hidden text-left cursor-pointer transition-all duration-200 lg:hover:-translate-y-1 lg:hover:scale-[1.02] lg:hover:brightness-105 active:scale-[0.98] shadow-2xl";
 
   if (href) {
     return (
