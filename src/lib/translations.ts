@@ -26,11 +26,9 @@ export interface TranslationDictionary {
 
   // Home page
   heroDoorCertTitle: string;
-  heroDoorCertSubtitle: string;
-  heroDoorCertMicroCta: string;
+  heroDoorCertLine: string;
   heroDoorMenuTitle: string;
-  heroDoorMenuSubtitle: string;
-  heroDoorMenuMicroCta: string;
+  heroDoorMenuLine: string;
   // "Cannabis. Done properly." is hardcoded in English across all locales
   // (not translated) — see HomeClient.
   addressLabel: string;
@@ -74,20 +72,18 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroDoorCertTitle: "Get Your Certificate",
-    heroDoorCertSubtitle: "Free, on the spot — stay legally protected",
-    heroDoorCertMicroCta: "Takes 2 minutes",
+    heroDoorCertLine: "Free, on the spot — stay legally protected",
     heroDoorMenuTitle: "Browse the Menu",
-    heroDoorMenuSubtitle: "Flower, joints & accessories",
-    heroDoorMenuMicroCta: "See today's stock",
+    heroDoorMenuLine: "Fresh stock, updated daily",
     addressLabel: "Address",
     hoursLabel: "Working hours",
     reviewsLabel: "Reviews",
     aboutLead: "What a modern dispensary should feel like",
     aboutPhotoLabel: "Interior photo coming soon",
     certSteps: [
-      { title: "Send", description: "Send your request: just your name and phone, takes a minute" },
-      { title: "Confirm", description: "Confirmed by our manager, who reaches out to arrange your visit" },
-      { title: "Receive", description: "Receive your certificate the next day, valid for 30 days" },
+      { title: "Send", description: "your request within a minute" },
+      { title: "Confirm", description: "details with our manager" },
+      { title: "Receive", description: "your certificate the next day, valid for 30 days" },
     ],
     contactsTitle: "Contact & Follow",
     footerDisclaimer: [
@@ -124,20 +120,18 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroDoorCertTitle: "Оформить справку",
-    heroDoorCertSubtitle: "Бесплатно, на месте — оставайтесь под защитой закона",
-    heroDoorCertMicroCta: "Займёт 2 минуты",
+    heroDoorCertLine: "Бесплатно, на месте — под защитой закона",
     heroDoorMenuTitle: "Смотреть меню",
-    heroDoorMenuSubtitle: "Цветы, джойнты и аксессуары",
-    heroDoorMenuMicroCta: "Смотреть наличие на сегодня",
+    heroDoorMenuLine: "Свежий товар, обновляем каждый день",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
     aboutLead: "Каким должен быть современный диспансер",
     aboutPhotoLabel: "Фото интерьера — скоро",
     certSteps: [
-      { title: "Отправить", description: "Отправьте заявку: только имя и телефон, это займёт минуту" },
-      { title: "Подтвердить", description: "Наш менеджер свяжется с вами, чтобы согласовать визит" },
-      { title: "Получить", description: "Получите справку на следующий день — она действует 30 дней" },
+      { title: "Отправить", description: "заявку в течение минуты" },
+      { title: "Подтвердить", description: "детали с нашим менеджером" },
+      { title: "Получить", description: "справку на следующий день, действует 30 дней" },
     ],
     contactsTitle: "Контакты и соцсети",
     footerDisclaimer: [
@@ -174,20 +168,18 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroDoorCertTitle: "ขอใบรับรองของคุณ",
-    heroDoorCertSubtitle: "ฟรี ออกทันทีที่ร้าน — อุ่นใจได้ตามกฎหมาย",
-    heroDoorCertMicroCta: "ใช้เวลาแค่ 2 นาที",
+    heroDoorCertLine: "ฟรี ออกทันทีที่ร้าน — อุ่นใจได้ตามกฎหมาย",
     heroDoorMenuTitle: "ดูเมนู",
-    heroDoorMenuSubtitle: "ดอก โจ๊ยท์ และอุปกรณ์เสริม",
-    heroDoorMenuMicroCta: "ดูสต๊อกวันนี้",
+    heroDoorMenuLine: "สต๊อกสดใหม่ อัปเดตทุกวัน",
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     reviewsLabel: "รีวิว",
     aboutLead: "นี่คือสิ่งที่ร้านกัญชาสมัยใหม่ควรจะเป็น",
     aboutPhotoLabel: "ภาพภายในร้าน — เร็วๆ นี้",
     certSteps: [
-      { title: "ส่งคำขอ", description: "ส่งคำขอของคุณ: แค่ชื่อและเบอร์โทร ใช้เวลาไม่ถึงนาที" },
-      { title: "ยืนยัน", description: "ผู้จัดการของเรายืนยันและติดต่อกลับเพื่อนัดหมายวันเข้าร้าน" },
-      { title: "รับใบรับรอง", description: "รับใบรับรองของคุณในวันถัดไป มีอายุ 30 วัน" },
+      { title: "ส่งคำขอ", description: "ภายในหนึ่งนาที ใช้แค่ชื่อและเบอร์โทร" },
+      { title: "ยืนยัน", description: "รายละเอียดกับผู้จัดการของเรา" },
+      { title: "รับใบรับรอง", description: "ในวันถัดไป มีอายุ 30 วัน" },
     ],
     contactsTitle: "ติดต่อและติดตามเรา",
     footerDisclaimer: [

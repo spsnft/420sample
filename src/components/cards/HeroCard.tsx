@@ -22,15 +22,12 @@ interface HeroCardProps {
   backgroundImage?: string;
   watermarkIcon: LucideIcon;
   watermarkColor: string;
-  /** Small line-art anchor icon, top-left of the card (32-40px, thin stroke). */
-  icon: LucideIcon;
-  iconClassName: string;
   title: string;
   titleClassName: string;
-  subtitle: string;
-  subtitleClassName: string;
-  microCta: string;
-  microCtaClassName: string;
+  /** Muted italic line under the title, combining what used to be a
+   *  separate subtitle and CTA hint — ends with the animated arrow. */
+  tagline: string;
+  taglineClassName: string;
   rippleClassName: string;
   /** Stagger for the one-shot arrow nudge, so both cards don't nudge in lockstep. */
   nudgeDelay?: number;
@@ -49,14 +46,10 @@ export const HeroCard: React.FC<HeroCardProps> = ({
   backgroundImage,
   watermarkIcon: Watermark,
   watermarkColor,
-  icon: Icon,
-  iconClassName,
   title,
   titleClassName,
-  subtitle,
-  subtitleClassName,
-  microCta,
-  microCtaClassName,
+  tagline,
+  taglineClassName,
   rippleClassName,
   nudgeDelay = 0,
 }) => {
@@ -94,7 +87,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({
       <Watermark
         aria-hidden
         className="absolute -bottom-12 -right-12 lg:-bottom-14 lg:-right-14 pointer-events-none"
-        style={{ width: 260, height: 260, color: watermarkColor, opacity: 0.12, transform: "rotate(-8deg)" }}
+        style={{ width: 260, height: 260, color: watermarkColor, opacity: 0.14, transform: "rotate(-8deg)" }}
       />
       <div className="absolute inset-0 grain-overlay opacity-[0.04] pointer-events-none" />
 
@@ -110,20 +103,12 @@ export const HeroCard: React.FC<HeroCardProps> = ({
         />
       ))}
 
-      <div className="relative w-full h-full flex flex-col p-5 lg:p-6">
-        <Icon aria-hidden className={iconClassName} size={36} strokeWidth={1.5} />
-
-        <div className="flex-1 flex flex-col justify-center gap-1 lg:gap-1.5">
-          <h2 className={`font-black uppercase tracking-tight text-2xl lg:text-3xl leading-tight ${titleClassName}`}>
-            {title}
-          </h2>
-          <p className={`text-[12px] font-bold ${subtitleClassName}`}>
-            {subtitle}
-          </p>
-        </div>
-
-        <p className={`flex items-center justify-end gap-1 text-[11px] italic font-semibold ${microCtaClassName}`}>
-          {microCta}
+      <div className="relative w-full h-full flex flex-col justify-center gap-1 lg:gap-1.5 p-5 lg:p-6">
+        <h2 className={`font-black uppercase tracking-tight text-2xl lg:text-3xl leading-tight ${titleClassName}`}>
+          {title}
+        </h2>
+        <p className={`flex items-center gap-1 text-[11px] italic font-semibold ${taglineClassName}`}>
+          {tagline}
           <motion.span
             initial={{ x: 0 }}
             animate={{ x: [0, 3, 0, 3, 0] }}
