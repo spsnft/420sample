@@ -28,7 +28,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     heroTitle: "Не просто сайт. Система, на которой держится ваш диспенсари.",
     heroSubtitle: "Статус медицинского допуска · Цифровое меню · Адрес, часы работы и отзывы — полностью по законам Таиланда.",
 
-    block1Title: "Вот что видят ваши клиенты.",
+    block1Title: "Вот что видит\nваш клиент",
     block1Cta: "Открыть живой пример",
 
     block2Title: "Вот что видит ваш персонал",
@@ -46,7 +46,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     heroTitle: "Not just a website. The system your dispensary runs on.",
     heroSubtitle: "Medical pass status · Digital menu · Address, hours & reviews — fully compliant with Thai law.",
 
-    block1Title: "This is what your customers see.",
+    block1Title: "This is what\nyour customer sees",
     block1Cta: "See the live example",
 
     block2Title: "Here's what your staff sees",
@@ -64,7 +64,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     heroTitle: "ไม่ใช่แค่เว็บไซต์ แต่คือระบบที่ร้านกัญชาของคุณใช้ขับเคลื่อนธุรกิจ",
     heroSubtitle: "สถานะบัตรทางการแพทย์ · เมนูดิจิทัล · ที่อยู่ เวลาทำการ และรีวิว — ถูกต้องตามกฎหมายไทยครบถ้วน",
 
-    block1Title: "นี่คือสิ่งที่ลูกค้าของคุณเห็น",
+    block1Title: "นี่คือสิ่งที่ลูกค้าของคุณ\nเห็น",
     block1Cta: "ดูตัวอย่างจริง",
 
     block2Title: "นี่คือสิ่งที่พนักงานของคุณเห็น",

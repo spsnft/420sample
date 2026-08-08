@@ -6,8 +6,11 @@ import { motion } from "framer-motion"
 // Composited screenshot of buds.digital (header + hero cards + the
 // "Cannabis. Done properly." tagline, padded out to a true iPhone 13/14
 // screen ratio of 390x844) assembled from the live homepage and wrapped in
-// a minimal device frame. Recapture and swap the PNG in
-// public/images/partners/customer-view.png whenever the live design changes.
+// a minimal device frame. The header stays pinned to the top; the cards
+// and tagline blocks are then spaced evenly (space-evenly) down to the
+// bottom edge instead of packing everything under the header. Recapture
+// and swap the PNG in public/images/partners/customer-view.png whenever
+// the live design changes, keeping that same even distribution.
 export function DeviceMockup() {
   // Drives the light-sweep off the frame's own viewport entry instead of a
   // second, independently-observed whileInView on the (absolutely

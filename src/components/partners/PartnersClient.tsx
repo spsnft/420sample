@@ -69,7 +69,7 @@ export default function PartnersClient() {
 
         <div className="gradient-ring rounded-card">
         <section className="p-5 rounded-card bg-white/5">
-          <h2 className="text-lg font-black uppercase tracking-tight text-brand-light mb-4">
+          <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light mb-5 whitespace-pre-line">
             {t.block1Title}
           </h2>
           <DeviceMockup />
