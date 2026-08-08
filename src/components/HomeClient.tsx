@@ -3,7 +3,7 @@ import * as React from "react"
 import Link from "next/link"
 import {
   MapPin, Clock, ShieldCheck, Star, Instagram,
-  Image as ImageIcon, Leaf, Award, ClipboardList,
+  Image as ImageIcon, Leaf,
 } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
@@ -63,14 +63,10 @@ export default function HomeClient() {
                 gradient="linear-gradient(135deg, #D4B67F 0%, #A67F3F 100%)"
                 watermarkIcon={ShieldCheck}
                 watermarkColor={GOLD_DOOR_WATERMARK}
-                icon={Award}
-                iconClassName="text-brand-primary/70"
                 title={t.heroDoorCertTitle}
                 titleClassName="text-brand-primary"
-                subtitle={t.heroDoorCertSubtitle}
-                subtitleClassName="text-brand-primary/70"
-                microCta={t.heroDoorCertMicroCta}
-                microCtaClassName="text-brand-primary/60"
+                tagline={t.heroDoorCertLine}
+                taglineClassName="text-brand-primary/60"
                 rippleClassName="bg-brand-primary/15"
               />
             </Reveal>
@@ -82,14 +78,10 @@ export default function HomeClient() {
                 gradient="linear-gradient(135deg, #3A543F 0%, #1E3322 100%)"
                 watermarkIcon={Leaf}
                 watermarkColor={OLIVE_DOOR_WATERMARK}
-                icon={ClipboardList}
-                iconClassName="text-brand-light/70"
                 title={t.heroDoorMenuTitle}
                 titleClassName="text-brand-light"
-                subtitle={t.heroDoorMenuSubtitle}
-                subtitleClassName="text-brand-light/70"
-                microCta={t.heroDoorMenuMicroCta}
-                microCtaClassName="text-brand-light/60"
+                tagline={t.heroDoorMenuLine}
+                taglineClassName="text-brand-light/60"
                 rippleClassName="bg-white/20"
                 nudgeDelay={0.15}
               />
