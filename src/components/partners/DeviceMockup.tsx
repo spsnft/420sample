@@ -16,7 +16,7 @@ export function DeviceMockup() {
   const [entered, setEntered] = React.useState(false);
 
   return (
-    <div className="mx-auto w-[200px] sm:w-[220px] -rotate-[5deg]">
+    <div className="mx-auto w-[90%] -rotate-[5deg]">
       <motion.div
         initial={{ opacity: 0, y: 12, filter: "drop-shadow(0 0px 0px rgba(0,0,0,0))" }}
         whileInView={{ opacity: 1, y: 0, filter: "drop-shadow(0 22px 38px rgba(0,0,0,0.55))" }}
@@ -30,9 +30,9 @@ export function DeviceMockup() {
             src="/images/partners/customer-view.png"
             alt="buds.digital home screen — hero cards and tagline"
             width={390}
-            height={601}
+            height={645}
             className="w-full h-auto block"
-            sizes="220px"
+            sizes="(min-width: 1024px) 260px, 90vw"
             priority
           />
           <motion.div
