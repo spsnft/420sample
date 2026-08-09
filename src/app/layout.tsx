@@ -1,6 +1,21 @@
 import "@/styles/globals.css"
 import type { Metadata, Viewport } from "next"
+import { Montserrat } from "next/font/google"
 import { siteConfig } from "@/config/site"
+
+// tailwind.config.ts sets `sans: ['var(--font-montserrat)', ...]`. Without this
+// the custom property is never defined, and an undefined var() with no fallback
+// invalidates the whole font-family declaration — dropping system-ui/sans-serif
+// along with it and leaving every page in the browser default (Times New Roman).
+// next/font self-hosts the files at build time, so there is no request to
+// Google at runtime. Thai has no Montserrat coverage and correctly falls
+// through to the system-ui/sans-serif tail of the stack.
+const montserrat = Montserrat({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "600", "700", "900"],
+  variable: "--font-montserrat",
+  display: "swap",
+})
 
 export const viewport: Viewport = {
   themeColor: siteConfig.themeColor,
@@ -51,7 +66,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
+    <html lang="en" className={`dark ${montserrat.variable}`} style={{ colorScheme: 'dark' }}>
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
       </head>
