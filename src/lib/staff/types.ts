@@ -83,6 +83,10 @@ export interface ClientCardData {
   };
   prescriptions: PrescriptionCard[];
   purchases: Purchase[];
+  stats: {
+    lifetimeSpent: number;
+    purchaseCount: number;
+  };
 }
 
 export interface StaffInvite {

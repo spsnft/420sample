@@ -7,6 +7,7 @@ import { MONTHLY_QUOTA_GRAMS } from "@/lib/staff/constants"
 import { formatDate } from "@/lib/staff/format"
 import { StatusPill } from "./StatusPill"
 import { QuotaBar } from "./QuotaBar"
+import { ClientStats } from "./ClientStats"
 import { NewSaleModal } from "./NewSaleModal"
 import { NewPrescriptionModal } from "./NewPrescriptionModal"
 import type { ClientCardData } from "@/lib/staff/types"
@@ -39,6 +40,12 @@ export function ClientCard({ data }: { data: ClientCardData }) {
           <span>Client since {formatDate(data.client.first_visit_date)}</span>
         </div>
       </div>
+
+      <ClientStats
+        lifetimeSpent={data.stats.lifetimeSpent}
+        purchaseCount={data.stats.purchaseCount}
+        firstVisitDate={data.client.first_visit_date}
+      />
 
       <div className="p-4 rounded-card bg-white/5 border border-white/10 space-y-3">
         <div className="flex items-center justify-between gap-3">

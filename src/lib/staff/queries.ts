@@ -86,12 +86,22 @@ export async function getClientCard(clientId: string): Promise<ClientCardData | 
 
   if (error || !prescriptions || prescriptions.length === 0) return null;
 
-  const { data: purchases } = await supabase
-    .from("purchases")
-    .select("*, staff:staff!staff_id(name)")
-    .eq("client_id", clientId)
-    .order("date", { ascending: false })
-    .limit(50);
+  // Purchase history in the UI only ever shows the most recent 50, but
+  // Lifetime Spent / Purchases on ClientStats need the true total — a
+  // second, unbounded query over just `price` so a client with a long
+  // history doesn't get a silently truncated "lifetime" figure.
+  const [{ data: purchases }, { data: allPrices }] = await Promise.all([
+    supabase
+      .from("purchases")
+      .select("*, staff:staff!staff_id(name)")
+      .eq("client_id", clientId)
+      .order("date", { ascending: false })
+      .limit(50),
+    supabase
+      .from("purchases")
+      .select("price")
+      .eq("client_id", clientId),
+  ]);
 
   const first = prescriptions[0];
   return {
@@ -105,6 +115,10 @@ export async function getClientCard(clientId: string): Promise<ClientCardData | 
     },
     prescriptions,
     purchases: (purchases ?? []) as ClientCardData["purchases"],
+    stats: {
+      lifetimeSpent: (allPrices ?? []).reduce((sum, p) => sum + Number(p.price), 0),
+      purchaseCount: (allPrices ?? []).length,
+    },
   };
 }
 
