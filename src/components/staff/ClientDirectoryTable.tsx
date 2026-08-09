@@ -64,41 +64,43 @@ export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center flex-wrap gap-2">
-        <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 shrink-0">All clients</p>
+      <div className="space-y-2">
+        <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40">All clients</p>
 
-        <div className="flex gap-1.5 flex-wrap">
-          {STATUS_FILTER_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => handleStatusChange(opt.value)}
-              className={`shrink-0 px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-wide transition-colors ${
-                status === opt.value
-                  ? "bg-brand-secondary/20 border-brand-secondary/40 text-brand-secondary"
-                  : "border-white/10 text-brand-light/40 hover:text-brand-light/70"
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex gap-1.5 flex-wrap">
+            {STATUS_FILTER_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => handleStatusChange(opt.value)}
+                className={`shrink-0 px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-wide transition-colors ${
+                  status === opt.value
+                    ? "bg-brand-secondary/20 border-brand-secondary/40 text-brand-secondary"
+                    : "border-white/10 text-brand-light/40 hover:text-brand-light/70"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
 
-        <div className="flex gap-1 p-0.5 rounded-button bg-white/5 border border-white/10 shrink-0">
-          {SORT_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => handleSortChange(opt.value)}
-              className={`px-2.5 py-1 rounded-button text-[10px] font-black uppercase tracking-wide transition-colors ${
-                sort === opt.value
-                  ? "bg-brand-secondary/20 text-brand-secondary"
-                  : "text-brand-light/40 hover:text-brand-light/70"
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
+          <div className="flex gap-1 p-0.5 rounded-button bg-white/5 border border-white/10 shrink-0">
+            {SORT_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => handleSortChange(opt.value)}
+                className={`px-2.5 py-1 rounded-button text-[10px] font-black uppercase tracking-wide transition-colors ${
+                  sort === opt.value
+                    ? "bg-brand-secondary/20 text-brand-secondary"
+                    : "text-brand-light/40 hover:text-brand-light/70"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

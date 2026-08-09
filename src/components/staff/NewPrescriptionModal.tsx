@@ -22,7 +22,6 @@ export function NewPrescriptionModal({ clientId, clientName, onClose }: NewPresc
   const router = useRouter();
   const [pt33Number, setPt33Number] = React.useState("");
   const [issueDate, setIssueDate] = React.useState(today());
-  const [doctor, setDoctor] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -38,7 +37,7 @@ export function NewPrescriptionModal({ clientId, clientName, onClose }: NewPresc
     setError(null);
     setIsSubmitting(true);
 
-    const result = await createPrescription({ clientId, pt33Number, issueDate, doctor });
+    const result = await createPrescription({ clientId, pt33Number, issueDate, doctor: "" });
 
     setIsSubmitting(false);
 
@@ -77,12 +76,11 @@ export function NewPrescriptionModal({ clientId, clientName, onClose }: NewPresc
         <p className="text-[12px] text-brand-light/50 mb-4">{clientName}</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className={labelClass}>PT.33 number</label>
-            <input required value={pt33Number} onChange={(e) => setPt33Number(e.target.value)} className={inputClass} />
-          </div>
-
           <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelClass}>PT.33 number</label>
+              <input required value={pt33Number} onChange={(e) => setPt33Number(e.target.value)} className={inputClass} />
+            </div>
             <div>
               <label className={labelClass}>Issue date</label>
               <input
@@ -92,10 +90,6 @@ export function NewPrescriptionModal({ clientId, clientName, onClose }: NewPresc
                 onChange={(e) => setIssueDate(e.target.value)}
                 className={inputClass}
               />
-            </div>
-            <div>
-              <label className={labelClass}>Doctor</label>
-              <input value={doctor} onChange={(e) => setDoctor(e.target.value)} className={inputClass} />
             </div>
           </div>
 
