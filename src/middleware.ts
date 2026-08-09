@@ -51,15 +51,18 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  const isLoginRoute = pathname === "/staff/login";
+  // /staff/signup is invite-code gated (see supabase/migrations/0003), not
+  // open registration — it just doesn't require an existing session to load,
+  // same as the login page.
+  const isPublicAuthRoute = pathname === "/staff/login" || pathname === "/staff/signup";
 
-  if (!user && !isLoginRoute) {
+  if (!user && !isPublicAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/staff/login";
     return NextResponse.redirect(url);
   }
 
-  if (user && isLoginRoute) {
+  if (user && isPublicAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/staff";
     return NextResponse.redirect(url);

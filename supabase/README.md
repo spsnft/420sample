@@ -10,25 +10,35 @@ Create a project at [supabase.com](https://supabase.com), or run one locally
 with the Supabase CLI. Note the project URL and anon key
 (Project Settings → API).
 
-## 2. Run the migration
+## 2. Run the migrations
 
-In the Supabase SQL editor, run `migrations/0001_init.sql`, then
-`migrations/0002_client_directory.sql`. Together they create:
+In the Supabase SQL editor, run, in order:
 
-- `staff`, `clients`, `prescriptions`, `purchases`, `client_views` tables
+- `migrations/0001_init.sql`
+- `migrations/0002_client_directory.sql`
+- `migrations/0003_intake_and_signup.sql`
+
+Together they create:
+
+- `staff`, `clients`, `prescriptions`, `purchases`, `client_views`,
+  `staff_invites` tables
 - `prescriptions_view` — the derived status (`active` / `expired` / `revoked`)
   and monthly quota usage the app actually queries
 - `clients_directory_view` — one row per client (latest prescription status +
   last-visit date) behind the "Recently Viewed" strip and the paginated
   client list on `/staff`
+- `create_client_with_prescription()` / staff insert policies on
+  `clients`/`prescriptions` — powers the "New Client" intake screen
+- `redeem_staff_invite()` — the only path (besides step 3 below) that can
+  create a `staff` row, gated by a valid, unexpired `staff_invites` code
 - table/view GRANTs for the `authenticated` role and RLS policies gating
   everything behind a matching row in `staff`
 
 ## 3. Create your first login
 
 Dashboard → Authentication → Users → Add user. This is the only account
-creation path for v1 — there's no sign-up screen, staff logins are
-provisioned manually (or via a future admin flow).
+creation path that doesn't need an invite code — every other staff account is
+provisioned via an invite (see "Adding staff" below).
 
 Copy the new user's UID (shown in the Users table).
 
@@ -73,8 +83,21 @@ so this never becomes a code path a real dispensary's deployment depends on.
   `prescription_id` — since a prescription only ever accepts purchases while
   it's active, this is equivalent to "purchases in the last 30 days from
   `issue_date`".
-- **No client/prescription intake screen in v1.** The three specced screens
-  are search → card → new sale. New clients/prescriptions go in directly via
-  Supabase for now.
-- **Adding staff later**: insert a row into `public.staff` with the new
-  Auth user's UID, a name, and a role (`staff` or `owner`).
+- **Client/prescription intake**: the "New Client" button on `/staff` creates
+  a client and their first PT.33 together (`create_client_with_prescription`,
+  one transaction). "New Rx" on an existing client's card adds a renewal
+  prescription to that same client.
+- **Adding staff — invite flow**: any owner can open `/staff/invites`,
+  generate a code (staff or owner role, expires in 7 days), and share the
+  `/staff/signup?code=...` link. Signup is invite-only — there's no open
+  registration; `redeem_staff_invite()` validates the code and is the only
+  way (besides manual provisioning below) a `staff` row gets created.
+  Requires **email confirmations disabled** on this Supabase project
+  (Authentication → Providers → Email), since the invite is redeemed in the
+  same request as sign-up and needs an active session to do it — if
+  confirmations are on, the auth user is created but never gets a `staff`
+  row, and needs manual provisioning below to finish.
+- **Adding staff — manual**: insert a row into `public.staff` with the new
+  Auth user's UID, a name, and a role (`staff` or `owner`). Still the only
+  path for the very first account (step 3 above), since generating an invite
+  requires an existing owner.

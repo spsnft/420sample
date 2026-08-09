@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Image from "next/image"
+import Link from "next/link"
 import { LoginForm } from "@/components/staff/LoginForm"
 import { siteConfig } from "@/config/site"
 
@@ -21,6 +22,13 @@ export default function StaffLoginPage() {
         <div className="p-5 rounded-card bg-white/5 border border-white/10">
           <LoginForm />
         </div>
+
+        <p className="text-center text-[12px] text-brand-light/40 mt-4">
+          Have an invite code?{" "}
+          <Link href="/staff/signup" className="text-brand-secondary/80 hover:text-brand-secondary transition-colors">
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );

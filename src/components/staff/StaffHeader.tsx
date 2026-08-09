@@ -16,6 +16,14 @@ export function StaffHeader({ staff }: { staff: StaffProfile }) {
         </Link>
 
         <div className="flex items-center gap-3 shrink-0">
+          {staff.role === "owner" && (
+            <Link
+              href="/staff/invites"
+              className="text-[11px] font-black uppercase tracking-wide text-brand-light/50 hover:text-brand-light transition-colors"
+            >
+              Invites
+            </Link>
+          )}
           <span className="text-[11px] font-bold text-brand-light/50 truncate max-w-[120px]">
             {staff.name}
           </span>
