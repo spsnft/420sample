@@ -12,18 +12,23 @@ interface DemoLoginButtonProps {
   errorFailed: string;
 }
 
+// Styled to match the block 1 CTA exactly: both blocks open a real live
+// surface, so neither outranks the other. The solid btn-metal treatment stays
+// reserved for the page's single closing WhatsApp action.
 function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: string }) {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      onClick={() => triggerHaptic('medium')}
-      className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl disabled:opacity-60"
-    >
-      {pending ? pendingLabel : label}
-      {!pending && <ArrowRight size={18} />}
-    </button>
+    <div className="gradient-ring rounded-button">
+      <button
+        type="submit"
+        disabled={pending}
+        onClick={() => triggerHaptic('medium')}
+        className="w-full h-12 bg-white/5 font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+      >
+        {pending ? pendingLabel : label}
+        {!pending && <ArrowRight size={16} />}
+      </button>
+    </div>
   );
 }
 
