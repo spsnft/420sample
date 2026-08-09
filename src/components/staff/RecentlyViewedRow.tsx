@@ -1,7 +1,6 @@
 "use client"
 import { Loader2 } from "lucide-react"
 import type { ClientDirectoryEntry } from "@/lib/staff/types"
-import { StatusPill } from "./StatusPill"
 import { useClientRowNav } from "./useClientRowNav"
 
 export function RecentlyViewedRow({ clients }: { clients: ClientDirectoryEntry[] }) {
@@ -20,20 +19,12 @@ export function RecentlyViewedRow({ clients }: { clients: ClientDirectoryEntry[]
               key={c.client_id}
               type="button"
               onClick={() => navigate(c.client_id)}
-              className={`shrink-0 w-36 p-3 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all text-left ${
+              className={`shrink-0 w-36 h-12 px-3 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all text-left flex items-center justify-between gap-2 ${
                 pending ? "opacity-60" : ""
               }`}
             >
               <p className="text-[13px] font-bold text-brand-light truncate">{c.client_name}</p>
-              <div className="mt-2">
-                {pending ? (
-                  <Loader2 size={14} className="animate-spin text-brand-secondary/70" />
-                ) : c.status ? (
-                  <StatusPill status={c.status} />
-                ) : (
-                  <span className="text-[10px] text-brand-light/30">No prescription</span>
-                )}
-              </div>
+              {pending && <Loader2 size={14} className="animate-spin text-brand-secondary/70 shrink-0" />}
             </button>
           );
         })}
