@@ -46,6 +46,7 @@ export interface ClientDirectoryEntry {
 export interface ClientListRow extends ClientDirectoryEntry {
   last_visit_at: string;
   client_created_at: string;
+  expiry_date: string | null;
 }
 
 export type ClientListSort = "last_visit" | "name" | "created_at";

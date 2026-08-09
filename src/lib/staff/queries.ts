@@ -170,7 +170,7 @@ export async function getClientsList(opts: {
   const supabase = createClient();
   const { data, count, error } = await supabase
     .from("clients_directory_view")
-    .select("client_id, client_name, pt33_number, status, last_visit_at, client_created_at", { count: "exact" })
+    .select("client_id, client_name, pt33_number, status, last_visit_at, client_created_at, expiry_date", { count: "exact" })
     .order(column, { ascending })
     .range(from, to);
 
