@@ -2,8 +2,8 @@
 import * as React from "react"
 import { Loader2 } from "lucide-react"
 import { getClientsListAction } from "@/app/staff/actions"
-import { formatDate, maskPt33Number } from "@/lib/staff/format"
-import type { ClientListPage, ClientListSort, ClientListRow } from "@/lib/staff/types"
+import { formatDate } from "@/lib/staff/format"
+import type { ClientListPage, ClientListSort, ClientListStatusFilter, ClientListRow } from "@/lib/staff/types"
 import { StatusPill } from "./StatusPill"
 import { useClientRowNav } from "./useClientRowNav"
 
@@ -13,30 +13,49 @@ const SORT_OPTIONS: { value: ClientListSort; label: string }[] = [
   { value: "created_at", label: "Date added" },
 ];
 
+const STATUS_FILTER_OPTIONS: { value: ClientListStatusFilter; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "active", label: "Active" },
+  { value: "expired", label: "Expired" },
+  { value: "revoked", label: "Revoked" },
+  { value: "none", label: "No Rx" },
+];
+
 export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
   const [sort, setSort] = React.useState<ClientListSort>("last_visit");
+  const [status, setStatus] = React.useState<ClientListStatusFilter>("all");
   const [rows, setRows] = React.useState<ClientListRow[]>(initial.rows);
   const [hasMore, setHasMore] = React.useState(initial.hasMore);
   const [page, setPage] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
   const { navigate, isRowPending } = useClientRowNav();
 
-  const handleSortChange = async (nextSort: ClientListSort) => {
-    if (nextSort === sort || isLoading) return;
-    setSort(nextSort);
+  const reload = async (nextSort: ClientListSort, nextStatus: ClientListStatusFilter) => {
     setIsLoading(true);
-    const result = await getClientsListAction(nextSort, 0);
+    const result = await getClientsListAction(nextSort, 0, nextStatus);
     setRows(result.rows);
     setHasMore(result.hasMore);
     setPage(0);
     setIsLoading(false);
   };
 
+  const handleSortChange = (nextSort: ClientListSort) => {
+    if (nextSort === sort || isLoading) return;
+    setSort(nextSort);
+    reload(nextSort, status);
+  };
+
+  const handleStatusChange = (nextStatus: ClientListStatusFilter) => {
+    if (nextStatus === status || isLoading) return;
+    setStatus(nextStatus);
+    reload(sort, nextStatus);
+  };
+
   const handleLoadMore = async () => {
     if (isLoading) return;
     setIsLoading(true);
     const nextPage = page + 1;
-    const result = await getClientsListAction(sort, nextPage);
+    const result = await getClientsListAction(sort, nextPage, status);
     setRows((prev) => [...prev, ...result.rows]);
     setHasMore(result.hasMore);
     setPage(nextPage);
@@ -65,7 +84,28 @@ export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
         </div>
       </div>
 
+      <div className="flex gap-1.5 overflow-x-auto no-scrollbar -mx-4 px-4">
+        {STATUS_FILTER_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => handleStatusChange(opt.value)}
+            className={`shrink-0 px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-wide transition-colors ${
+              status === opt.value
+                ? "bg-brand-secondary/20 border-brand-secondary/40 text-brand-secondary"
+                : "border-white/10 text-brand-light/40 hover:text-brand-light/70"
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+
       <div className="space-y-2">
+        {rows.length === 0 && !isLoading && (
+          <p className="text-[12px] text-brand-light/40 text-center py-8">No clients match this filter.</p>
+        )}
+
         {rows.map((r) => {
           const pending = isRowPending(r.client_id);
           return (
@@ -77,15 +117,8 @@ export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
                 pending ? "opacity-60" : ""
               }`}
             >
-              <div className="min-w-0">
-                <p className="text-[14px] font-bold text-brand-light truncate">{r.client_name}</p>
-                <p className="text-[12px] text-brand-light/40 truncate">
-                  {r.pt33_number
-                    ? `${maskPt33Number(r.pt33_number)}${r.expiry_date ? ` · Expires ${formatDate(r.expiry_date)}` : ""}`
-                    : "No prescription"}
-                </p>
-              </div>
-              <div className="flex flex-col items-end gap-1 shrink-0">
+              <p className="text-[14px] font-bold text-brand-light truncate min-w-0">{r.client_name}</p>
+              <div className="flex items-center gap-2 shrink-0">
                 {pending ? (
                   <Loader2 size={16} className="animate-spin text-brand-secondary/70" />
                 ) : (

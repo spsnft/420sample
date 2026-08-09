@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/lib/supabase/server"
 import { getClientsList, getCurrentStaff, searchClients } from "@/lib/staff/queries"
-import type { ClientListPage, ClientListSort, ClientSearchResult } from "@/lib/staff/types"
+import type { ClientListPage, ClientListSort, ClientListStatusFilter, ClientSearchResult } from "@/lib/staff/types"
 
 export interface FormActionState {
   error: string | null;
@@ -103,8 +103,12 @@ export async function searchClientsAction(query: string): Promise<ClientSearchRe
   return searchClients(query);
 }
 
-export async function getClientsListAction(sort: ClientListSort, page: number): Promise<ClientListPage> {
-  return getClientsList({ sort, page });
+export async function getClientsListAction(
+  sort: ClientListSort,
+  page: number,
+  status: ClientListStatusFilter = "all"
+): Promise<ClientListPage> {
+  return getClientsList({ sort, page, status });
 }
 
 export async function setPrescriptionRevoked(prescriptionId: string, revoked: boolean) {

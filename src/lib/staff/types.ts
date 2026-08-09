@@ -46,10 +46,13 @@ export interface ClientDirectoryEntry {
 export interface ClientListRow extends ClientDirectoryEntry {
   last_visit_at: string;
   client_created_at: string;
-  expiry_date: string | null;
 }
 
 export type ClientListSort = "last_visit" | "name" | "created_at";
+
+// "none" = clients with no prescription on file (status is null in
+// clients_directory_view), not a PrescriptionStatus value.
+export type ClientListStatusFilter = "all" | PrescriptionStatus | "none";
 
 export interface ClientListPage {
   rows: ClientListRow[];

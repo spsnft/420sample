@@ -4,6 +4,7 @@ import type {
   ClientDirectoryEntry,
   ClientListPage,
   ClientListSort,
+  ClientListStatusFilter,
   ClientSearchResult,
   StaffInvite,
   StaffProfile,
@@ -160,19 +161,27 @@ export async function getRecentlyViewedClients(): Promise<ClientDirectoryEntry[]
 export async function getClientsList(opts: {
   sort?: ClientListSort;
   page?: number;
+  status?: ClientListStatusFilter;
 } = {}): Promise<ClientListPage> {
   const sort = opts.sort ?? "last_visit";
+  const status = opts.status ?? "all";
   const page = Math.max(0, opts.page ?? 0);
   const from = page * CLIENT_LIST_PAGE_SIZE;
   const to = from + CLIENT_LIST_PAGE_SIZE - 1;
   const { column, ascending } = SORT_COLUMNS[sort];
 
   const supabase = createClient();
-  const { data, count, error } = await supabase
+  let query = supabase
     .from("clients_directory_view")
-    .select("client_id, client_name, pt33_number, status, last_visit_at, client_created_at, expiry_date", { count: "exact" })
-    .order(column, { ascending })
-    .range(from, to);
+    .select("client_id, client_name, pt33_number, status, last_visit_at, client_created_at", { count: "exact" });
+
+  if (status === "none") {
+    query = query.is("status", null);
+  } else if (status !== "all") {
+    query = query.eq("status", status);
+  }
+
+  const { data, count, error } = await query.order(column, { ascending }).range(from, to);
 
   if (error) {
     console.error("getClientsList:", error.message);
