@@ -10,7 +10,7 @@ import type {
   StaffProfile,
 } from "./types"
 
-const CLIENT_LIST_PAGE_SIZE = 25;
+const CLIENT_LIST_PAGE_SIZE = 10;
 const RECENTLY_VIEWED_LIMIT = 8;
 
 const SORT_COLUMNS: Record<ClientListSort, { column: string; ascending: boolean }> = {
