@@ -49,7 +49,6 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
       <div className="flex items-start justify-between gap-3">
         <div>
           <h1 className="text-lg font-black uppercase tracking-tight text-brand-light">Find a client</h1>
-          <p className="text-[12px] text-brand-light/40 mt-0.5">Search by name or PT.33 number</p>
         </div>
         <button
           type="button"
