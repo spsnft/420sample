@@ -10,14 +10,9 @@ import { StatusPill } from "./StatusPill"
 import type { PrescriptionCard } from "@/lib/staff/types"
 
 const PRODUCT_SUGGESTIONS = [
-  "Flower — Sativa",
-  "Flower — Indica",
   "Flower — Hybrid",
-  "Pre-roll",
-  "Vape",
-  "Edible",
-  "Concentrate",
-  "Accessory",
+  "Flower — Indica",
+  "Flower — Sativa",
 ];
 
 interface NewSaleModalProps {
