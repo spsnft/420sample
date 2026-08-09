@@ -16,7 +16,6 @@ export interface PartnersDictionary {
   // audiences — so their titles stay grammatically parallel in every language.
   block1Title: string;
   block2Title: string;
-  block2Desc: string;
 
   // Both blocks share one CTA label: each opens a real, live surface.
   ctaLive: string;
@@ -30,9 +29,9 @@ export interface PartnersDictionary {
 
 export const partnersTranslations: Record<Language, PartnersDictionary> = {
   ru: {
-    heroTitle: "Не просто сайт. Система, на которой держится ваш диспенсари.",
+    heroTitle: "Не просто сайт. Система, на которой вы работаете",
     heroPills: [
-      "Статус мед. допуска",
+      "Проверка мед. карты",
       "Цифровое меню",
       "Контакты и отзывы",
       "По законам Таиланда",
@@ -41,20 +40,19 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
 
     block1Title: "Вот что видит\nваш клиент",
     block2Title: "Вот что видит\nваш персонал",
-    block2Desc: "Продавец вводит имя или номер карты — и за секунду видит, действует ли медицинский допуск и сколько осталось от месячной квоты. Ошибиться невозможно.",
 
     ctaLive: "Смотреть живое демо",
     ctaLivePending: "Входим в демо…",
     ctaLiveErrorNotConfigured: "Демо-доступ ещё не настроен. Напишите нам, и мы покажем панель лично.",
     ctaLiveErrorFailed: "Не получилось открыть демо. Попробуйте ещё раз или напишите нам.",
 
-    ctaTitle: "Хотите такую же систему для своего заведения? Напишите — соберём под ваш бренд за несколько дней.",
+    ctaTitle: "Ваше заведение, ваш бренд, запуск за день. Оставляйте заявку.",
     ctaButton: "Написать в WhatsApp",
   },
   en: {
-    heroTitle: "Not just a website. The system your dispensary runs on.",
+    heroTitle: "Not just a website. The system you run on",
     heroPills: [
-      "Medical pass status",
+      "Med card check",
       "Digital menu",
       "Contacts & Reviews",
       "TH law compliant",
@@ -63,20 +61,19 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
 
     block1Title: "This is what\nyour customer sees",
     block2Title: "This is what\nyour staff sees",
-    block2Desc: "Staff type in a name or card number and get an instant green-or-red status, plus how much of the monthly quota is left. There's no room for mistakes.",
 
     ctaLive: "See the live demo",
     ctaLivePending: "Signing in to demo…",
     ctaLiveErrorNotConfigured: "The demo isn't set up yet. Message us and we'll show you the panel directly.",
     ctaLiveErrorFailed: "Couldn't open the demo. Try again or message us.",
 
-    ctaTitle: "Want the same system for your business? Message me — we'll build it under your brand in a few days.",
+    ctaTitle: "Your shop, your brand, live in a day. Let's talk.",
     ctaButton: "Message on WhatsApp",
   },
   th: {
-    heroTitle: "ไม่ใช่แค่เว็บไซต์ แต่คือระบบที่ร้านกัญชาของคุณใช้ขับเคลื่อนธุรกิจ",
+    heroTitle: "ไม่ใช่แค่เว็บไซต์ แต่คือระบบที่คุณใช้ขับเคลื่อนธุรกิจ",
     heroPills: [
-      "สถานะบัตรทางการแพทย์",
+      "ตรวจสอบบัตรแพทย์",
       "เมนูดิจิทัล",
       "ติดต่อและรีวิว",
       "ถูกต้องตามกฎหมายไทย",
@@ -85,14 +82,13 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
 
     block1Title: "นี่คือสิ่งที่\nลูกค้าของคุณเห็น",
     block2Title: "นี่คือสิ่งที่\nพนักงานของคุณเห็น",
-    block2Desc: "พนักงานพิมพ์ชื่อหรือหมายเลขบัตร แล้วเห็นสถานะสีเขียวหรือแดงทันที พร้อมโควตารายเดือนที่เหลือ ผิดพลาดไม่ได้เลย",
 
     ctaLive: "ดูเดโมจริง",
     ctaLivePending: "กำลังเข้าสู่เดโม…",
     ctaLiveErrorNotConfigured: "ยังไม่ได้ตั้งค่าเดโม ทักหาเราแล้วเราจะโชว์แผงควบคุมให้โดยตรง",
     ctaLiveErrorFailed: "เปิดเดโมไม่สำเร็จ ลองใหม่อีกครั้งหรือทักหาเรา",
 
-    ctaTitle: "สนใจระบบแบบนี้สำหรับร้านของคุณไหม? ทักมาได้เลย เราจะสร้างให้ตรงกับแบรนด์ของคุณภายในไม่กี่วัน",
+    ctaTitle: "ร้านของคุณ แบรนด์ของคุณ พร้อมใช้งานใน 1 วัน ทักมาได้เลย",
     ctaButton: "ทักผ่าน WhatsApp",
   },
 };

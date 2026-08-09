@@ -68,7 +68,7 @@ export default function PartnersClient() {
 
       <main className="max-w-xl mx-auto space-y-6 pb-10">
         <section className="text-center py-4">
-          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light">
+          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-balance text-brand-light">
             {t.heroTitle}
           </h1>
           <ul className="mt-4 flex flex-wrap justify-center gap-1.5">
@@ -112,13 +112,10 @@ export default function PartnersClient() {
               errorFailed={t.ctaLiveErrorFailed}
             />
           </div>
-          <p className="text-[12px] text-brand-light/50 leading-relaxed mt-3">
-            {t.block2Desc}
-          </p>
         </PitchBlock>
 
         <section className="p-6 rounded-card card-premium text-center">
-          <p className="text-[14px] font-bold text-brand-light/80 leading-relaxed mb-4">
+          <p className="text-[14px] font-bold text-brand-light/80 leading-relaxed text-balance mb-4">
             {t.ctaTitle}
           </p>
           <Link
