@@ -5,6 +5,7 @@ import type {
   ClientListPage,
   ClientListSort,
   ClientSearchResult,
+  StaffInvite,
   StaffProfile,
 } from "./types"
 
@@ -181,4 +182,20 @@ export async function getClientsList(opts: {
   const rows = (data ?? []) as ClientListPage["rows"];
   const total = count ?? 0;
   return { rows, total, hasMore: from + rows.length < total };
+}
+
+// RLS on staff_invites only lets owners select rows at all, so this
+// naturally returns [] for a non-owner rather than needing a role check here.
+export async function getStaffInvites(): Promise<StaffInvite[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("staff_invites")
+    .select("id, code, role, expires_at, used_at, created_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("getStaffInvites:", error.message);
+    return [];
+  }
+  return data as StaffInvite[];
 }

@@ -80,3 +80,12 @@ export interface ClientCardData {
   prescriptions: PrescriptionCard[];
   purchases: Purchase[];
 }
+
+export interface StaffInvite {
+  id: string;
+  code: string;
+  role: "staff" | "owner";
+  expires_at: string;
+  used_at: string | null;
+  created_at: string;
+}

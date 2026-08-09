@@ -1,13 +1,15 @@
 "use client"
 import * as React from "react"
 import Link from "next/link"
-import { Search } from "lucide-react"
+import { Search, UserPlus } from "lucide-react"
 import { searchClientsAction } from "@/app/staff/actions"
+import { triggerHaptic } from "@/lib/utils"
 import type { ClientDirectoryEntry, ClientListPage, ClientSearchResult } from "@/lib/staff/types"
 import { StatusPill } from "./StatusPill"
 import { RecentlyViewedRow } from "./RecentlyViewedRow"
 import { ClientDirectoryTable } from "./ClientDirectoryTable"
 import { EmptyClientState } from "./EmptyClientState"
+import { NewClientModal } from "./NewClientModal"
 
 interface SearchScreenProps {
   recentlyViewed: ClientDirectoryEntry[];
@@ -18,6 +20,7 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
   const [query, setQuery] = React.useState("");
   const [results, setResults] = React.useState<ClientSearchResult[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
+  const [isNewClientOpen, setIsNewClientOpen] = React.useState(false);
   const requestId = React.useRef(0);
 
   React.useEffect(() => {
@@ -43,9 +46,19 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-lg font-black uppercase tracking-tight text-brand-light">Find a client</h1>
-        <p className="text-[12px] text-brand-light/40 mt-0.5">Search by name or PT.33 number</p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-lg font-black uppercase tracking-tight text-brand-light">Find a client</h1>
+          <p className="text-[12px] text-brand-light/40 mt-0.5">Search by name or PT.33 number</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => { triggerHaptic("medium"); setIsNewClientOpen(true); }}
+          className="shrink-0 h-9 px-3 rounded-button bg-white/5 border border-white/10 hover:border-brand-secondary/30 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-brand-light/70 hover:text-brand-light transition-all"
+        >
+          <UserPlus size={14} />
+          New Client
+        </button>
       </div>
 
       <div className="relative">
@@ -93,6 +106,8 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
           <ClientDirectoryTable initial={clientsList} />
         </div>
       )}
+
+      {isNewClientOpen && <NewClientModal onClose={() => setIsNewClientOpen(false)} />}
     </div>
   );
 }

@@ -8,11 +8,13 @@ import { formatDate } from "@/lib/staff/format"
 import { StatusPill } from "./StatusPill"
 import { QuotaBar } from "./QuotaBar"
 import { NewSaleModal } from "./NewSaleModal"
+import { NewPrescriptionModal } from "./NewPrescriptionModal"
 import type { ClientCardData } from "@/lib/staff/types"
 
 export function ClientCard({ data }: { data: ClientCardData }) {
   const router = useRouter();
   const [isSaleOpen, setIsSaleOpen] = React.useState(false);
+  const [isNewRxOpen, setIsNewRxOpen] = React.useState(false);
   const [isTogglingRevoke, setIsTogglingRevoke] = React.useState(false);
 
   const rx = data.prescriptions.find((p) => p.status === "active") ?? data.prescriptions[0];
@@ -65,13 +67,22 @@ export function ClientCard({ data }: { data: ClientCardData }) {
         </button>
       </div>
 
-      <button
-        type="button"
-        onClick={() => { triggerHaptic("medium"); setIsSaleOpen(true); }}
-        className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all"
-      >
-        New Sale
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => { triggerHaptic("medium"); setIsSaleOpen(true); }}
+          className="flex-1 h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all"
+        >
+          New Sale
+        </button>
+        <button
+          type="button"
+          onClick={() => { triggerHaptic("medium"); setIsNewRxOpen(true); }}
+          className="h-14 px-4 rounded-button bg-white/5 border border-white/10 hover:border-brand-secondary/30 font-black uppercase tracking-widest text-[12px] text-brand-light/70 hover:text-brand-light active:scale-95 transition-all whitespace-nowrap"
+        >
+          New Rx
+        </button>
+      </div>
 
       {olderPrescriptions.length > 0 && (
         <div>
@@ -114,6 +125,14 @@ export function ClientCard({ data }: { data: ClientCardData }) {
           prescription={rx}
           onClose={() => setIsSaleOpen(false)}
           onSuccess={() => router.refresh()}
+        />
+      )}
+
+      {isNewRxOpen && (
+        <NewPrescriptionModal
+          clientId={data.client.id}
+          clientName={data.client.name}
+          onClose={() => setIsNewRxOpen(false)}
         />
       )}
     </div>
