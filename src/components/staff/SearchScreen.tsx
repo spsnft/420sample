@@ -87,7 +87,8 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
               <Link
                 key={`${r.client_id}:${r.pt33_number}`}
                 href={`/staff/clients/${r.client_id}`}
-                className="flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 transition-all"
+                onClick={() => triggerHaptic("light")}
+                className="flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all"
               >
                 <div className="min-w-0">
                   <p className="text-[14px] font-bold text-brand-light truncate">{r.client_name}</p>

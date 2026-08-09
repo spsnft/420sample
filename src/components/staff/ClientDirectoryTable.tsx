@@ -2,6 +2,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { getClientsListAction } from "@/app/staff/actions"
+import { triggerHaptic } from "@/lib/utils"
 import { formatDate, maskPt33Number } from "@/lib/staff/format"
 import type { ClientListPage, ClientListSort, ClientListRow } from "@/lib/staff/types"
 import { StatusPill } from "./StatusPill"
@@ -68,7 +69,8 @@ export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
           <Link
             key={r.client_id}
             href={`/staff/clients/${r.client_id}`}
-            className="flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 transition-all"
+            onClick={() => triggerHaptic("light")}
+            className="flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all"
           >
             <div className="min-w-0">
               <p className="text-[14px] font-bold text-brand-light truncate">{r.client_name}</p>

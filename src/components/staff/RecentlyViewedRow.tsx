@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { triggerHaptic } from "@/lib/utils"
 import type { ClientDirectoryEntry } from "@/lib/staff/types"
 import { StatusPill } from "./StatusPill"
 
@@ -13,7 +14,8 @@ export function RecentlyViewedRow({ clients }: { clients: ClientDirectoryEntry[]
           <Link
             key={c.client_id}
             href={`/staff/clients/${c.client_id}`}
-            className="shrink-0 w-36 p-3 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 transition-all"
+            onClick={() => triggerHaptic("light")}
+            className="shrink-0 w-36 p-3 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all"
           >
             <p className="text-[13px] font-bold text-brand-light truncate">{c.client_name}</p>
             <div className="mt-2">
