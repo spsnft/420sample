@@ -1,7 +1,6 @@
 "use client"
 import * as React from "react"
-import Link from "next/link"
-import { Search, UserPlus } from "lucide-react"
+import { Search, UserPlus, Loader2 } from "lucide-react"
 import { searchClientsAction } from "@/app/staff/actions"
 import { triggerHaptic } from "@/lib/utils"
 import type { ClientDirectoryEntry, ClientListPage, ClientSearchResult } from "@/lib/staff/types"
@@ -10,6 +9,7 @@ import { RecentlyViewedRow } from "./RecentlyViewedRow"
 import { ClientDirectoryTable } from "./ClientDirectoryTable"
 import { EmptyClientState } from "./EmptyClientState"
 import { NewClientModal } from "./NewClientModal"
+import { useClientRowNav } from "./useClientRowNav"
 
 interface SearchScreenProps {
   recentlyViewed: ClientDirectoryEntry[];
@@ -22,6 +22,7 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
   const [isSearching, setIsSearching] = React.useState(false);
   const [isNewClientOpen, setIsNewClientOpen] = React.useState(false);
   const requestId = React.useRef(0);
+  const { navigate, isRowPending } = useClientRowNav();
 
   React.useEffect(() => {
     const trimmed = query.trim();
@@ -82,20 +83,29 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
           )}
 
           <div className="space-y-2">
-            {results.map((r) => (
-              <Link
-                key={`${r.client_id}:${r.pt33_number}`}
-                href={`/staff/clients/${r.client_id}`}
-                onClick={() => triggerHaptic("light")}
-                className="flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all"
-              >
-                <div className="min-w-0">
-                  <p className="text-[14px] font-bold text-brand-light truncate">{r.client_name}</p>
-                  <p className="text-[12px] text-brand-light/40">{r.pt33_number}</p>
-                </div>
-                <StatusPill status={r.status} />
-              </Link>
-            ))}
+            {results.map((r) => {
+              const pending = isRowPending(r.client_id);
+              return (
+                <button
+                  key={`${r.client_id}:${r.pt33_number}`}
+                  type="button"
+                  onClick={() => navigate(r.client_id)}
+                  className={`w-full flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all text-left ${
+                    pending ? "opacity-60" : ""
+                  }`}
+                >
+                  <div className="min-w-0">
+                    <p className="text-[14px] font-bold text-brand-light truncate">{r.client_name}</p>
+                    <p className="text-[12px] text-brand-light/40">{r.pt33_number}</p>
+                  </div>
+                  {pending ? (
+                    <Loader2 size={16} className="animate-spin text-brand-secondary/70 shrink-0" />
+                  ) : (
+                    <StatusPill status={r.status} />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </>
       ) : clientsList.total === 0 ? (

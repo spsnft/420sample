@@ -1,11 +1,11 @@
 "use client"
 import * as React from "react"
-import Link from "next/link"
+import { Loader2 } from "lucide-react"
 import { getClientsListAction } from "@/app/staff/actions"
-import { triggerHaptic } from "@/lib/utils"
 import { formatDate, maskPt33Number } from "@/lib/staff/format"
 import type { ClientListPage, ClientListSort, ClientListRow } from "@/lib/staff/types"
 import { StatusPill } from "./StatusPill"
+import { useClientRowNav } from "./useClientRowNav"
 
 const SORT_OPTIONS: { value: ClientListSort; label: string }[] = [
   { value: "last_visit", label: "Last visit" },
@@ -19,6 +19,7 @@ export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
   const [hasMore, setHasMore] = React.useState(initial.hasMore);
   const [page, setPage] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
+  const { navigate, isRowPending } = useClientRowNav();
 
   const handleSortChange = async (nextSort: ClientListSort) => {
     if (nextSort === sort || isLoading) return;
@@ -65,25 +66,36 @@ export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
       </div>
 
       <div className="space-y-2">
-        {rows.map((r) => (
-          <Link
-            key={r.client_id}
-            href={`/staff/clients/${r.client_id}`}
-            onClick={() => triggerHaptic("light")}
-            className="flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all"
-          >
-            <div className="min-w-0">
-              <p className="text-[14px] font-bold text-brand-light truncate">{r.client_name}</p>
-              <p className="text-[12px] text-brand-light/40">
-                {r.pt33_number ? maskPt33Number(r.pt33_number) : "No prescription"}
-              </p>
-            </div>
-            <div className="flex flex-col items-end gap-1 shrink-0">
-              {r.status && <StatusPill status={r.status} />}
-              <span className="text-[11px] text-brand-light/40">{formatDate(r.last_visit_at)}</span>
-            </div>
-          </Link>
-        ))}
+        {rows.map((r) => {
+          const pending = isRowPending(r.client_id);
+          return (
+            <button
+              key={r.client_id}
+              type="button"
+              onClick={() => navigate(r.client_id)}
+              className={`w-full flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all text-left ${
+                pending ? "opacity-60" : ""
+              }`}
+            >
+              <div className="min-w-0">
+                <p className="text-[14px] font-bold text-brand-light truncate">{r.client_name}</p>
+                <p className="text-[12px] text-brand-light/40 truncate">
+                  {r.pt33_number
+                    ? `${maskPt33Number(r.pt33_number)}${r.expiry_date ? ` · Expires ${formatDate(r.expiry_date)}` : ""}`
+                    : "No prescription"}
+                </p>
+              </div>
+              <div className="flex flex-col items-end gap-1 shrink-0">
+                {pending ? (
+                  <Loader2 size={16} className="animate-spin text-brand-secondary/70" />
+                ) : (
+                  r.status && <StatusPill status={r.status} />
+                )}
+                <span className="text-[11px] text-brand-light/40">{formatDate(r.last_visit_at)}</span>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       {hasMore && (
