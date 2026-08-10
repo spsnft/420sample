@@ -2,6 +2,7 @@
 import * as React from "react"
 import { Loader2 } from "lucide-react"
 import type { ClientDirectoryEntry, PrescriptionStatus } from "@/lib/staff/types"
+import { useScrollEdges } from "@/lib/use-scroll-edges"
 import { useClientRowNav } from "./useClientRowNav"
 
 // Same active=green / expired,revoked=red mapping as StatusPill, just as a
@@ -13,53 +14,6 @@ const STATUS_TINT: Record<PrescriptionStatus, string> = {
   revoked: "bg-red-500/10 border-red-500/25 hover:border-red-500/40",
 };
 const NEUTRAL_TINT = "bg-white/5 border-transparent hover:border-brand-secondary/30";
-
-// How far the edge fade reaches in. Wide enough to read as "there's more this
-// way" against a 144px chip, narrow enough not to grey out a whole name.
-const FADE = "28px";
-
-// Which ends of the strip have chips hidden past them. Tracked rather than
-// assumed because the fade has to be able to switch off: the row only scrolls
-// on narrow viewports, and a permanent CSS mask would dim the last chip on a
-// wide screen where there is nothing more to scroll to — turning an affordance
-// into a rendering bug. Both ends are tracked so the fade also tells staff
-// they have scrolled past the start.
-function useScrollEdges(deps: unknown) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [edges, setEdges] = React.useState({ start: false, end: false });
-
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const update = () => {
-      // A pixel of slack: fractional layout widths mean scrollLeft never lands
-      // exactly on the maximum, which would leave the end fade stuck on at the
-      // end of the strip.
-      const max = el.scrollWidth - el.clientWidth;
-      setEdges({ start: el.scrollLeft > 1, end: el.scrollLeft < max - 1 });
-    };
-
-    update();
-    el.addEventListener("scroll", update, { passive: true });
-    // Catches rotation and window resizing, which change whether the row
-    // overflows at all without any scrolling happening.
-    const observer = new ResizeObserver(update);
-    observer.observe(el);
-    return () => {
-      el.removeEventListener("scroll", update);
-      observer.disconnect();
-    };
-  }, [deps]);
-
-  // Each side's stop collapses to zero width when that side has nothing hidden
-  // behind it, so an unscrollable row is masked with a plain opaque gradient.
-  const mask = `linear-gradient(to right, transparent 0, black ${edges.start ? FADE : "0px"}, black calc(100% - ${
-    edges.end ? FADE : "0px"
-  }), transparent 100%)`;
-
-  return { ref, mask };
-}
 
 export function RecentlyViewedRow({ clients }: { clients: ClientDirectoryEntry[] }) {
   const { navigate, isRowPending } = useClientRowNav();

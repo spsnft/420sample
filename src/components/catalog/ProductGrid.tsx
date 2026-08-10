@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import { Leaf, Cigarette, Layers, ChevronDown, Tag } from "lucide-react"
-import { HighlightCard, ProductRow } from "@/components/cards/ProductCards"
+import { HighlightCard, ProductRow, FOCUS_RING } from "@/components/cards/ProductCards"
 import { TranslationDictionary } from "@/lib/translations"
 
 interface CategoryConfig {
@@ -86,7 +86,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const restKeys = sortedKeys.filter(k => !priorityOrder.includes(k));
 
   return (
-    <main className="max-w-5xl mx-auto space-y-8 relative z-10">
+    // A section, not a <main>: the page already provides the single main
+    // landmark, and a second one leaves a screen reader with two "main
+    // content" targets and no way to tell which is the real one.
+    <div className="max-w-5xl mx-auto space-y-8 relative z-10">
       {specialListKeys.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {specialListKeys.map(cat => {
@@ -98,18 +101,21 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               <section key={cat} className="flex flex-col h-full space-y-3">
                 {config.collapsible ? (
                   <button
+                    type="button"
                     onClick={() => toggleSection(cat)}
-                    className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors md:cursor-default rounded-badge"
+                    aria-expanded={isOpen}
+                    aria-controls={`section-${cat}`}
+                    className={`w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors md:cursor-default rounded-badge ${FOCUS_RING}`}
                   >
                     <div className="flex items-center gap-2">
                       {config.icon}
                       <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">{config.title}</h2>
                     </div>
                     <div className="flex items-center gap-2 md:hidden">
-                      <span className="text-[11px] font-black uppercase tracking-wide opacity-40 text-brand-light">
+                      <span className="text-[11px] font-black uppercase tracking-wide text-brand-light/60">
                         {isOpen ? t.close : t.open}
                       </span>
-                      <ChevronDown size={18} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown size={18} className={`text-brand-light/60 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                     </div>
                   </button>
                 ) : (
@@ -119,7 +125,17 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                   </div>
                 )}
 
-                <div className={`overflow-hidden transition-all duration-500 ${config.collapsible && !isOpen ? 'max-h-0 md:max-h-[3000px]' : 'max-h-[3000px]'}`}>
+                {/* `invisible` alongside `max-h-0` is what keeps a collapsed
+                    section out of the tab order — clipping by itself leaves
+                    every row inside still focusable, so Tab would wander
+                    through products nobody can see. `transition-all` carries
+                    visibility too, and CSS holds it at `visible` for the whole
+                    duration, so the collapse still animates. Joints stay open
+                    on desktop, hence the md: overrides on both. */}
+                <div
+                  id={`section-${cat}`}
+                  className={`overflow-hidden transition-all duration-500 ${config.collapsible && !isOpen ? 'max-h-0 invisible md:max-h-[3000px] md:visible' : 'max-h-[3000px] visible'}`}
+                >
                   <div className="gradient-ring rounded-card overflow-hidden h-full">
                     <div className={`rounded-card overflow-hidden bg-brand-primary h-full ${!isList(config.layout) ? 'p-3 ' + gridClass(config.layout) : ''}`}>
                       {products.map((p: any) => (
@@ -144,21 +160,27 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         return (
           <section key={cat} className="w-full space-y-3">
             <button
+              type="button"
               onClick={() => toggleSection(cat)}
-              className="w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors rounded-badge"
+              aria-expanded={isOpen}
+              aria-controls={`section-${cat}`}
+              className={`w-full flex items-center justify-between px-1 active:bg-white/5 transition-colors rounded-badge ${FOCUS_RING}`}
             >
               <div className="flex items-center gap-2">
                 {config.icon}
                 <h2 className="text-[16px] font-black uppercase tracking-tight text-brand-light">{config.title}</h2>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-black uppercase tracking-wide opacity-40 text-brand-light">
+                <span className="text-[11px] font-black uppercase tracking-wide text-brand-light/60">
                   {isOpen ? t.close : t.open}
                 </span>
-                <ChevronDown size={18} className={`opacity-40 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={18} className={`text-brand-light/60 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
               </div>
             </button>
-            <div className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div
+              id={`section-${cat}`}
+              className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px] opacity-100 visible' : 'max-h-0 opacity-0 invisible'}`}
+            >
               <div className={gridClass(config.layout)}>
                 {products.map((p: any) => (
                   <HighlightCard key={p.id} item={p} onClick={() => onSelect(p)} />
@@ -168,6 +190,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           </section>
         );
       })}
-    </main>
+    </div>
   );
 };

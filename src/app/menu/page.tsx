@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 }
 
 export default async function MenuPage() {
-  const { products, descriptions, categories } = await getProducts();
+  const { products, descriptions, categories, failed } = await getProducts();
 
   return (
     <main>
@@ -21,6 +21,7 @@ export default async function MenuPage() {
         initialProducts={products}
         initialDescriptions={descriptions}
         categories={categories}
+        failed={failed}
       />
     </main>
   );

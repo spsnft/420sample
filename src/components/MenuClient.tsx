@@ -8,19 +8,23 @@ import { Product, Order, AgeGate } from "@/components/modals"
 import { Header } from "@/components/layout/Header"
 import { ProductCarousel } from "@/components/catalog/ProductCarousel"
 import { ProductGrid } from "@/components/catalog/ProductGrid"
+import { CatalogFallback } from "@/components/catalog/CatalogFallback"
 import { BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
 import { useIdleTimer } from "@/lib/use-idle-timer"
+import { siteConfig } from "@/config/site"
 
 const IDLE_TIMEOUT_MS = 4 * 60 * 1000;
 
 export default function MenuClient({
   initialProducts = [],
   categories = {},
+  failed = false,
 }: {
   initialProducts: any[],
   initialDescriptions?: any[],
   categories?: Record<string, any[]>,
+  failed?: boolean,
 }) {
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   const [isOrderOpen, setIsOrderOpen] = React.useState(false);
@@ -51,6 +55,7 @@ export default function MenuClient({
   useIdleTimer(IDLE_TIMEOUT_MS, resetSession);
 
   const hasItems = items.length > 0;
+  const isEmpty = initialProducts.length === 0;
 
   return (
     <div className={`min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans ${hasItems ? 'pb-44' : 'pb-4'}`}>
@@ -59,16 +64,28 @@ export default function MenuClient({
 
       <Header safeLang={safeLang} />
 
-      <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
-      <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
+      {/* The page's own heading. Visually the wordmark in the header already
+          says where you are, but the document had no h1 at all — headings
+          started at the section level, leaving a screen reader without a title
+          to announce for the page. */}
+      <h1 className="sr-only">{siteConfig.name} — {t.menuTitle}</h1>
 
-      <ProductGrid
-        categories={categories}
-        openSections={openSections}
-        toggleSection={toggleSection}
-        t={t}
-        onSelect={setSelectedProduct}
-      />
+      {isEmpty ? (
+        <CatalogFallback t={t} failed={failed} />
+      ) : (
+        <>
+          <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
+          <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
+
+          <ProductGrid
+            categories={categories}
+            openSections={openSections}
+            toggleSection={toggleSection}
+            t={t}
+            onSelect={setSelectedProduct}
+          />
+        </>
+      )}
 
       {hasItems && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] w-full max-w-sm px-4">
