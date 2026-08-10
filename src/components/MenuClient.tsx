@@ -9,7 +9,7 @@ import { Header } from "@/components/layout/Header"
 import { ProductCarousel } from "@/components/catalog/ProductCarousel"
 import { ProductGrid, sortCategoryKeys, getCategoryConfig } from "@/components/catalog/ProductGrid"
 import { CatalogFallback } from "@/components/catalog/CatalogFallback"
-import { CatalogNav, TypeFilter } from "@/components/catalog/CatalogNav"
+import { CatalogNav } from "@/components/catalog/CatalogNav"
 import { BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, accentFor } from "@/lib/utils"
 import { useIdleTimer } from "@/lib/use-idle-timer"
@@ -19,6 +19,9 @@ const IDLE_TIMEOUT_MS = 4 * 60 * 1000;
 // Long enough to notice and answer, short enough that an abandoned tablet is
 // clear before the next guest reaches it.
 const IDLE_GRACE_SECONDS = 20;
+// Strains read in the order a customer is used to seeing them, not
+// alphabetically; anything else — accessory kinds — falls in after, A to Z.
+const STRAIN_ORDER = ["indica", "sativa", "hybrid"];
 
 export default function MenuClient({
   initialProducts = [],
@@ -39,7 +42,7 @@ export default function MenuClient({
 }) {
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   const [isOrderOpen, setIsOrderOpen] = React.useState(false);
-  const [typeFilter, setTypeFilter] = React.useState<TypeFilter | null>(null);
+  const [typeFilter, setTypeFilter] = React.useState<string | null>(null);
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
   const [isIdle, setIsIdle] = React.useState(false);
 
@@ -48,43 +51,63 @@ export default function MenuClient({
   const safeLang = (lang || 'en') as Language;
   const t: TranslationDictionary = translations[safeLang] || translations.en;
 
-  const matchesFilter = React.useCallback(
-    (p: any) => !typeFilter || p?.type?.toLowerCase() === typeFilter,
-    [typeFilter]
-  );
-
-  // The filter narrows the whole page, carousels included — a "Sales" row still
-  // offering sativa while the page is filtered to indica reads as a bug.
-  const visibleCategories = React.useMemo(() => {
-    if (!typeFilter) return categories;
-    const filtered: Record<string, any[]> = {};
-    for (const [key, list] of Object.entries(categories)) {
-      const kept = list.filter(matchesFilter);
-      if (kept.length > 0) filtered[key] = kept;
-    }
-    return filtered;
-  }, [categories, typeFilter, matchesFilter]);
-
   // Products arrive already in sort_order, so both rows keep the order the
   // sheet asked for instead of re-sorting by id — ids identify a product, they
-  // do not rank it.
-  const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p?.badge === 'NEW' && matchesFilter(p)), [initialProducts, matchesFilter]);
+  // do not rank it. Neither row is touched by the category filter: they are the
+  // showcase, above and outside the catalogue's own controls.
+  const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p?.badge === 'NEW'), [initialProducts]);
   // A sale is a discount, not a label somebody remembered to type: the row and
-  // the struck-through price on the card now come from the same number.
-  const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p?.discountPercent > 0 && matchesFilter(p)), [initialProducts, matchesFilter]);
+  // the struck-through price on the card come from the same number.
+  const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p?.discountPercent > 0), [initialProducts]);
 
-  const navSections = React.useMemo(
-    () => sortCategoryKeys(visibleCategories).map(key => ({ key, title: getCategoryConfig(key, t).title })),
-    [visibleCategories, t]
+  const navCategories = React.useMemo(
+    () => sortCategoryKeys(categories).map(key => ({ key, title: getCategoryConfig(key, t).title })),
+    [categories, t]
   );
 
-  // A filter can take the open category off the page entirely — accessories
-  // have no strain — so the tab falls back to whatever is still there rather
-  // than leaving the customer looking at nothing.
-  const currentCategory = React.useMemo(() => {
-    if (activeCategory && visibleCategories[activeCategory]?.length) return activeCategory;
-    return navSections[0]?.key ?? null;
-  }, [activeCategory, visibleCategories, navSections]);
+  const currentCategory = React.useMemo(
+    () => (activeCategory && categories[activeCategory]?.length ? activeCategory : navCategories[0]?.key ?? null),
+    [activeCategory, categories, navCategories]
+  );
+
+  const categoryProducts = React.useMemo(
+    () => (currentCategory ? categories[currentCategory] ?? [] : []),
+    [categories, currentCategory]
+  );
+
+  // The chips are whatever this category actually stocks — strains for flower
+  // and joints, kinds for accessories. Offering a fixed indica/sativa/hybrid row
+  // everywhere meant accessories were filtered by a property they do not have,
+  // and the whole section vanished when anyone touched it.
+  const filters = React.useMemo(() => {
+    const present = Array.from(new Set(categoryProducts.map((p: any) => p?.type).filter(Boolean)));
+    return present.sort((a: string, b: string) => {
+      const ai = STRAIN_ORDER.indexOf(a);
+      const bi = STRAIN_ORDER.indexOf(b);
+      if (ai !== -1 || bi !== -1) return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+      return a.localeCompare(b);
+    });
+  }, [categoryProducts]);
+
+  const visibleProducts = React.useMemo(
+    () => (typeFilter ? categoryProducts.filter((p: any) => p?.type === typeFilter) : categoryProducts),
+    [categoryProducts, typeFilter]
+  );
+
+  // Switching category drops the filter: "bong" means nothing under Buds, and a
+  // filter carried across would silently empty the section you just opened.
+  const selectCategory = (key: string) => {
+    setActiveCategory(key);
+    setTypeFilter(null);
+    // Tapping a tab while the bar is stuck to the top would otherwise leave you
+    // wherever you were in the old, possibly longer list.
+    requestAnimationFrame(() => {
+      const anchor = document.getElementById('catalog');
+      if (anchor && anchor.getBoundingClientRect().top < 0) {
+        window.scrollTo({ top: anchor.offsetTop, behavior: 'smooth' });
+      }
+    });
+  };
 
   // Shared kiosk device: wipe the basket and every open screen so the next
   // customer starts clean — including the language and the scroll position,
@@ -104,7 +127,6 @@ export default function MenuClient({
 
   const hasItems = items.length > 0;
   const isEmpty = initialProducts.length === 0;
-  const noMatches = !isEmpty && Object.keys(visibleCategories).length === 0;
 
   return (
     <div className={`min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans ${hasItems ? 'pb-44' : 'pb-4'}`}>
@@ -132,41 +154,32 @@ export default function MenuClient({
         <CatalogFallback t={t} failed={failed} />
       ) : (
         <>
-          <CatalogNav
-            sections={navSections}
-            activeSection={currentCategory}
-            onSelectCategory={setActiveCategory}
-            typeFilter={typeFilter}
-            onTypeFilter={setTypeFilter}
-            t={t}
-          />
+          <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
+          <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
 
-          {noMatches ? (
-            <div className="max-w-5xl mx-auto py-16 text-center">
-              <p className="text-sm font-bold text-brand-light/50 mb-5">{t.filterEmpty}</p>
-              <button
-                type="button"
-                onClick={() => { triggerHaptic('light'); setTypeFilter(null); }}
-                className="h-11 px-5 rounded-button border border-white/15 text-[12px] font-black uppercase tracking-widest text-brand-light/80 hover:border-white/30 active:scale-95 transition-all"
-              >
-                {t.filterReset}
-              </button>
-            </div>
-          ) : (
-            <>
-              <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
-              <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
+          {/* The catalogue and its controls, in that order: the tabs sit
+              directly above the products they switch, not a screen away
+              above the showcase rows. */}
+          <div id="catalog" className="scroll-mt-0">
+            <CatalogNav
+              categories={navCategories}
+              activeCategory={currentCategory}
+              onSelectCategory={selectCategory}
+              filters={filters}
+              activeFilter={typeFilter}
+              onFilter={setTypeFilter}
+              t={t}
+            />
 
-              {currentCategory && (
-                <ProductGrid
-                  category={currentCategory}
-                  products={visibleCategories[currentCategory]}
-                  t={t}
-                  onSelect={setSelectedProduct}
-                />
-              )}
-            </>
-          )}
+            {currentCategory && (
+              <ProductGrid
+                category={currentCategory}
+                products={visibleProducts}
+                t={t}
+                onSelect={setSelectedProduct}
+              />
+            )}
+          </div>
         </>
       )}
 
