@@ -83,6 +83,15 @@ const LanguageDropdown: React.FC<{ safeLang: Language; onSelect: (l: Language) =
 export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline }) => {
   const { setLang } = useCart();
 
+  // The language lives in a persisted client store, so the server cannot render
+  // the right `lang` — it always ships "en". Left alone, a Russian or Thai page
+  // is announced by a screen reader in an English voice and offered for
+  // translation from the wrong language. Kept here because this is where the
+  // switcher lives, so every page carrying the header gets it.
+  React.useEffect(() => {
+    document.documentElement.lang = safeLang;
+  }, [safeLang]);
+
   return (
     <header
       className={

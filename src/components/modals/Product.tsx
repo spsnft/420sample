@@ -6,6 +6,7 @@ import { X, Plus, Minus, ShoppingBag, Sparkles } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { Language, TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic, Baht } from "@/lib/utils"
+import { useModalA11y } from "@/lib/use-modal-a11y"
 
 const FALLBACK_IMAGE = "/images/logo.svg";
 
@@ -43,6 +44,8 @@ export const Product = ({
       onClose();
     }, 300);
   }, [onClose]);
+
+  const dialogRef = useModalA11y({ onClose: handleClose });
 
   if (!product || (!isOpen && !isClosing)) return null;
 
@@ -82,7 +85,13 @@ export const Product = ({
     <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       <div className="absolute inset-0 bg-black/80" onClick={handleClose} />
 
-      <div className="gradient-ring w-full max-w-md sm:rounded-modal rounded-t-modal shadow-2xl">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="product-dialog-title"
+        className="gradient-ring w-full max-w-md sm:rounded-modal rounded-t-modal shadow-2xl"
+      >
       <motion.div
         drag="y"
         dragConstraints={{ top: 0 }}
@@ -105,6 +114,7 @@ export const Product = ({
         <button
           type="button"
           onClick={handleClose}
+          aria-label={t.close}
           className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full border border-white/10 transition-all text-brand-light z-20"
         >
           <X size={18} />
@@ -133,7 +143,7 @@ export const Product = ({
             {product.type || product.category}
           </span>
 
-          <h2 className="text-2xl font-black uppercase tracking-tighter text-brand-light text-center leading-none mb-1">
+          <h2 id="product-dialog-title" className="text-2xl font-black uppercase tracking-tighter text-brand-light text-center leading-none mb-1">
             {product.name}
           </h2>
 
@@ -183,17 +193,19 @@ export const Product = ({
             <button
               type="button"
               onClick={() => { triggerHaptic('light'); setQuantity(Math.max(1, quantity - 1)); }}
+              aria-label={`−1 ${unitLabel}`}
               className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light/70"
             >
               <Minus size={16} />
             </button>
 
-            <span className="text-[16px] font-black w-4 text-center text-brand-light">
+            <span className="text-[16px] font-black w-4 text-center text-brand-light" aria-live="polite">
               {quantity}
             </span>
 
             <button
               type="button"
+              aria-label={`+1 ${unitLabel}`}
               onClick={() => { triggerHaptic('light'); setQuantity(quantity + 1); }}
               className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light"
             >

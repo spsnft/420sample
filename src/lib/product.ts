@@ -37,12 +37,23 @@ function formatProduct(item: any, index: number) {
   };
 }
 
-export async function getProducts() {
+// An empty catalogue and an unreachable one look identical to the page unless
+// the difference is carried out of here: one is "we sold out / nothing is
+// published", the other is "something is broken and retrying may fix it".
+// Callers render a different message for each, so the flag is part of the
+// contract rather than a console line nobody sees.
+export async function getProducts(): Promise<{
+  products: any[];
+  categories: Record<string, any[]>;
+  stories?: any[];
+  descriptions?: any[];
+  failed: boolean;
+}> {
   const SCRIPT_URL = siteConfig.apiUrl;
 
   if (!SCRIPT_URL) {
     console.warn("⚠️ API URL не настроен");
-    return { products: [], categories: {} };
+    return { products: [], categories: {}, failed: true };
   }
 
   const controller = new AbortController();
@@ -74,10 +85,11 @@ export async function getProducts() {
       categories,
       stories: data.stories || [],
       descriptions: data.descriptions || [],
+      failed: false,
     };
   } catch (error) {
     console.error("❌ Ошибка загрузки каталога:", error);
-    return { products: [], categories: {} };
+    return { products: [], categories: {}, failed: true };
   } finally {
     clearTimeout(timeout);
   }

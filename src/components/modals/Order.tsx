@@ -5,6 +5,7 @@ import { X, Trash2, ShoppingBag, CheckCircle2 } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic, Baht, generateOrderNumber } from "@/lib/utils"
+import { useModalA11y } from "@/lib/use-modal-a11y"
 
 interface OrderProps {
   items: any[];
@@ -28,6 +29,11 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
     }, 300);
   }, [onClose]);
 
+  // Once the order number is on screen the sheet stops being dismissible — it is
+  // what the customer shows the staff — so Escape and the backdrop are disabled
+  // together, and only "start new order" clears it.
+  const dialogRef = useModalA11y({ onClose: handleClose, dismissible: !orderId });
+
   const handlePlaceOrder = () => {
     if (items.length === 0) return;
     triggerHaptic('success');
@@ -45,7 +51,13 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
     <div className={`fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       <div className="absolute inset-0 bg-black/80" onClick={orderId ? undefined : handleClose} />
 
-      <div className="gradient-ring w-full max-w-lg sm:rounded-modal rounded-t-modal shadow-2xl max-h-[90vh]">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="order-dialog-title"
+        className="gradient-ring w-full max-w-lg sm:rounded-modal rounded-t-modal shadow-2xl max-h-[90vh]"
+      >
       <motion.div
         drag={orderId ? false : "y"}
         dragConstraints={{ top: 0 }}
@@ -64,6 +76,7 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
           <button
             type="button"
             onClick={handleClose}
+            aria-label={t.close}
             className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full border border-white/10 transition-all text-brand-light z-20"
           >
             <X size={18} />
@@ -80,7 +93,7 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
               {t.orderTitle}
             </span>
 
-            <h2 className="text-4xl font-black uppercase tracking-tighter text-brand-secondary leading-none mb-4">
+            <h2 id="order-dialog-title" className="text-4xl font-black uppercase tracking-tighter text-brand-secondary leading-none mb-4">
               {t.orderPlacedTitle.replace('{id}', orderId)}
             </h2>
 
@@ -122,7 +135,7 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
                 <ShoppingBag size={22} />
               </div>
               <div>
-                <h2 className="text-xl font-black uppercase tracking-tight text-brand-light">{t.orderTitle}</h2>
+                <h2 id="order-dialog-title" className="text-xl font-black uppercase tracking-tight text-brand-light">{t.orderTitle}</h2>
                 <p className="text-xs text-brand-light/50">{items.length} {t.items}</p>
               </div>
             </div>
@@ -146,6 +159,7 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
                       <button
                         type="button"
                         onClick={() => { triggerHaptic('warning'); removeItem(item.id, item.weight); }}
+                        aria-label={`${t.remove}: ${item.name}`}
                         className="p-2 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 rounded-badge transition-all"
                       >
                         <Trash2 size={16} />

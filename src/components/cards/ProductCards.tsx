@@ -45,10 +45,27 @@ export const BadgeIcon = React.memo(({ type, isSmall }: { type: string, isSmall?
 // rendered box makes next/image serve an upscaled, soft image.
 const GRID_SIZES = "(min-width: 768px) 340px, 50vw";
 
-export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID_SIZES }: { item: any, onClick: () => void, priority?: boolean, sizes?: string }) => {
-  if (!item) return null;
+// Shown on the New/Sales rows only. The same strain exists as a bud and as a
+// joint at different prices, so a card pulled out of its category and dropped
+// into a mixed row is ambiguous without it — inside the category sections the
+// heading already says which is which, and the chip would be noise.
+const CATEGORY_LABELS: Record<string, string> = {
+  buds: "Bud",
+  joints: "Joint",
+  accessories: "Accessory",
+};
 
-  const [imgSrc, setImgSrc] = React.useState(item.image || FALLBACK_IMAGE);
+// Same ring on every tappable catalogue element, and only for keyboard users —
+// `focus-visible` keeps it off during touch and mouse presses.
+export const FOCUS_RING =
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary";
+
+export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID_SIZES, showCategory }: { item: any, onClick: () => void, priority?: boolean, sizes?: string, showCategory?: boolean }) => {
+  // Above the empty-item bail-out: a hook behind a conditional return changes
+  // the hook order between renders, which is a crash waiting for the first null.
+  const [imgSrc, setImgSrc] = React.useState(item?.image || FALLBACK_IMAGE);
+
+  if (!item) return null;
 
   const typeUpper = item.type?.toUpperCase() || "";
   let accentColor = '#3A6B58';
@@ -60,10 +77,13 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
   const priceInfo = getFirstAvailablePrice(item) || { price: 0, weight: 0 };
   const currentPrice = priceInfo.price || 0;
 
+  const categoryLabel = showCategory ? CATEGORY_LABELS[item.category] : null;
+
   return (
-    <div
+    <button
+      type="button"
       onClick={() => { triggerHaptic('light'); onClick(); }}
-      className="relative rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden h-[200px] bg-brand-primary card-premium"
+      className={`relative w-full text-left rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden h-[200px] bg-brand-primary card-premium ${FOCUS_RING}`}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70 pointer-events-none" />
       <div className="absolute inset-0 opacity-30 pointer-events-none transition-opacity duration-500 group-hover:opacity-50" style={{ background: `radial-gradient(ellipse at 50% 80%, ${accentColor}15, transparent 70%)` }} />
@@ -92,31 +112,43 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
         </div>
       </div>
 
-      <div className="relative z-10 flex justify-between items-end px-4 pb-3 mt-auto">
-        <span className="text-[11px] font-black uppercase tracking-normal brightness-125" style={{ color: accentColor }}>
-          {item.type}
+      {/* Category sits above the strain type rather than beside the name: on a
+          160px card a chip in the title row cost enough width to truncate
+          "Lemon Cherry Bath" to "Lemon Cherr…". */}
+      <div className="relative z-10 flex justify-between items-end px-4 pb-3 mt-auto gap-2">
+        <span className="min-w-0 flex flex-col">
+          {categoryLabel && (
+            <span className="text-[9px] font-black uppercase tracking-wide text-brand-light/45 leading-none mb-1 truncate">
+              {categoryLabel}
+            </span>
+          )}
+          <span className="text-[11px] font-black uppercase tracking-normal brightness-125 leading-none truncate" style={{ color: accentColor }}>
+            {item.type}
+          </span>
         </span>
         <p className="text-[16px] font-black tracking-tighter leading-none text-brand-light">
           {currentPrice > 0 ? (<>{currentPrice}<BahtSymbol /></>) : '—'}
         </p>
       </div>
-    </div>
+    </button>
   );
 });
 
 export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) => {
-  if (!p) return null;
+  // See HighlightCard: state has to be declared before the bail-out.
+  const [imgSrc, setImgSrc] = React.useState(p?.image || FALLBACK_IMAGE);
 
-  const [imgSrc, setImgSrc] = React.useState(p.image || FALLBACK_IMAGE);
+  if (!p) return null;
 
   const typeKey = p.type?.toLowerCase() || "";
   const priceInfo = getFirstAvailablePrice(p) || { price: 0 };
   const displayPrice = priceInfo.price || 0;
 
   return (
-    <div
+    <button
+      type="button"
       onClick={() => { triggerHaptic('light'); onClick(); }}
-      className="flex items-center justify-between gap-3 px-4 py-4 text-brand-light border-b border-white/10 last:border-b-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group"
+      className={`w-full text-left flex items-center justify-between gap-3 px-4 py-4 text-brand-light border-b border-white/10 last:border-b-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group ${FOCUS_RING} focus-visible:ring-inset focus-visible:ring-offset-0`}
     >
       <div className="flex items-center gap-3 truncate flex-1">
         <div className="w-8 h-8 bg-black/10 rounded-badge overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5 relative">
@@ -149,6 +181,6 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
           {displayPrice > 0 ? (<>{displayPrice}<BahtSymbol /></>) : '—'}
         </span>
       </div>
-    </div>
+    </button>
   );
 });

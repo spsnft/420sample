@@ -10,11 +10,20 @@ export interface TranslationDictionary {
   updates: string;
   sales: string;
   accessories: string;
+  menuTitle: string;
   open: string;
   close: string;
+  remove: string;
   basket: string;
   items: string;
   total: string;
+
+  // Catalogue states — shown in place of the product sections when the menu
+  // cannot be fetched, or when it loads but has nothing in it.
+  catalogErrorTitle: string;
+  catalogErrorBody: string;
+  catalogRetry: string;
+  catalogEmpty: string;
 
   // Order flow (kiosk)
   orderTitle: string;
@@ -55,11 +64,18 @@ export const translations: Record<Language, TranslationDictionary> = {
     updates: "New",
     sales: "Sales",
     accessories: "Accessories",
+    menuTitle: "Menu",
     open: "Open",
     close: "Close",
+    remove: "Remove",
     basket: "Basket",
     items: "items",
     total: "Total",
+
+    catalogErrorTitle: "Menu unavailable",
+    catalogErrorBody: "We couldn't load today's menu. Check the connection and try again — or just ask our staff.",
+    catalogRetry: "Try again",
+    catalogEmpty: "Nothing on the menu right now. Please ask our staff.",
 
     // Order flow (kiosk)
     orderTitle: "Your Order",
@@ -101,11 +117,18 @@ export const translations: Record<Language, TranslationDictionary> = {
     updates: "Новинки",
     sales: "Распродажа",
     accessories: "Аксессуары",
+    menuTitle: "Меню",
     open: "Открыть",
     close: "Закрыть",
+    remove: "Удалить",
     basket: "Корзина",
     items: "тов.",
     total: "Итого",
+
+    catalogErrorTitle: "Меню недоступно",
+    catalogErrorBody: "Не удалось загрузить сегодняшнее меню. Проверьте соединение и попробуйте снова — или спросите у наших сотрудников.",
+    catalogRetry: "Повторить",
+    catalogEmpty: "Сейчас в меню ничего нет. Спросите у наших сотрудников.",
 
     // Order flow (kiosk)
     orderTitle: "Ваш заказ",
@@ -147,11 +170,18 @@ export const translations: Record<Language, TranslationDictionary> = {
     updates: "มาใหม่",
     sales: "ลดราคา",
     accessories: "อุปกรณ์เสริม",
+    menuTitle: "เมนู",
     open: "เปิด",
     close: "ปิด",
+    remove: "ลบ",
     basket: "ตะกร้า",
     items: "ชิ้น",
     total: "ยอดรวม",
+
+    catalogErrorTitle: "ไม่สามารถแสดงเมนูได้",
+    catalogErrorBody: "โหลดเมนูของวันนี้ไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อแล้วลองใหม่อีกครั้ง หรือสอบถามพนักงานของเรา",
+    catalogRetry: "ลองอีกครั้ง",
+    catalogEmpty: "ขณะนี้ยังไม่มีรายการในเมนู กรุณาสอบถามพนักงานของเรา",
 
     // Order flow (kiosk)
     orderTitle: "รายการสั่งซื้อของคุณ",

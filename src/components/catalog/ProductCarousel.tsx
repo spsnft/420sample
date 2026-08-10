@@ -48,7 +48,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({ type, title, p
         >
           {products.map((p: any, idx: number) => (
             <div key={p?.id || idx} className="w-[160px] shrink-0 snap-start">
-              <HighlightCard item={p} onClick={() => onSelect(p)} priority={idx < 4} sizes={CARD_SIZES} />
+              <HighlightCard item={p} onClick={() => onSelect(p)} priority={idx < 4} sizes={CARD_SIZES} showCategory />
             </div>
           ))}
         </div>
