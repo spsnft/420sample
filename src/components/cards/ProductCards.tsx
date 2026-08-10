@@ -146,7 +146,11 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
     <button
       type="button"
       onClick={() => { triggerHaptic('light'); onClick(); }}
-      className={`w-full text-left flex items-center justify-between gap-3 px-4 py-4 text-brand-light border-b border-white/10 last:border-b-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group ${FOCUS_RING} focus-visible:ring-inset focus-visible:ring-offset-0`}
+      // Divider on top rather than bottom: in the desktop two-column list the
+      // container can then drop it from the first row of each column with one
+      // rule, whatever the product count. A bottom border cannot — "last child"
+      // is one cell, so the left column kept a stray line under it.
+      className={`w-full text-left flex items-center justify-between gap-3 px-4 py-4 text-brand-light border-t border-white/10 first:border-t-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group ${FOCUS_RING} focus-visible:ring-inset focus-visible:ring-offset-0`}
     >
       <div className="flex items-center gap-3 truncate flex-1">
         <div className="w-8 h-8 bg-black/10 rounded-badge overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5 relative">

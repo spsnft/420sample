@@ -4,7 +4,7 @@ import { ShoppingBag, Send } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
 import { translations, Language, TranslationDictionary } from "@/lib/translations"
-import { Product, Order, AgeGate } from "@/components/modals"
+import { Product, Order, AgeGate, IdlePrompt } from "@/components/modals"
 import { Header } from "@/components/layout/Header"
 import { ProductCarousel } from "@/components/catalog/ProductCarousel"
 import { ProductGrid, sortCategoryKeys, getCategoryConfig } from "@/components/catalog/ProductGrid"
@@ -16,29 +16,34 @@ import { useIdleTimer } from "@/lib/use-idle-timer"
 import { siteConfig } from "@/config/site"
 
 const IDLE_TIMEOUT_MS = 4 * 60 * 1000;
+// Long enough to notice and answer, short enough that an abandoned tablet is
+// clear before the next guest reaches it.
+const IDLE_GRACE_SECONDS = 20;
 
 export default function MenuClient({
   initialProducts = [],
   categories = {},
   failed = false,
+  kiosk = false,
+  ageVerified = false,
 }: {
   initialProducts: any[],
   initialDescriptions?: any[],
   categories?: Record<string, any[]>,
   failed?: boolean,
+  /** The shop's own tablet, opened once with ?kiosk=1. */
+  kiosk?: boolean,
+  /** Decided on the server from the age cookie, so the catalogue is never
+   *  rendered to someone who has not answered. */
+  ageVerified?: boolean,
 }) {
-  const allSections = React.useMemo(() => sortCategoryKeys(categories), [categories]);
-
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   const [isOrderOpen, setIsOrderOpen] = React.useState(false);
-  // Every section starts open. Collapsed-by-default hid Joints and Accessories
-  // behind a control most people never tapped — the state is there to shorten a
-  // menu you have already seen, not to introduce it.
-  const [openSections, setOpenSections] = React.useState<string[]>(allSections);
   const [typeFilter, setTypeFilter] = React.useState<TypeFilter | null>(null);
-  const [activeSection, setActiveSection] = React.useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
+  const [isIdle, setIsIdle] = React.useState(false);
 
-  const { items, getTotal, lang, clearCart } = useCart();
+  const { items, getTotal, lang, setLang, clearCart } = useCart();
 
   const safeLang = (lang || 'en') as Language;
   const t: TranslationDictionary = translations[safeLang] || translations.en;
@@ -73,50 +78,29 @@ export default function MenuClient({
     [visibleCategories, t]
   );
 
-  const toggleSection = (id: string) => {
-    triggerHaptic('light');
-    setOpenSections(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
-  };
+  // A filter can take the open category off the page entirely — accessories
+  // have no strain — so the tab falls back to whatever is still there rather
+  // than leaving the customer looking at nothing.
+  const currentCategory = React.useMemo(() => {
+    if (activeCategory && visibleCategories[activeCategory]?.length) return activeCategory;
+    return navSections[0]?.key ?? null;
+  }, [activeCategory, visibleCategories, navSections]);
 
-  // Tapping a category in the nav opens it first: scrolling to a heading with
-  // nothing under it looks like the jump failed.
-  const jumpToSection = (key: string) => {
-    setOpenSections(p => p.includes(key) ? p : [...p, key]);
-    requestAnimationFrame(() => {
-      document.getElementById(`cat-${key}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  };
-
-  // Which category the reader is currently in. The band is deliberately narrow
-  // and high on the screen, so the highlight changes when a heading reaches
-  // reading position rather than when a section merely enters the viewport.
-  React.useEffect(() => {
-    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-category]"));
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      entries => {
-        const visible = entries.filter(e => e.isIntersecting);
-        if (visible.length > 0) setActiveSection(visible[0].target.getAttribute("data-category"));
-      },
-      { rootMargin: "-20% 0px -70% 0px" }
-    );
-
-    sections.forEach(s => observer.observe(s));
-    return () => observer.disconnect();
-  }, [navSections]);
-
-  // Shared kiosk device: wipe cart & any open screens after a period of inactivity
-  // so the next customer never sees the previous person's order.
+  // Shared kiosk device: wipe the basket and every open screen so the next
+  // customer starts clean — including the language and the scroll position,
+  // which used to carry over from whoever stood there before.
   const resetSession = React.useCallback(() => {
     setSelectedProduct(null);
     setIsOrderOpen(false);
-    setOpenSections(allSections);
     setTypeFilter(null);
+    setActiveCategory(null);
+    setIsIdle(false);
+    setLang('en');
     clearCart();
-  }, [clearCart, allSections]);
+    window.scrollTo({ top: 0 });
+  }, [clearCart, setLang]);
 
-  useIdleTimer(IDLE_TIMEOUT_MS, resetSession);
+  useIdleTimer(IDLE_TIMEOUT_MS, () => setIsIdle(true), kiosk);
 
   const hasItems = items.length > 0;
   const isEmpty = initialProducts.length === 0;
@@ -125,7 +109,16 @@ export default function MenuClient({
   return (
     <div className={`min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans ${hasItems ? 'pb-44' : 'pb-4'}`}>
 
-      <AgeGate />
+      {!ageVerified && <AgeGate />}
+
+      {isIdle && (
+        <IdlePrompt
+          seconds={IDLE_GRACE_SECONDS}
+          t={t}
+          onStay={() => setIsIdle(false)}
+          onExpire={resetSession}
+        />
+      )}
 
       <Header safeLang={safeLang} />
 
@@ -141,8 +134,8 @@ export default function MenuClient({
         <>
           <CatalogNav
             sections={navSections}
-            activeSection={activeSection}
-            onJump={jumpToSection}
+            activeSection={currentCategory}
+            onSelectCategory={setActiveCategory}
             typeFilter={typeFilter}
             onTypeFilter={setTypeFilter}
             t={t}
@@ -164,13 +157,14 @@ export default function MenuClient({
               <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
               <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
 
-              <ProductGrid
-                categories={visibleCategories}
-                openSections={openSections}
-                toggleSection={toggleSection}
-                t={t}
-                onSelect={setSelectedProduct}
-              />
+              {currentCategory && (
+                <ProductGrid
+                  category={currentCategory}
+                  products={visibleCategories[currentCategory]}
+                  t={t}
+                  onSelect={setSelectedProduct}
+                />
+              )}
             </>
           )}
         </>

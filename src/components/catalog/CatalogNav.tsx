@@ -16,30 +16,29 @@ export type TypeFilter = (typeof TYPE_FILTERS)[number];
 interface CatalogNavProps {
   sections: { key: string; title: string }[];
   activeSection: string | null;
-  onJump: (key: string) => void;
+  onSelectCategory: (key: string) => void;
   typeFilter: TypeFilter | null;
   onTypeFilter: (type: TypeFilter | null) => void;
   t: TranslationDictionary;
 }
 
-// Sticky strip carrying both ways of getting around a long menu: jump to a
-// category, or narrow the whole page to one strain type. They share a row —
+// Sticky strip carrying both ways of getting around the menu: switch category,
+// or narrow the page to one strain type. The categories are tabs, not links to
+// sections — one category is on screen at a time, which keeps each screen short
+// and gives the bar something visible to do. They share a row with the filters —
 // two stacked rows would eat 90px of a phone screen — and are told apart by
-// shape: category chips are bare text with an underline, filters are outlined
-// pills behind a filter icon.
+// shape: tabs are bare text with an underline, filters are outlined pills
+// behind a filter icon.
 export const CatalogNav: React.FC<CatalogNavProps> = ({
   sections,
   activeSection,
-  onJump,
+  onSelectCategory,
   typeFilter,
   onTypeFilter,
   t,
 }) => {
   const { ref, mask } = useScrollEdges(sections.length);
 
-  // Nothing is "current" until the reader reaches a section, but a nav with no
-  // active tab at the top of the page looks broken — so the first category
-  // holds the highlight until scrolling says otherwise.
   const current = activeSection ?? sections[0]?.key;
 
   return (
@@ -66,8 +65,8 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
               <button
                 key={key}
                 type="button"
-                onClick={() => { triggerHaptic('light'); onJump(key); }}
-                aria-current={isActive ? "true" : undefined}
+                onClick={() => { triggerHaptic('light'); onSelectCategory(key); }}
+                aria-current={isActive ? "page" : undefined}
                 className={`shrink-0 px-2.5 h-8 rounded-badge text-[12px] font-black uppercase tracking-wide transition-colors border-b-2 ${FOCUS_RING} ${
                   isActive
                     ? "text-brand-secondary border-brand-secondary"
