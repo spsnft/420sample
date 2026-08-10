@@ -13,6 +13,11 @@ const LANGUAGES: Language[] = ['en', 'th', 'ru'];
 interface HeaderProps {
   safeLang: Language;
   sticky?: boolean;
+  // Optional sub-line tucked under the wordmark, used by /partners to attribute
+  // the build ("by FT.Agency"). It renders *outside* the home Link — it is a
+  // link of its own, and an anchor cannot nest inside another anchor — so the
+  // wordmark and the logo are two separate links to "/" rather than one.
+  byline?: React.ReactNode;
 }
 
 const LanguageDropdown: React.FC<{ safeLang: Language; onSelect: (l: Language) => void }> = ({ safeLang, onSelect }) => {
@@ -75,7 +80,7 @@ const LanguageDropdown: React.FC<{ safeLang: Language; onSelect: (l: Language) =
   );
 };
 
-export const Header: React.FC<HeaderProps> = ({ safeLang, sticky }) => {
+export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline }) => {
   const { setLang } = useCart();
 
   return (
@@ -90,12 +95,20 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky }) => {
       }
     >
       <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
-        <Link href="/" className="flex items-center gap-2.5 min-w-0 shrink-0">
-          <Image src="/images/logo.svg" priority width={64} height={64} className="w-auto h-8 sm:h-9 md:h-10 object-contain shrink-0" alt={siteConfig.name} />
-          <span className="text-[18px] sm:text-[21px] font-black uppercase tracking-wide text-brand-light whitespace-nowrap">
-            {siteConfig.name}
-          </span>
-        </Link>
+        <div className="flex items-center gap-2.5 min-w-0 shrink-0">
+          <Link href="/" className="shrink-0" aria-label={siteConfig.name}>
+            <Image src="/images/logo.svg" priority width={64} height={64} className="w-auto h-8 sm:h-9 md:h-10 object-contain shrink-0" alt={siteConfig.name} />
+          </Link>
+          <div className="min-w-0">
+            <Link
+              href="/"
+              className="block text-[18px] sm:text-[21px] font-black uppercase tracking-wide text-brand-light whitespace-nowrap"
+            >
+              {siteConfig.name}
+            </Link>
+            {byline}
+          </div>
+        </div>
 
         <LanguageDropdown safeLang={safeLang} onSelect={setLang} />
       </div>

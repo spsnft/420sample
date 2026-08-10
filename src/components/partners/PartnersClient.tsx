@@ -54,17 +54,24 @@ export default function PartnersClient() {
 
   return (
     <div className="min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans">
-      <Header safeLang={safeLang} />
-      <p className="max-w-xl mx-auto text-center text-[10px] font-black uppercase tracking-[0.2em] text-brand-light/30 -mt-2 mb-4">
-        <Link
-          href="https://tsvetkov.site"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-brand-light/60 transition-colors"
-        >
-          by FT.Agency
-        </Link>
-      </p>
+      {/* The attribution belongs to the wordmark, not to the page: as a
+          centred line of its own under a left-aligned header it read as an
+          orphan and pushed the hero down. Tucked under "420 Store" it becomes
+          part of the lockup — "this shop, built by us" — which is the whole
+          pitch of the page. */}
+      <Header
+        safeLang={safeLang}
+        byline={
+          <Link
+            href="https://tsvetkov.site"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block -mt-0.5 text-[9px] font-black uppercase tracking-[0.18em] text-brand-light/30 hover:text-brand-light/60 transition-colors"
+          >
+            by FT.Agency
+          </Link>
+        }
+      />
 
       <main className="max-w-xl mx-auto space-y-6 pb-10">
         <section className="text-center py-4">
