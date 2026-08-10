@@ -125,14 +125,18 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
             {item.type}
           </span>
         </span>
-        {/* shrink-0: without it the price shares the squeeze with the labels on
-            its left, and a discounted card — two figures instead of one — cut
-            "Accessory" to "Acce…" and "Indica" to "Indi…". */}
-        <p className="shrink-0 text-[16px] font-black tracking-tighter leading-none text-brand-light flex items-baseline gap-1.5">
+        {/* The old price stacks above the new one rather than sitting beside
+            it. Side by side, two figures on a 160px card left the labels on
+            the left about 48px — enough to cut "Indica" to "Indi…". Stacked,
+            the price column is as narrow as an undiscounted card's, and it
+            mirrors the category-over-type stack opposite. */}
+        <p className="shrink-0 flex flex-col items-end leading-none text-brand-light">
           {discounted && (
-            <span className="text-[11px] font-bold text-brand-light/40 line-through">{listPrice}</span>
+            <span className="text-[11px] font-bold text-brand-light/40 line-through mb-1">{listPrice}</span>
           )}
-          {currentPrice > 0 ? (<>{currentPrice}<BahtSymbol /></>) : '—'}
+          <span className="text-[16px] font-black tracking-tighter">
+            {currentPrice > 0 ? (<>{currentPrice}<BahtSymbol /></>) : '—'}
+          </span>
         </p>
       </div>
     </button>
