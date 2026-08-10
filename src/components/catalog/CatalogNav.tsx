@@ -45,7 +45,11 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
   return (
     <nav
       aria-label={t.menuTitle}
-      className="sticky top-0 z-[95] -mx-4 px-4 py-2 mb-4 bg-brand-primary border-b border-white/5"
+      // Translucent rather than solid now that the page has a gradient behind
+      // it: an opaque bar would sit on the background as a visible band the
+      // moment the two stopped matching, which is at every scroll position but
+      // the top.
+      className="sticky top-0 z-[95] -mx-4 px-4 py-2 mb-4 bg-brand-primary/80 backdrop-blur-xl border-b border-white/5"
     >
       {/* One row on a desktop screen, two on a phone: all six controls in a
           single 390px row left the filters off-screen behind a horizontal
