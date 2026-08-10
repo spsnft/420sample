@@ -11,13 +11,17 @@ interface CategoryConfig {
   collapsible?: boolean;
 }
 
-function getCategoryConfig(category: string, t: TranslationDictionary): CategoryConfig {
+export function getCategoryConfig(category: string, t: TranslationDictionary): CategoryConfig {
   const configs: Record<string, CategoryConfig> = {
     buds: {
       title: "Buds",
       icon: <Leaf size={20} className="text-brand-secondary" />,
       layout: "list",
-      collapsible: false,
+      // Collapsible like the rest: ten rows of flower filled a phone screen on
+      // their own, pushing Joints and Accessories — both collapsed — below the
+      // fold, so two thirds of the menu were invisible until you scrolled past
+      // the part you could already see.
+      collapsible: true,
     },
     joints: {
       title: "Joints",
@@ -53,6 +57,23 @@ function isList(layout: "list" | "grid2" | "grid4"): boolean {
   return layout === "list";
 }
 
+// Flower first, joints next to it, accessories last, anything unknown in
+// between alphabetically. Exported so the sticky nav lists the categories in
+// the order the page actually renders them.
+export function sortCategoryKeys(categories: Record<string, any[]>): string[] {
+  const priorityOrder = ["buds", "joints"];
+  return Object.keys(categories).sort((a, b) => {
+    if (a === "accessories") return 1;
+    if (b === "accessories") return -1;
+    const aIdx = priorityOrder.indexOf(a);
+    const bIdx = priorityOrder.indexOf(b);
+    if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+    if (aIdx !== -1) return -1;
+    if (bIdx !== -1) return 1;
+    return a.localeCompare(b);
+  });
+}
+
 interface ProductGridProps {
   categories: Record<string, any[]>;
   openSections: string[];
@@ -69,18 +90,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   onSelect,
 }) => {
   const priorityOrder = ["buds", "joints"];
-  const accessoryKey = "accessories";
 
-  const sortedKeys = Object.keys(categories).sort((a, b) => {
-    if (a === accessoryKey) return 1;
-    if (b === accessoryKey) return -1;
-    const aIdx = priorityOrder.indexOf(a);
-    const bIdx = priorityOrder.indexOf(b);
-    if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
-    if (aIdx !== -1) return -1;
-    if (bIdx !== -1) return 1;
-    return a.localeCompare(b);
-  });
+  const sortedKeys = sortCategoryKeys(categories);
 
   const specialListKeys = priorityOrder.filter(k => categories[k]?.length > 0);
   const restKeys = sortedKeys.filter(k => !priorityOrder.includes(k));
@@ -98,7 +109,9 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             const isOpen = openSections.includes(cat);
 
             return (
-              <section key={cat} className="flex flex-col h-full space-y-3">
+              // scroll-mt clears the sticky nav, so jumping to a category does
+              // not park its heading underneath the bar you tapped it from.
+              <section key={cat} id={`cat-${cat}`} data-category={cat} className="flex flex-col h-full space-y-3 scroll-mt-20">
                 {config.collapsible ? (
                   <button
                     type="button"
@@ -158,7 +171,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         const isOpen = openSections.includes(cat);
 
         return (
-          <section key={cat} className="w-full space-y-3">
+          <section key={cat} id={`cat-${cat}`} data-category={cat} className="w-full space-y-3 scroll-mt-20">
             <button
               type="button"
               onClick={() => toggleSection(cat)}
