@@ -38,7 +38,14 @@ export const BadgeIcon = React.memo(({ type, isSmall }: { type: string, isSmall?
   }
 });
 
-export const HighlightCard = React.memo(({ item, onClick, priority }: { item: any, onClick: () => void, priority?: boolean }) => {
+// Widest the card gets in the category grids: 4 columns inside max-w-5xl leaves
+// ~235px, 3 columns ~330px, and two columns on a phone are about half the
+// viewport. The carousel passes its own fixed width instead. Getting this wrong
+// is invisible in code and very visible on screen — a `sizes` smaller than the
+// rendered box makes next/image serve an upscaled, soft image.
+const GRID_SIZES = "(min-width: 768px) 340px, 50vw";
+
+export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID_SIZES }: { item: any, onClick: () => void, priority?: boolean, sizes?: string }) => {
   if (!item) return null;
 
   const [imgSrc, setImgSrc] = React.useState(item.image || FALLBACK_IMAGE);
@@ -77,7 +84,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority }: { item: an
             alt={item.name || "Product"}
             fill
             className="object-contain transform group-hover:scale-105 transition-transform duration-300 relative z-10"
-            sizes="160px"
+            sizes={sizes}
             priority={priority}
             style={{ filter: `drop-shadow(0 0 18px ${accentColor}40)` }}
             onError={() => setImgSrc(FALLBACK_IMAGE)}
