@@ -29,7 +29,7 @@ export interface PartnersDictionary {
 
 export const partnersTranslations: Record<Language, PartnersDictionary> = {
   ru: {
-    heroTitle: "Не просто сайт. Система, на которой вы работаете",
+    heroTitle: "Не просто сайт. Система, с которой вы работаете",
     heroPills: [
       "Проверка мед. карты",
       "Цифровое меню",

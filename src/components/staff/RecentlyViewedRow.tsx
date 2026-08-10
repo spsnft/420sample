@@ -21,7 +21,13 @@ export function RecentlyViewedRow({ clients }: { clients: ClientDirectoryEntry[]
   return (
     <div>
       <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-2">Recently Viewed</p>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 pb-1">
+      {/* The scroll row shares the content column's edges rather than bleeding
+          past them. The old `-mx-4 px-4` was aimed at a phone, where the
+          column's padding is the only thing between it and the screen edge —
+          but the column is centred once the viewport passes max-w-2xl, so on
+          anything wider the bleed just moved the clip edge 16px to the right
+          of every other block on the page and read as a misalignment. */}
+      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
         {clients.map((c) => {
           const pending = isRowPending(c.client_id);
           const tint = c.status ? STATUS_TINT[c.status] : NEUTRAL_TINT;
