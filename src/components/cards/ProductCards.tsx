@@ -2,11 +2,7 @@
 import * as React from "react"
 import Image from "next/image"
 import { Plus, Tag, Zap } from "lucide-react"
-import {
-  triggerHaptic,
-  TYPE_COLORS,
-  GOLDEN_COLOR
-} from "@/lib/utils"
+import { triggerHaptic, accentFor } from "@/lib/utils"
 import { entryPrice } from "@/lib/pricing"
 
 const FALLBACK_IMAGE = "/images/logo.svg";
@@ -67,12 +63,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
 
   if (!item) return null;
 
-  const typeUpper = item.type?.toUpperCase() || "";
-  let accentColor = '#3A6B58';
-  if (item.category === 'joints') accentColor = GOLDEN_COLOR;
-  else if (typeUpper === 'SATIVA') accentColor = '#B65C3A';
-  else if (typeUpper === 'INDICA') accentColor = '#8A5A96';
-  else if (typeUpper === 'HYBRID') accentColor = '#3A6B58';
+  const accentColor = accentFor(item);
 
   const { price: currentPrice, listPrice, discounted } = entryPrice(item);
 
@@ -149,7 +140,6 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
 
   if (!p) return null;
 
-  const typeKey = p.type?.toLowerCase() || "";
   const { price: displayPrice, listPrice: rowListPrice, discounted: rowDiscounted } = entryPrice(p);
 
   return (
@@ -182,7 +172,7 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
       </div>
 
       <div className="flex items-center gap-4 shrink-0">
-        <span className="text-[11px] font-black uppercase tracking-normal" style={{ color: TYPE_COLORS[typeKey] || '#10B981' }}>
+        <span className="text-[11px] font-black uppercase tracking-normal" style={{ color: accentFor(p) }}>
           {p.type}
         </span>
         <span className="text-[14px] font-black text-brand-light flex items-baseline gap-1.5">

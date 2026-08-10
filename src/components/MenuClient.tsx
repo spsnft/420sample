@@ -11,7 +11,7 @@ import { ProductGrid, sortCategoryKeys, getCategoryConfig } from "@/components/c
 import { CatalogFallback } from "@/components/catalog/CatalogFallback"
 import { CatalogNav, TypeFilter } from "@/components/catalog/CatalogNav"
 import { BahtSymbol } from "@/components/cards/ProductCards"
-import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
+import { triggerHaptic, accentFor } from "@/lib/utils"
 import { useIdleTimer } from "@/lib/use-idle-timer"
 import { siteConfig } from "@/config/site"
 
@@ -198,7 +198,7 @@ export default function MenuClient({
         <Product
           product={selectedProduct}
           t={t}
-          style={{ color: selectedProduct.category === 'joints' ? GOLDEN_COLOR : '#10B981' }}
+          style={{ color: accentFor(selectedProduct) }}
           onClose={() => setSelectedProduct(null)}
         />
       )}
