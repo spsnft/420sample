@@ -4,10 +4,10 @@ import Image from "next/image"
 import { Plus, Tag, Zap } from "lucide-react"
 import {
   triggerHaptic,
-  getFirstAvailablePrice,
   TYPE_COLORS,
   GOLDEN_COLOR
 } from "@/lib/utils"
+import { entryPrice } from "@/lib/pricing"
 
 const FALLBACK_IMAGE = "/images/logo.svg";
 
@@ -74,8 +74,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
   else if (typeUpper === 'INDICA') accentColor = '#8A5A96';
   else if (typeUpper === 'HYBRID') accentColor = '#3A6B58';
 
-  const priceInfo = getFirstAvailablePrice(item) || { price: 0, weight: 0 };
-  const currentPrice = priceInfo.price || 0;
+  const { price: currentPrice, listPrice, discounted } = entryPrice(item);
 
   const categoryLabel = showCategory ? CATEGORY_LABELS[item.category] : null;
 
@@ -126,7 +125,13 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
             {item.type}
           </span>
         </span>
-        <p className="text-[16px] font-black tracking-tighter leading-none text-brand-light">
+        {/* shrink-0: without it the price shares the squeeze with the labels on
+            its left, and a discounted card — two figures instead of one — cut
+            "Accessory" to "Acce…" and "Indica" to "Indi…". */}
+        <p className="shrink-0 text-[16px] font-black tracking-tighter leading-none text-brand-light flex items-baseline gap-1.5">
+          {discounted && (
+            <span className="text-[11px] font-bold text-brand-light/40 line-through">{listPrice}</span>
+          )}
           {currentPrice > 0 ? (<>{currentPrice}<BahtSymbol /></>) : '—'}
         </p>
       </div>
@@ -141,8 +146,7 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
   if (!p) return null;
 
   const typeKey = p.type?.toLowerCase() || "";
-  const priceInfo = getFirstAvailablePrice(p) || { price: 0 };
-  const displayPrice = priceInfo.price || 0;
+  const { price: displayPrice, listPrice: rowListPrice, discounted: rowDiscounted } = entryPrice(p);
 
   return (
     <button
@@ -165,9 +169,9 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
           <span className="text-[13px] font-black uppercase tracking-tight text-brand-light/90 truncate leading-tight group-hover:text-brand-secondary transition-colors block">
             {p.name}
           </span>
-          {p.farm && p.farm !== "-" && (
+          {p.taste && (
             <span className="text-[11px] font-bold text-brand-light/40 uppercase tracking-normal block truncate">
-              {p.farm}
+              {p.taste}
             </span>
           )}
         </div>
@@ -177,7 +181,10 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
         <span className="text-[11px] font-black uppercase tracking-normal" style={{ color: TYPE_COLORS[typeKey] || '#10B981' }}>
           {p.type}
         </span>
-        <span className="text-[14px] font-black text-brand-light">
+        <span className="text-[14px] font-black text-brand-light flex items-baseline gap-1.5">
+          {rowDiscounted && (
+            <span className="text-[11px] font-bold text-brand-light/40 line-through">{rowListPrice}</span>
+          )}
           {displayPrice > 0 ? (<>{displayPrice}<BahtSymbol /></>) : '—'}
         </span>
       </div>

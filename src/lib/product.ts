@@ -1,6 +1,11 @@
 import { siteConfig } from "@/config/site"
+import { parseTiers, parseUnit, parseDiscount } from "@/lib/pricing"
 
 const FALLBACK_IMAGE = "/images/logo.svg";
+
+// Products with no sort_order fall to the end of their section rather than to
+// the front, so a row added in a hurry never displaces a curated order.
+const UNSORTED = Number.MAX_SAFE_INTEGER;
 
 function formatProduct(item: any, index: number) {
   let rawImg = item.image || item.photo || item.Image || item.Photo || '';
@@ -16,25 +21,39 @@ function formatProduct(item: any, index: number) {
     cleanImage = FALLBACK_IMAGE;
   }
 
+  const category = String(item.category || "").toLowerCase().trim();
+  const sortOrder = Number(item.sort_order);
+
   return {
-    ...item,
     id: String(item.id || `product-${index}`),
     name: String(item.name || "Unnamed Product"),
-    category: String(item.category || "").toLowerCase().trim(),
-    subcategory: String(item.subcategory || "").toLowerCase().trim(),
+    category,
+    // Strain for flower and joints, kind of thing for accessories — the same
+    // question asked of whatever the row happens to be, which is why it is one
+    // column and one slot on the card.
+    type: String(item.type || "").toLowerCase().trim(),
     image: cleanImage,
     description: String(item.description || ""),
-    farm: String(item.farm || "Organic Demo Farm"),
-    taste: String(item.taste || "Sweet, Earthy"),
-    terpenes: String(item.terpenes || "Myrcene, Limonene"),
-    prices: {
-      1: Number(item.price_1g) || 0,
-      5: Number(item.price_5g) || 0,
-      10: Number(item.price_10g) || 0,
-      20: Number(item.price_20g) || 0
-    },
-    price: Number(item.price_1g) || Number(item.price) || 0
+    taste: String(item.taste || ""),
+    terpenes: String(item.terpenes || ""),
+    badge: String(item.badge || "").toUpperCase().trim(),
+    sortOrder: Number.isFinite(sortOrder) ? sortOrder : UNSORTED,
+    // Everything pricing needs. No consumer of this object looks at `category`
+    // to work out a price or a unit ever again.
+    unit: parseUnit(item, category),
+    tiers: parseTiers(item),
+    discountPercent: parseDiscount(item),
   };
+}
+
+export type CatalogProduct = ReturnType<typeof formatProduct>;
+
+// sort_order ascending, then name, so two rows sharing a number still land in a
+// stable, explainable order instead of whatever the sheet happened to return.
+// Ids take no part in this: they identify a product, they do not rank it.
+export function byDisplayOrder(a: CatalogProduct, b: CatalogProduct): number {
+  if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+  return a.name.localeCompare(b.name);
 }
 
 // An empty catalogue and an unreachable one look identical to the page unless
@@ -43,8 +62,8 @@ function formatProduct(item: any, index: number) {
 // Callers render a different message for each, so the flag is part of the
 // contract rather than a console line nobody sees.
 export async function getProducts(): Promise<{
-  products: any[];
-  categories: Record<string, any[]>;
+  products: CatalogProduct[];
+  categories: Record<string, CatalogProduct[]>;
   stories?: any[];
   descriptions?: any[];
   failed: boolean;
@@ -71,9 +90,9 @@ export async function getProducts(): Promise<{
 
     const data = await response.json();
     const items: any[] = data.products || [];
-    const formattedProducts = items.map(formatProduct);
+    const formattedProducts = items.map(formatProduct).sort(byDisplayOrder);
 
-    const categories: Record<string, any[]> = {};
+    const categories: Record<string, CatalogProduct[]> = {};
     for (const product of formattedProducts) {
       const cat = product.category || 'other';
       if (!categories[cat]) categories[cat] = [];

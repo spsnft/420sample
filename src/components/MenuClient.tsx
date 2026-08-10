@@ -60,8 +60,13 @@ export default function MenuClient({
     return filtered;
   }, [categories, typeFilter, matchesFilter]);
 
-  const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'NEW' && matchesFilter(p)).sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts, matchesFilter]);
-  const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'SALE' && matchesFilter(p)).sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts, matchesFilter]);
+  // Products arrive already in sort_order, so both rows keep the order the
+  // sheet asked for instead of re-sorting by id — ids identify a product, they
+  // do not rank it.
+  const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p?.badge === 'NEW' && matchesFilter(p)), [initialProducts, matchesFilter]);
+  // A sale is a discount, not a label somebody remembered to type: the row and
+  // the struck-through price on the card now come from the same number.
+  const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p?.discountPercent > 0 && matchesFilter(p)), [initialProducts, matchesFilter]);
 
   const navSections = React.useMemo(
     () => sortCategoryKeys(visibleCategories).map(key => ({ key, title: getCategoryConfig(key, t).title })),
@@ -191,7 +196,7 @@ export default function MenuClient({
 
       {selectedProduct && (
         <Product
-          product={{ ...selectedProduct, unitLabel: selectedProduct.category === 'accessories' ? 'pcs' : 'g' }}
+          product={selectedProduct}
           t={t}
           style={{ color: selectedProduct.category === 'joints' ? GOLDEN_COLOR : '#10B981' }}
           onClose={() => setSelectedProduct(null)}
@@ -200,7 +205,7 @@ export default function MenuClient({
 
       {isOrderOpen && (
         <Order
-          items={items.map(item => ({ ...item, unitLabel: item.category === 'accessories' ? 'pcs' : 'g' }))}
+          items={items}
           total={getTotal()}
           t={t}
           onClose={() => setIsOrderOpen(false)}

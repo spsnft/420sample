@@ -1,0 +1,27 @@
+id,name,category,type,unit,qty_1,price_1,qty_2,price_2,qty_3,price_3,qty_4,price_4,discount_percent,image,description,taste,terpenes,badge,sort_order
+1,Super Boof Cherry,buds,indica,g,1,200,5,900,10,1700,20,3000,,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png","Sweet cherry finish, heavy body","Cherry, Earth","Myrcene, Caryophyllene",NEW,10
+2,Super Boof,buds,indica,g,1,200,5,900,10,1700,20,3000,,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png",Dense evening flower,"Berry, Pine","Myrcene, Pinene",NEW,20
+3,Ice Cold,buds,indica,g,1,200,5,900,10,1700,20,3000,15,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png",Cool menthol nose,"Mint, Citrus","Limonene, Menthol",,30
+4,Mind Melter,buds,indica,g,1,220,5,980,10,1850,20,3300,,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png","Slow, weighty, late night","Grape, Musk","Myrcene, Linalool",HIT,40
+5,Tropical Sherb,buds,hybrid,g,1,200,5,900,10,1700,20,3000,,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png","Sherbet sweetness, balanced","Mango, Cream","Limonene, Caryophyllene",NEW,50
+6,Lemon Cherry Bath,buds,hybrid,g,1,200,5,900,10,1700,20,3000,,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png",Lemon rind over soft cherry,"Lemon, Cherry","Limonene, Myrcene",NEW,60
+7,Wazabi,buds,hybrid,g,1,200,5,900,10,1700,20,3000,20,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png",Sharp herbal bite,"Herb, Pepper","Caryophyllene, Humulene",,70
+8,Permanent Chimera,buds,sativa,g,1,250,5,1100,10,2100,20,3800,,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png","Bright, talkative daytime flower","Citrus, Diesel","Terpinolene, Limonene",HIT,80
+9,Apple Banana Zoap,buds,sativa,g,1,200,5,900,10,1700,20,3000,10,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png","Orchard sweet, clean lift","Apple, Banana","Limonene, Ocimene",,90
+10,Divine Truffle,buds,sativa,g,1,200,5,900,10,1700,20,3000,,"https://res.cloudinary.com/dpjwbcgrq/image/upload/f_auto,q_auto/Untitled_design_-_6_uh5iqf.png","Earthy truffle, long finish","Truffle, Cocoa","Humulene, Myrcene",,100
+11,Super Boof Cherry,joints,indica,pcs,1,150,3,420,5,650,10,1200,25,,"Hand-rolled, 1g",,,,10
+12,Super Boof,joints,indica,pcs,1,150,3,420,5,650,10,1200,,,"Hand-rolled, 1g",,,,20
+13,Ice Cold,joints,indica,pcs,1,150,3,420,5,650,10,1200,,,"Hand-rolled, 1g",,,,30
+14,Mind Melter,joints,indica,pcs,1,150,3,420,5,650,10,1200,,,"Hand-rolled, 1g",,,,40
+15,Tropical Sherb,joints,hybrid,pcs,1,150,3,420,5,650,10,1200,,,"Hand-rolled, 1g",,,,50
+16,Lemon Cherry Bath,joints,hybrid,pcs,1,150,3,420,5,650,10,1200,,,"Hand-rolled, 1g",,,,60
+17,Wazabi,joints,hybrid,pcs,1,150,3,420,5,650,10,1200,,,"Hand-rolled, 1g",,,,70
+18,Permanent Chimera,joints,sativa,pcs,1,150,3,420,5,650,10,1200,,,"Hand-rolled, 1g",,,,80
+19,Apple Banana Zoap,joints,sativa,pcs,1,150,3,420,5,650,10,1200,15,,"Hand-rolled, 1g",,,,90
+20,Divine Truffle,joints,sativa,pcs,1,150,3,420,5,650,10,1200,,,"Hand-rolled, 1g",,,,100
+21,Bong 20cm,accessories,bong,pcs,1,600,,,,,,,,,,,,,10
+22,Bong 30cm,accessories,bong,pcs,1,800,,,,,,,,,,,,NEW,20
+23,Glass Pipe,accessories,pipe,pcs,1,800,,,,,,,10,,,,,,30
+24,Grinder 4 parts,accessories,grinder,pcs,1,350,,,,,,,,,,,,NEW,40
+25,Rolling Papers,accessories,papers,pcs,1,20,,,,,,,,,,,,,50
+26,Filter Tips,accessories,tips,pcs,1,50,,,,,,,,,,,,,60
