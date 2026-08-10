@@ -8,6 +8,15 @@ import { motion } from "framer-motion"
 // rather than a phone body — the frame itself is what tells the visitor this
 // block is about them, not their customers.
 //
+// Like the phone in block 01, the window is deliberately *not* a closed
+// rectangle. A browser frame that starts and ends inside the block reads as a
+// second card pasted onto the first one — a hard bottom edge plus a hairline
+// border tracing the full outline, sitting on a card that already has its own
+// border. Fading the bottom out and pulling the CTA up under the fade lets the
+// window continue past the block instead of terminating in it, which is what
+// gives the pair its sense of depth. Keep the fade and the negative margin in
+// step: the pull-up should land roughly where the frame has gone transparent.
+//
 // The screenshot is a real render of the live /staff search screen carrying the
 // demo data supabase/seed.sql seeds. Recapture and swap
 // public/images/partners/staff-view.png whenever that screen's design changes.
@@ -23,14 +32,18 @@ export function DesktopMockup() {
   const [entered, setEntered] = React.useState(false);
 
   return (
-    <div className="mx-auto w-full max-w-[420px] rotate-[3deg]">
+    <div className="mx-auto w-full max-w-[420px] rotate-[3deg] -mb-6">
       <motion.div
         initial={{ opacity: 0, y: 12, filter: "drop-shadow(0 0px 0px rgba(0,0,0,0))" }}
         whileInView={{ opacity: 1, y: 0, filter: "drop-shadow(0 22px 38px rgba(0,0,0,0.55))" }}
         viewport={{ once: true, amount: 0.4 }}
         onViewportEnter={() => setEntered(true)}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="rounded-[0.9rem] overflow-hidden bg-black border border-white/10"
+        className="rounded-[0.9rem] overflow-hidden bg-black border-x border-t border-white/10"
+        style={{
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 68%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, black 0%, black 68%, transparent 100%)",
+        }}
       >
         <div className="flex items-center gap-1.5 px-2.5 py-2 bg-white/[0.04] border-b border-white/10">
           <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
