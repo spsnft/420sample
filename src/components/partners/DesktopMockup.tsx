@@ -8,6 +8,15 @@ import { motion } from "framer-motion"
 // rather than a phone body — the frame itself is what tells the visitor this
 // block is about them, not their customers.
 //
+// Unlike the phone in block 01, this one is not tilted. A phone reads fine at
+// an angle — that is how people hold them — but a browser window is something
+// we only ever see square to the screen, so a few degrees of rotation doesn't
+// read as "dynamic", it reads as a screenshot pasted in crooked. The tilt also
+// forced the window to stay narrower than the block so its rotated corners had
+// somewhere to go, which left it floating in the middle of a much wider card.
+// Square and full width, it sits *in* the block instead of on top of it, and
+// the screenshot renders about a quarter larger, which the client rows need.
+//
 // Like the phone in block 01, the window is deliberately *not* a closed
 // rectangle. A browser frame that starts and ends inside the block reads as a
 // second card pasted onto the first one — a hard bottom edge plus a hairline
@@ -32,7 +41,7 @@ export function DesktopMockup() {
   const [entered, setEntered] = React.useState(false);
 
   return (
-    <div className="mx-auto w-full max-w-[420px] rotate-[3deg] -mb-6">
+    <div className="w-full -mb-6">
       <motion.div
         initial={{ opacity: 0, y: 12, filter: "drop-shadow(0 0px 0px rgba(0,0,0,0))" }}
         whileInView={{ opacity: 1, y: 0, filter: "drop-shadow(0 22px 38px rgba(0,0,0,0.55))" }}
@@ -41,8 +50,8 @@ export function DesktopMockup() {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="rounded-[0.9rem] overflow-hidden bg-black border-x border-t border-white/10"
         style={{
-          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 68%, transparent 100%)",
-          maskImage: "linear-gradient(to bottom, black 0%, black 68%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 80%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, black 0%, black 80%, transparent 100%)",
         }}
       >
         <div className="flex items-center gap-1.5 px-2.5 py-2 bg-white/[0.04] border-b border-white/10">
