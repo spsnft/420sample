@@ -24,6 +24,8 @@ export interface TranslationDictionary {
   catalogErrorBody: string;
   catalogRetry: string;
   catalogEmpty: string;
+  filterEmpty: string;
+  filterReset: string;
 
   // Order flow (kiosk)
   orderTitle: string;
@@ -76,6 +78,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogErrorBody: "We couldn't load today's menu. Check the connection and try again — or just ask our staff.",
     catalogRetry: "Try again",
     catalogEmpty: "Nothing on the menu right now. Please ask our staff.",
+    filterEmpty: "Nothing matches this filter.",
+    filterReset: "Show everything",
 
     // Order flow (kiosk)
     orderTitle: "Your Order",
@@ -129,6 +133,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogErrorBody: "Не удалось загрузить сегодняшнее меню. Проверьте соединение и попробуйте снова — или спросите у наших сотрудников.",
     catalogRetry: "Повторить",
     catalogEmpty: "Сейчас в меню ничего нет. Спросите у наших сотрудников.",
+    filterEmpty: "По этому фильтру ничего нет.",
+    filterReset: "Показать всё",
 
     // Order flow (kiosk)
     orderTitle: "Ваш заказ",
@@ -182,6 +188,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogErrorBody: "โหลดเมนูของวันนี้ไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อแล้วลองใหม่อีกครั้ง หรือสอบถามพนักงานของเรา",
     catalogRetry: "ลองอีกครั้ง",
     catalogEmpty: "ขณะนี้ยังไม่มีรายการในเมนู กรุณาสอบถามพนักงานของเรา",
+    filterEmpty: "ไม่พบรายการที่ตรงกับตัวกรองนี้",
+    filterReset: "แสดงทั้งหมด",
 
     // Order flow (kiosk)
     orderTitle: "รายการสั่งซื้อของคุณ",

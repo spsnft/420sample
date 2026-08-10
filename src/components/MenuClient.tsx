@@ -7,8 +7,9 @@ import { translations, Language, TranslationDictionary } from "@/lib/translation
 import { Product, Order, AgeGate } from "@/components/modals"
 import { Header } from "@/components/layout/Header"
 import { ProductCarousel } from "@/components/catalog/ProductCarousel"
-import { ProductGrid } from "@/components/catalog/ProductGrid"
+import { ProductGrid, sortCategoryKeys, getCategoryConfig } from "@/components/catalog/ProductGrid"
 import { CatalogFallback } from "@/components/catalog/CatalogFallback"
+import { CatalogNav, TypeFilter } from "@/components/catalog/CatalogNav"
 import { BahtSymbol } from "@/components/cards/ProductCards"
 import { triggerHaptic, GOLDEN_COLOR } from "@/lib/utils"
 import { useIdleTimer } from "@/lib/use-idle-timer"
@@ -26,36 +27,95 @@ export default function MenuClient({
   categories?: Record<string, any[]>,
   failed?: boolean,
 }) {
+  const allSections = React.useMemo(() => sortCategoryKeys(categories), [categories]);
+
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   const [isOrderOpen, setIsOrderOpen] = React.useState(false);
-  const [openSections, setOpenSections] = React.useState<string[]>([]);
+  // Every section starts open. Collapsed-by-default hid Joints and Accessories
+  // behind a control most people never tapped — the state is there to shorten a
+  // menu you have already seen, not to introduce it.
+  const [openSections, setOpenSections] = React.useState<string[]>(allSections);
+  const [typeFilter, setTypeFilter] = React.useState<TypeFilter | null>(null);
+  const [activeSection, setActiveSection] = React.useState<string | null>(null);
 
   const { items, getTotal, lang, clearCart } = useCart();
 
   const safeLang = (lang || 'en') as Language;
   const t: TranslationDictionary = translations[safeLang] || translations.en;
 
-  const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'NEW').sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts]);
-  const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'SALE').sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts]);
+  const matchesFilter = React.useCallback(
+    (p: any) => !typeFilter || p?.type?.toLowerCase() === typeFilter,
+    [typeFilter]
+  );
+
+  // The filter narrows the whole page, carousels included — a "Sales" row still
+  // offering sativa while the page is filtered to indica reads as a bug.
+  const visibleCategories = React.useMemo(() => {
+    if (!typeFilter) return categories;
+    const filtered: Record<string, any[]> = {};
+    for (const [key, list] of Object.entries(categories)) {
+      const kept = list.filter(matchesFilter);
+      if (kept.length > 0) filtered[key] = kept;
+    }
+    return filtered;
+  }, [categories, typeFilter, matchesFilter]);
+
+  const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'NEW' && matchesFilter(p)).sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts, matchesFilter]);
+  const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p && p.badge?.toUpperCase() === 'SALE' && matchesFilter(p)).sort((a: any, b: any) => (Number(b.id) || 0) - (Number(a.id) || 0)), [initialProducts, matchesFilter]);
+
+  const navSections = React.useMemo(
+    () => sortCategoryKeys(visibleCategories).map(key => ({ key, title: getCategoryConfig(key, t).title })),
+    [visibleCategories, t]
+  );
 
   const toggleSection = (id: string) => {
     triggerHaptic('light');
     setOpenSections(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   };
 
+  // Tapping a category in the nav opens it first: scrolling to a heading with
+  // nothing under it looks like the jump failed.
+  const jumpToSection = (key: string) => {
+    setOpenSections(p => p.includes(key) ? p : [...p, key]);
+    requestAnimationFrame(() => {
+      document.getElementById(`cat-${key}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  // Which category the reader is currently in. The band is deliberately narrow
+  // and high on the screen, so the highlight changes when a heading reaches
+  // reading position rather than when a section merely enters the viewport.
+  React.useEffect(() => {
+    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-category]"));
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        const visible = entries.filter(e => e.isIntersecting);
+        if (visible.length > 0) setActiveSection(visible[0].target.getAttribute("data-category"));
+      },
+      { rootMargin: "-20% 0px -70% 0px" }
+    );
+
+    sections.forEach(s => observer.observe(s));
+    return () => observer.disconnect();
+  }, [navSections]);
+
   // Shared kiosk device: wipe cart & any open screens after a period of inactivity
   // so the next customer never sees the previous person's order.
   const resetSession = React.useCallback(() => {
     setSelectedProduct(null);
     setIsOrderOpen(false);
-    setOpenSections([]);
+    setOpenSections(allSections);
+    setTypeFilter(null);
     clearCart();
-  }, [clearCart]);
+  }, [clearCart, allSections]);
 
   useIdleTimer(IDLE_TIMEOUT_MS, resetSession);
 
   const hasItems = items.length > 0;
   const isEmpty = initialProducts.length === 0;
+  const noMatches = !isEmpty && Object.keys(visibleCategories).length === 0;
 
   return (
     <div className={`min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans ${hasItems ? 'pb-44' : 'pb-4'}`}>
@@ -74,16 +134,40 @@ export default function MenuClient({
         <CatalogFallback t={t} failed={failed} />
       ) : (
         <>
-          <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
-          <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
-
-          <ProductGrid
-            categories={categories}
-            openSections={openSections}
-            toggleSection={toggleSection}
+          <CatalogNav
+            sections={navSections}
+            activeSection={activeSection}
+            onJump={jumpToSection}
+            typeFilter={typeFilter}
+            onTypeFilter={setTypeFilter}
             t={t}
-            onSelect={setSelectedProduct}
           />
+
+          {noMatches ? (
+            <div className="max-w-5xl mx-auto py-16 text-center">
+              <p className="text-sm font-bold text-brand-light/50 mb-5">{t.filterEmpty}</p>
+              <button
+                type="button"
+                onClick={() => { triggerHaptic('light'); setTypeFilter(null); }}
+                className="h-11 px-5 rounded-button border border-white/15 text-[12px] font-black uppercase tracking-widest text-brand-light/80 hover:border-white/30 active:scale-95 transition-all"
+              >
+                {t.filterReset}
+              </button>
+            </div>
+          ) : (
+            <>
+              <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
+              <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
+
+              <ProductGrid
+                categories={visibleCategories}
+                openSections={openSections}
+                toggleSection={toggleSection}
+                t={t}
+                onSelect={setSelectedProduct}
+              />
+            </>
+          )}
         </>
       )}
 
