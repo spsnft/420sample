@@ -10,11 +10,41 @@ function monthsSince(dateStr: string): number {
   return Math.max(0, months);
 }
 
+// Four tiles across means the narrower labels ("Purchases") sit on one line
+// while the wider ones ("Lifetime Spent") wrap to two, at every phone width.
+// Left to flow, that pushes each tile's number to a different height and the
+// row of figures — the part staff actually read across — comes out ragged.
+// So the label block reserves two lines' worth of height whether it needs
+// them or not, and the value is pushed to the bottom of the tile, which keeps
+// the numbers on one line even if a label ever wraps to three.
+// Four tiles on a phone leave ~60px of usable width per tile, which a fully
+// grouped baht figure outgrows the moment a client is worth more than five
+// digits — "124,500" truncated to "124,..." is worse than no number at all.
+// Anything from 10k up is shown compact, which is the precision a staff member
+// glancing at lifetime value actually needs; the exact figure is still in the
+// purchase history below.
+//
+// Rolled by hand rather than handed to Intl's compact notation, which has no
+// way to say "one decimal, but only while it still fits": capping fraction
+// digits at 1 gives "124.5K" and capping significant digits at 3 gives
+// "2.45M", and both of those overflow the tile just like the raw number did.
+// The rule that fits is one decimal only while the mantissa is two digits.
+// Locale is pinned so the server and client render the same string.
+function formatBaht(amount: number): string {
+  if (amount < 10_000) return amount.toLocaleString("en-US");
+  // Branch on the rounded value, so 999,999 reads "1M" and never "1000K".
+  const [scaled, suffix] = amount < 999_500 ? [amount / 1_000, "K"] : [amount / 1_000_000, "M"];
+  // Number() re-parses to drop a trailing ".0" — "12.4K" but "125K", not "125.0K".
+  return `${Number(scaled.toFixed(scaled < 100 ? 1 : 0))}${suffix}`;
+}
+
 function StatTile({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="p-3 rounded-card bg-white/5 border border-white/10 text-center">
-      <p className="text-[9px] font-black uppercase tracking-wide text-brand-light/40 leading-tight">{label}</p>
-      <p className="text-[15px] font-black text-brand-light mt-1 truncate">{value}</p>
+    <div className="p-3 rounded-card bg-white/5 border border-white/10 text-center flex flex-col">
+      <p className="text-[9px] font-black uppercase tracking-wide text-brand-light/40 leading-tight min-h-[2.5em]">
+        {label}
+      </p>
+      <p className="text-[15px] font-black text-brand-light mt-auto pt-1 truncate">{value}</p>
     </div>
   );
 }
@@ -31,10 +61,10 @@ export function ClientStats({ lifetimeSpent, purchaseCount, firstVisitDate }: Cl
 
   return (
     <div className="grid grid-cols-4 gap-2">
-      <StatTile label="Lifetime Spent" value={<>{lifetimeSpent.toLocaleString()}<Baht /></>} />
-      <StatTile label="Purchases" value={purchaseCount} />
+      <StatTile label="Lifetime Spent" value={<>{formatBaht(lifetimeSpent)}<Baht /></>} />
+      <StatTile label="Purchases" value={purchaseCount.toLocaleString("en-US")} />
       <StatTile label="Client Since" value={months === 0 ? "New" : `${months} mo`} />
-      <StatTile label="Avg / Visit" value={avgPerVisit !== null ? <>{avgPerVisit.toLocaleString()}<Baht /></> : "—"} />
+      <StatTile label="Avg / Visit" value={avgPerVisit !== null ? <>{formatBaht(avgPerVisit)}<Baht /></> : "—"} />
     </div>
   );
 }
