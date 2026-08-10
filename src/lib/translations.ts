@@ -27,6 +27,11 @@ export interface TranslationDictionary {
   filterEmpty: string;
   filterReset: string;
 
+  // Kiosk idle prompt
+  idleTitle: string;
+  idleBody: string;
+  idleStay: string;
+
   // Order flow (kiosk)
   orderTitle: string;
   emptyCart: string;
@@ -80,6 +85,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogEmpty: "Nothing on the menu right now. Please ask our staff.",
     filterEmpty: "Nothing matches this filter.",
     filterReset: "Show everything",
+
+    idleTitle: "Still there?",
+    idleBody: "This screen is shared. We'll clear your basket in {seconds} seconds so the next guest starts fresh.",
+    idleStay: "I'm still here",
 
     // Order flow (kiosk)
     orderTitle: "Your Order",
@@ -136,6 +145,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     filterEmpty: "По этому фильтру ничего нет.",
     filterReset: "Показать всё",
 
+    idleTitle: "Вы ещё здесь?",
+    idleBody: "Этим экраном пользуются гости по очереди. Через {seconds} сек. мы очистим корзину, чтобы следующий начал с чистого листа.",
+    idleStay: "Я здесь",
+
     // Order flow (kiosk)
     orderTitle: "Ваш заказ",
     emptyCart: "Корзина пуста",
@@ -190,6 +203,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogEmpty: "ขณะนี้ยังไม่มีรายการในเมนู กรุณาสอบถามพนักงานของเรา",
     filterEmpty: "ไม่พบรายการที่ตรงกับตัวกรองนี้",
     filterReset: "แสดงทั้งหมด",
+
+    idleTitle: "ยังอยู่ไหม?",
+    idleBody: "หน้าจอนี้ใช้ร่วมกัน เราจะล้างตะกร้าใน {seconds} วินาที เพื่อให้ลูกค้าคนถัดไปเริ่มใหม่",
+    idleStay: "ยังอยู่",
 
     // Order flow (kiosk)
     orderTitle: "รายการสั่งซื้อของคุณ",

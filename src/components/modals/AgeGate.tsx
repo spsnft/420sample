@@ -1,9 +1,12 @@
 "use client"
 import * as React from "react"
-import { ShieldAlert, Check, X } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { ShieldAlert, Check, X, ArrowLeft } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
+import { ageCookieValue } from "@/lib/age-gate"
+import { useModalA11y } from "@/lib/use-modal-a11y"
 
 const ageGateTranslations = {
   ru: {
@@ -11,42 +14,46 @@ const ageGateTranslations = {
     subtitle: "Согласно законам Таиланда, просмотр каталога и покупка разрешены только лицам от 20 лет",
     confirm: "Мне есть 20+ лет",
     deny: "Мне нет 20",
-    deniedText: "Доступ ограничен законодательством Таиланда"
+    deniedText: "Доступ ограничен законодательством Таиланда",
+    leave: "Вернуться на сайт"
   },
   en: {
     title: "Are you 20 or older?",
     subtitle: "In accordance with Thai law, content is restricted to individuals aged 20 and above",
     confirm: "I am 20+",
     deny: "I am under 20",
-    deniedText: "Access restricted under Thailand regulations"
+    deniedText: "Access restricted under Thailand regulations",
+    leave: "Back to the site"
   },
   th: {
     title: "คุณมีอายุ 20 ปีขึ้นไปหรือไม่?",
     subtitle: "ตามกฎหมายไทย เนื้อหาและผลิตภัณฑ์จำกัดเฉพาะผู้ที่มีอายุ 20 ปีขึ้นไปเท่านั้น",
     confirm: "ฉันอายุ 20 ปีขึ้นไป",
     deny: "ฉันอายุต่ำกว่า 20",
-    deniedText: "จำกัดการเข้าถึงตามกฎหมายไทย"
+    deniedText: "จำกัดการเข้าถึงตามกฎหมายไทย",
+    leave: "กลับไปที่เว็บไซต์"
   }
 };
 
+// Rendered only when the server has seen no age cookie, so there is no state to
+// resolve on the client and no frame in which the catalogue shows through.
 export const AgeGate = () => {
-  const [isVisible, setIsVisible] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(true);
   const [isDenied, setIsDenied] = React.useState(false);
+  const router = useRouter();
 
   const { lang } = useCart();
   const safeLang = (lang || 'en') as Language;
   const t = ageGateTranslations[safeLang] || ageGateTranslations.en;
 
-  React.useEffect(() => {
-    const verified = localStorage.getItem('age_verified_20');
-    if (!verified) {
-      setIsVisible(true);
-    }
-  }, []);
+  // A gate is a dialog you cannot dismiss: no Escape, no backdrop click. The
+  // hook still traps focus and freezes the page behind, which is the part that
+  // was missing — the catalogue used to scroll under the overlay.
+  const dialogRef = useModalA11y({ onClose: () => {}, dismissible: false });
 
   const handleConfirm = () => {
     triggerHaptic('success');
-    localStorage.setItem('age_verified_20', 'true');
+    document.cookie = ageCookieValue();
     setIsVisible(false);
   };
 
@@ -59,7 +66,13 @@ export const AgeGate = () => {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 transition-opacity duration-300">
-      <div className="relative w-full max-w-sm bg-brand-primary border border-white/10 rounded-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col items-center text-center animate-in fade-in zoom-in-95 duration-300">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="age-gate-title"
+        className="relative w-full max-w-sm bg-brand-primary border border-white/10 rounded-[2.5rem] p-6 pt-8 shadow-2xl flex flex-col items-center text-center animate-in fade-in zoom-in-95 duration-300"
+      >
 
         <div className="w-16 h-16 rounded-3xl bg-brand-secondary/15 border border-brand-secondary/40 flex items-center justify-center text-brand-secondary mb-4 shadow-[0_0_20px_rgba(200,158,88,0.25)]">
           <ShieldAlert size={32} />
@@ -69,7 +82,7 @@ export const AgeGate = () => {
           AGE VERIFICATION
         </span>
 
-        <h2 className="text-xl font-black uppercase tracking-tight text-brand-light leading-tight mb-2">
+        <h2 id="age-gate-title" className="text-xl font-black uppercase tracking-tight text-brand-light leading-tight mb-2">
           {t.title}
         </h2>
 
@@ -78,8 +91,20 @@ export const AgeGate = () => {
         </p>
 
         {isDenied ? (
-          <div className="w-full p-4 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-400 text-xs font-bold animate-in fade-in text-balance">
-            {t.deniedText}
+          // Not a dead end any more: saying no used to leave the visitor on a
+          // screen with no control on it and the catalogue showing through.
+          <div className="w-full space-y-3 animate-in fade-in">
+            <div className="w-full p-4 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-400 text-xs font-bold text-balance">
+              {t.deniedText}
+            </div>
+            <button
+              type="button"
+              onClick={() => { triggerHaptic('light'); router.push('/'); }}
+              className="w-full h-12 bg-white/5 hover:bg-white/10 text-brand-light/80 font-black uppercase tracking-widest text-[11px] rounded-2xl active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <ArrowLeft size={14} />
+              {t.leave}
+            </button>
           </div>
         ) : (
           <div className="w-full space-y-2.5">
