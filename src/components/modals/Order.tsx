@@ -5,6 +5,7 @@ import { X, Trash2, ShoppingBag, CheckCircle2 } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic, Baht, generateOrderNumber } from "@/lib/utils"
+import { unitLabel } from "@/lib/pricing"
 import { useModalA11y } from "@/lib/use-modal-a11y"
 
 interface OrderProps {
@@ -15,7 +16,7 @@ interface OrderProps {
 }
 
 export const Order = ({ items, total, t, onClose }: OrderProps) => {
-  const { removeItem, clearCart } = useCart();
+  const { removeItem, clearCart, getLinePrice, lang } = useCart();
 
   const [orderId, setOrderId] = React.useState<string | null>(null);
   const [isClosing, setIsClosing] = React.useState(false);
@@ -103,13 +104,13 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
 
             <div className="w-full space-y-2 mb-6 text-left">
               {items.map((item) => (
-                <div key={`${item.id}-${item.weight}`} className="gradient-ring rounded-button">
+                <div key={item.id} className="gradient-ring rounded-button">
                   <div className="p-3 bg-white/5 rounded-button flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <h4 className="text-xs font-black uppercase text-brand-light truncate">{item.name}</h4>
-                      <span className="text-[11px] font-bold text-brand-secondary">{item.weight}{item.unitLabel}</span>
+                      <span className="text-[11px] font-bold text-brand-secondary">{item.qty}{unitLabel(item.unit, lang)}</span>
                     </div>
-                    <span className="text-xs font-black text-brand-light shrink-0">{item.price}<Baht /></span>
+                    <span className="text-xs font-black text-brand-light shrink-0">{getLinePrice(item)}<Baht /></span>
                   </div>
                 </div>
               ))}
@@ -147,18 +148,18 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
                 </div>
               ) : (
                 items.map((item) => (
-                  <div key={`${item.id}-${item.weight}`} className="gradient-ring rounded-button">
+                  <div key={item.id} className="gradient-ring rounded-button">
                     <div className="p-3 bg-white/5 rounded-button flex items-center justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <h4 className="text-xs font-black uppercase text-brand-light truncate">{item.name}</h4>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[11px] font-bold text-brand-secondary px-2 py-0.5 bg-brand-secondary/10 rounded-md">{item.weight}{item.unitLabel}</span>
-                          <span className="text-xs font-black text-brand-light">{item.price}<Baht /></span>
+                          <span className="text-[11px] font-bold text-brand-secondary px-2 py-0.5 bg-brand-secondary/10 rounded-md">{item.qty}{unitLabel(item.unit, lang)}</span>
+                          <span className="text-xs font-black text-brand-light">{getLinePrice(item)}<Baht /></span>
                         </div>
                       </div>
                       <button
                         type="button"
-                        onClick={() => { triggerHaptic('warning'); removeItem(item.id, item.weight); }}
+                        onClick={() => { triggerHaptic('warning'); removeItem(item.id); }}
                         aria-label={`${t.remove}: ${item.name}`}
                         className="p-2 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 rounded-badge transition-all"
                       >

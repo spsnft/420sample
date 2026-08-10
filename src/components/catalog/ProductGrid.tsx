@@ -9,6 +9,10 @@ interface CategoryConfig {
   icon: React.ReactNode;
   layout: "list" | "grid2" | "grid4";
   collapsible?: boolean;
+  /** Break the section into sub-groups headed by each product's `type`. Bongs,
+   *  pipes and papers in one undifferentiated grid are hard to scan; strain
+   *  types are not grouped this way because the nav filters those instead. */
+  groupByType?: boolean;
 }
 
 export function getCategoryConfig(category: string, t: TranslationDictionary): CategoryConfig {
@@ -34,6 +38,7 @@ export function getCategoryConfig(category: string, t: TranslationDictionary): C
       icon: <Layers size={20} className="text-brand-secondary" />,
       layout: "grid4",
       collapsible: true,
+      groupByType: true,
     },
   };
 
@@ -72,6 +77,20 @@ export function sortCategoryKeys(categories: Record<string, any[]>): string[] {
     if (bIdx !== -1) return 1;
     return a.localeCompare(b);
   });
+}
+
+// Groups stay in the order the products arrive, which is sort_order — so the
+// sheet decides whether bongs or papers come first, the same lever that orders
+// everything else on the page. Untyped products collect under one unheaded
+// group at the end rather than vanishing.
+function groupByType(products: any[]): [string, any[]][] {
+  const groups = new Map<string, any[]>();
+  for (const product of products) {
+    const type = product?.type || "";
+    if (!groups.has(type)) groups.set(type, []);
+    groups.get(type)!.push(product);
+  }
+  return Array.from(groups.entries()).sort(([a], [b]) => (a ? 0 : 1) - (b ? 0 : 1));
 }
 
 interface ProductGridProps {
@@ -194,11 +213,30 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               id={`section-${cat}`}
               className={`overflow-hidden transition-all duration-500 ${isOpen ? 'max-h-[3000px] opacity-100 visible' : 'max-h-0 opacity-0 invisible'}`}
             >
-              <div className={gridClass(config.layout)}>
-                {products.map((p: any) => (
-                  <HighlightCard key={p.id} item={p} onClick={() => onSelect(p)} />
-                ))}
-              </div>
+              {config.groupByType ? (
+                <div className="space-y-5">
+                  {groupByType(products).map(([type, group]) => (
+                    <div key={type} className="space-y-2">
+                      {type && (
+                        <h3 className="text-[11px] font-black uppercase tracking-widest text-brand-light/40 px-1">
+                          {type}
+                        </h3>
+                      )}
+                      <div className={gridClass(config.layout)}>
+                        {group.map((p: any) => (
+                          <HighlightCard key={p.id} item={p} onClick={() => onSelect(p)} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className={gridClass(config.layout)}>
+                  {products.map((p: any) => (
+                    <HighlightCard key={p.id} item={p} onClick={() => onSelect(p)} />
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         );

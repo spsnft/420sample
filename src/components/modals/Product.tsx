@@ -6,6 +6,7 @@ import { X, Plus, Minus, ShoppingBag, Sparkles } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { Language, TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic, Baht } from "@/lib/utils"
+import { priceFor, nextBetterTier, unitLabel } from "@/lib/pricing"
 import { useModalA11y } from "@/lib/use-modal-a11y"
 
 const FALLBACK_IMAGE = "/images/logo.svg";
@@ -49,35 +50,28 @@ export const Product = ({
 
   if (!product || (!isOpen && !isClosing)) return null;
 
-  const defaultPrice = product.prices?.['1'] || product.price || 0;
-  const currentPrice = defaultPrice;
-
   const cartItem = items.find(i => i.id === product.id);
-  const cartQty = cartItem ? cartItem.quantity : 0;
+  const cartQty = cartItem ? cartItem.qty : 0;
+  // The banner and the button both talk about the basket the customer would
+  // leave with, not about this sheet in isolation — otherwise "add 4 more to
+  // reach 900฿" contradicts a cart that already holds three.
   const totalQty = cartQty + quantity;
 
-  const getNextDiscountTier = (category: string, qty: number) => {
-    const tiers = category === 'joints'
-      ? [{ q: 3, p: 420 }, { q: 5, p: 650 }, { q: 10, p: 1200 }]
-      : [{ q: 5, p: 900 }, { q: 10, p: 1700 }, { q: 20, p: 3000 }];
+  const upsell = nextBetterTier(totalQty, product);
+  const unit = unitLabel(product.unit, safeLang);
 
-    return tiers.find(tier => tier.q > qty);
-  };
-
-  const nextTier = getNextDiscountTier(product.category, totalQty);
-
-  const getUnitLabel = () => {
-    const isPiece = product.category === 'accessories' || product.category === 'joints';
-    if (safeLang === 'ru') return isPiece ? 'шт' : 'г';
-    if (safeLang === 'th') return isPiece ? 'ชิ้น' : 'กรัม';
-    return isPiece ? 'pcs' : 'g';
-  };
-
-  const unitLabel = getUnitLabel();
+  // What this sheet adds to the bill: the repriced line minus what the line
+  // already costs. With an empty cart it is simply the price of the quantity
+  // shown; with 3g already in it, adding 2g charges what those 2g change the
+  // line by, so the tiers stay honest however the order was assembled.
+  const inCart = priceFor(cartQty, product);
+  const withAddition = priceFor(totalQty, product);
+  const addPrice = withAddition.price - inCart.price;
+  const addListPrice = withAddition.listPrice - inCart.listPrice;
 
   const handleAdd = () => {
     triggerHaptic('success');
-    addItem({ ...product, price: currentPrice, weight: String(quantity) });
+    addItem(product, quantity);
     handleClose();
   };
 
@@ -147,14 +141,9 @@ export const Product = ({
             {product.name}
           </h2>
 
-          {product.farm && product.farm !== "-" && (
-            <p className="text-[11px] font-bold uppercase tracking-wide text-brand-light/40 mt-2">
-              {product.farm}
-            </p>
-          )}
         </div>
 
-        {nextTier && (
+        {upsell && (
           <div
             className="mb-6 p-4 rounded-button border bg-brand-secondary/10 flex items-center justify-between relative z-10"
             style={{ borderColor: `${accentColor}30` }}
@@ -162,14 +151,14 @@ export const Product = ({
             <div className="flex flex-col">
               <span className="text-[11px] font-black uppercase text-brand-light/70 tracking-wider flex items-center gap-1.5">
                 <Sparkles size={13} className="text-brand-secondary" />
-                {safeLang === 'ru' && `Добавь еще ${nextTier.q - totalQty} ${unitLabel}`}
-                {safeLang === 'th' && `เพิ่มอีก ${nextTier.q - totalQty} ${unitLabel}`}
-                {safeLang === 'en' && `Add ${nextTier.q - totalQty} ${unitLabel} more`}
+                {safeLang === 'ru' && `Добавь еще ${upsell.add} ${unit}`}
+                {safeLang === 'th' && `เพิ่มอีก ${upsell.add} ${unit}`}
+                {safeLang === 'en' && `Add ${upsell.add} ${unit} more`}
               </span>
               <span className="text-[14px] font-black text-brand-secondary mt-0.5 tracking-tight">
-                {safeLang === 'ru' && `чтобы цена стала ${nextTier.p}฿`}
-                {safeLang === 'th' && `เพื่อรับราคา ${nextTier.p}฿`}
-                {safeLang === 'en' && `to unlock ${nextTier.p}฿ price`}
+                {safeLang === 'ru' && `чтобы цена стала ${upsell.price}฿`}
+                {safeLang === 'th' && `เพื่อรับราคา ${upsell.price}฿`}
+                {safeLang === 'en' && `to unlock ${upsell.price}฿ price`}
               </span>
             </div>
 
@@ -177,7 +166,7 @@ export const Product = ({
               type="button"
               onClick={() => {
                 triggerHaptic('light');
-                setQuantity(q => q + (nextTier.q - totalQty));
+                setQuantity(q => q + upsell.add);
               }}
               className="w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform shadow-md"
               style={{ backgroundColor: `${accentColor}20`, color: accentColor }}
@@ -193,19 +182,19 @@ export const Product = ({
             <button
               type="button"
               onClick={() => { triggerHaptic('light'); setQuantity(Math.max(1, quantity - 1)); }}
-              aria-label={`−1 ${unitLabel}`}
+              aria-label={`−1 ${unit}`}
               className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light/70"
             >
               <Minus size={16} />
             </button>
 
-            <span className="text-[16px] font-black w-4 text-center text-brand-light" aria-live="polite">
-              {quantity}
+            <span className="text-[16px] font-black min-w-[2.5rem] text-center text-brand-light whitespace-nowrap" aria-live="polite">
+              {quantity}<span className="text-[11px] text-brand-light/50 ml-0.5">{unit}</span>
             </span>
 
             <button
               type="button"
-              aria-label={`+1 ${unitLabel}`}
+              aria-label={`+1 ${unit}`}
               onClick={() => { triggerHaptic('light'); setQuantity(quantity + 1); }}
               className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light"
             >
@@ -220,7 +209,10 @@ export const Product = ({
             className="flex-1 h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-3 hover:brightness-110 shadow-xl"
           >
             <ShoppingBag size={18} />
-            <span>{currentPrice * quantity}</span>
+            {addListPrice > addPrice && (
+              <span className="text-[12px] opacity-50 line-through">{addListPrice}</span>
+            )}
+            <span>{addPrice}</span>
             <Baht />
           </button>
         </div>

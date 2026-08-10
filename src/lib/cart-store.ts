@@ -1,18 +1,22 @@
 "use client"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import { getInterpolatedPrice, isElite } from "./utils"
 
-interface CartItem {
+import { priceFor, Tier, Unit } from "./pricing"
+
+// A line is a product and how much of it — never a price the caller passed in.
+// The old shape carried `weight: "7G"` alongside a `price` decided by whoever
+// called addItem, which is how a 5g line ended up costing one gram's worth, and
+// how the receipt printed "7Gg".
+export interface CartItem {
   id: string;
   name: string;
-  price: number;
-  weight: string;
-  quantity: number;
+  qty: number;
+  unit: Unit;
+  tiers: Tier[];
+  discountPercent: number;
   image?: string;
-  subcategory?: string;
   type?: string;
-  prices?: Record<string, number>;
   category?: string;
 }
 
@@ -20,36 +24,16 @@ interface CartStore {
   items: CartItem[];
   lang: 'en' | 'ru' | 'th';
   setLang: (lang: 'en' | 'ru' | 'th') => void;
-  addItem: (newItem: CartItem) => void;
-  removeItem: (id: string, weight: string) => void;
+  addItem: (product: Omit<CartItem, 'qty'>, qty: number) => void;
+  setQty: (id: string, qty: number) => void;
+  removeItem: (id: string) => void;
   clearCart: () => void;
+  getLinePrice: (item: CartItem) => number;
   getTotal: () => number;
 }
 
-function isValidPrice(value: unknown): value is number {
-  return typeof value === 'number' && !isNaN(value) && value >= 0;
-}
-
-function validatePrices(prices: unknown): Record<string, number> | null {
-  if (!prices || typeof prices !== 'object') return null;
-  const valid: Record<string, number> = {};
-  for (const [key, value] of Object.entries(prices)) {
-    if (isValidPrice(value)) valid[key] = value;
-  }
-  return Object.keys(valid).length > 0 ? valid : null;
-}
-
-function safeInterpolate(weight: number, prices: unknown, isEliteProduct: boolean): number {
-  const validPrices = validatePrices(prices);
-  if (!validPrices) return 0;
-
-  try {
-    const result = getInterpolatedPrice(weight, validPrices, isEliteProduct);
-    if (!isValidPrice(result)) return 0;
-    return Math.round(result);
-  } catch {
-    return 0;
-  }
+function linePrice(item: CartItem): number {
+  return priceFor(item.qty, item).price;
 }
 
 export const useCart = create<CartStore>()(
@@ -60,67 +44,46 @@ export const useCart = create<CartStore>()(
 
       setLang: (lang) => set({ lang }),
 
-      addItem: (newItem) => set((state) => {
-        if (!newItem) return state;
+      addItem: (product, qty) => set((state) => {
+        if (!product?.id || !Number.isFinite(qty) || qty <= 0) return state;
 
-        const itemPrice = isValidPrice(newItem.price) ? newItem.price : 0;
-        const addedWeightNum = parseFloat(newItem.weight) || 0;
+        const index = state.items.findIndex(i => i.id === product.id);
 
-        if (addedWeightNum <= 0) return state;
-        if (!newItem.id) return state;
-
-        const existingIndex = state.items.findIndex((i) => i.id === newItem.id);
-
-        if (existingIndex > -1) {
-          const existingItem = state.items[existingIndex];
-          const currentWeightNum = parseFloat(existingItem.weight) || 0;
-          const totalWeightNum = currentWeightNum + addedWeightNum;
-
-          const safeItemForCheck = { ...newItem, ...existingItem };
-          const isEliteProduct = isElite(safeItemForCheck) && safeItemForCheck.subcategory?.toLowerCase() !== 'import loose';
-
-          const priceData = existingItem.prices || newItem.prices;
-          const interpolated = safeInterpolate(totalWeightNum, priceData, isEliteProduct);
-
-          const newTotalPrice = interpolated > 0
-            ? interpolated
-            : (existingItem.price || 0) + itemPrice;
-
-          const unit = existingItem.category === 'joints' ? 'PCS' : 'G';
-
-          const updatedItems = [...state.items];
-          updatedItems[existingIndex] = {
-            ...existingItem,
-            weight: `${totalWeightNum}${unit}`,
-            price: newTotalPrice,
-            quantity: 1
-          };
-
-          return { items: updatedItems };
+        // Adding 2g to an existing 5g line makes it a 7g line, repriced as
+        // one — the ladder applies to what the customer walks out with, not to
+        // the order they happened to tap things in.
+        if (index > -1) {
+          const items = [...state.items];
+          items[index] = { ...items[index], qty: items[index].qty + qty };
+          return { items };
         }
 
-        return {
-          items: [...state.items, {
-            ...newItem,
-            price: itemPrice,
-            quantity: 1
-          }]
-        };
+        return { items: [...state.items, { ...product, qty }] };
       }),
 
-      removeItem: (id, weight) => set((state) => ({
-        items: state.items.filter((i) => !(i.id === id && i.weight === weight))
+      setQty: (id, qty) => set((state) => ({
+        items: qty > 0
+          ? state.items.map(i => (i.id === id ? { ...i, qty } : i))
+          : state.items.filter(i => i.id !== id),
+      })),
+
+      removeItem: (id) => set((state) => ({
+        items: state.items.filter(i => i.id !== id),
       })),
 
       clearCart: () => set({ items: [] }),
 
-      getTotal: () => {
-        const items = get().items || [];
-        return items.reduce((acc, item) => acc + (isValidPrice(item.price) ? item.price : 0), 0);
-      },
+      getLinePrice: linePrice,
+
+      // Derived on read from the ladder, so a price can never drift from the
+      // quantity it belongs to, and a stale cart cannot outlive a price change.
+      getTotal: () => (get().items || []).reduce((sum, item) => sum + linePrice(item), 0),
     }),
     {
-      name: "buds-digital-cart-v1"
+      // v2: lines from v1 carry a different shape (weight strings, baked-in
+      // prices) and would be mispriced if they survived the upgrade.
+      name: "buds-digital-cart-v2",
+      partialize: (state) => ({ items: state.items, lang: state.lang }),
     }
   )
 );
