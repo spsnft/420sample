@@ -22,7 +22,14 @@ function formatProduct(item: any, index: number) {
   }
 
   const category = String(item.category || "").toLowerCase().trim();
-  const sortOrder = Number(item.sort_order);
+
+  // A blank cell is "not set", not zero. The sheet's exporter sends empty
+  // strings for empty cells, and Number("") is 0 — which would rank every
+  // unsorted product first, the exact opposite of the rule.
+  const rawSortOrder = item.sort_order;
+  const sortOrder = rawSortOrder === "" || rawSortOrder === null || rawSortOrder === undefined
+    ? UNSORTED
+    : Number(rawSortOrder);
 
   return {
     id: String(item.id || `product-${index}`),
@@ -47,6 +54,8 @@ function formatProduct(item: any, index: number) {
 }
 
 export type CatalogProduct = ReturnType<typeof formatProduct>;
+
+export { formatProduct };
 
 // sort_order ascending, then name, so two rows sharing a number still land in a
 // stable, explainable order instead of whatever the sheet happened to return.
@@ -89,6 +98,19 @@ export async function getProducts(): Promise<{
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     const data = await response.json();
+
+    // The sheet's exporter cannot answer with an HTTP error code, so it reports
+    // failure in the body instead. Without this the page would treat a broken
+    // catalogue as an empty one and say "nothing on the menu" — no explanation,
+    // no retry — when the truth is that something is wrong and worth retrying.
+    if (data?.error) throw new Error(String(data.error));
+
+    // Contract complaints from the exporter — a renamed column, a duplicate id.
+    // They do not stop the page, but they belong somewhere visible.
+    if (Array.isArray(data?.warnings) && data.warnings.length > 0) {
+      console.warn("⚠️ Каталог:", data.warnings.join(" | "));
+    }
+
     const items: any[] = data.products || [];
     const formattedProducts = items.map(formatProduct).sort(byDisplayOrder);
 
