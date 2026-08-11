@@ -2,7 +2,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, Globe, ClipboardCheck, ArrowUpRight } from "lucide-react"
+import { Menu, X, Globe, Leaf, ClipboardCheck, ArrowUpRight } from "lucide-react"
 
 import { translations, Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
@@ -19,9 +19,10 @@ import { siteConfig } from "@/config/site"
 // squeeze the logo. So the destinations live behind one chip the same size and
 // shape as the language one, which is a pattern the header already teaches.
 //
-// A rule separates the shop's own site from the two surfaces its operators use.
-// Both are still full-strength: this deployment is a showcase, and the panel is
-// as much a part of what is being shown as the menu is.
+// A rule separates what a customer came for — the site and the menu — from the
+// two surfaces the shop's operators use. Both halves are full-strength: this
+// deployment is a showcase, and the panel is as much a part of what is being
+// shown as the menu is.
 
 interface NavItem {
   href: string;
@@ -79,6 +80,7 @@ export const SiteNav: React.FC<SiteNavProps> = ({ safeLang, surface = 'site' }) 
 
   const items: NavItem[] = [
     { href: at("/"), label: t.navSite, icon: Globe, external: onPartners },
+    { href: at("/menu"), label: t.menuTitle, icon: Leaf, external: onPartners },
     { href: at("/staff"), label: t.navStaff, icon: ClipboardCheck, external: onPartners, dividerAbove: true },
     // Dropped on the pitch page itself — it is the page you are standing on.
     ...(onPartners
@@ -106,8 +108,6 @@ export const SiteNav: React.FC<SiteNavProps> = ({ safeLang, surface = 'site' }) 
           className="absolute top-full right-0 mt-2 w-60 rounded-button bg-brand-primary border border-white/10 shadow-2xl overflow-hidden z-20 py-1"
         >
           {items.map(({ href, label, icon: Icon, external, dividerAbove }) => {
-            // The menu is inside the site, not beside it, so /menu leaves the
-            // site entry unmarked rather than claiming to be somewhere else.
             const isCurrent = !external && href === pathname;
 
             return (
