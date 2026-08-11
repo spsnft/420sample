@@ -7,6 +7,7 @@ import { useCart } from "@/lib/cart-store"
 import { Language } from "@/lib/translations"
 import { SiteNav, SiteNavProps } from "@/components/layout/SiteNav"
 import { triggerHaptic } from "@/lib/utils"
+import { useStuck } from "@/lib/use-stuck"
 import { siteConfig } from "@/config/site"
 
 const LANGUAGES: Language[] = ['en', 'th', 'ru'];
@@ -106,19 +107,27 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
   const homeHref = onPartners ? siteConfig.url : "/";
   const homeLinkProps = onPartners ? { target: "_blank", rel: "noopener" } : {};
 
-  return (
+  // Same rule as the catalogue bar: a sticky bar earns its fill by having
+  // something to hide. At the top of the page there is nothing under it, and a
+  // fill there is just a dark band ruled across a lit wall — brand-primary is
+  // darker than the backdrop it sits on, so the more solid the bar, the more it
+  // reads as a hole rather than as a header. It stays clear until the page
+  // moves, then frosts over.
+  const { ref: sentinelRef, stuck } = useStuck();
+
+  const header = (
     <header
       className={
-        // Fully opaque (not translucent) so decorative background elements —
-        // e.g. the hero corner leaf — tuck cleanly under the header instead
-        // of showing a blurred, uneven smear at the seam.
-        //
         // Both variants carry the same vertical padding. Without it the
         // wordmark sat 12px higher on /menu than on /, and the whole page with
         // it — so moving between the two, which is the main path through the
         // site, nudged the header up and down for no reason a reader could see.
         sticky
-          ? "sticky top-0 z-[100] -mx-4 px-4 py-3 mb-4 bg-brand-primary border-b border-white/5"
+          ? `sticky top-0 z-[100] -mx-4 px-4 py-3 mb-4 border-b transition-colors duration-200 ${
+              stuck
+                ? "bg-brand-primary/80 backdrop-blur-xl border-white/5"
+                : "border-transparent"
+            }`
           : "relative z-[100] py-3 mb-4"
       }
     >
@@ -145,5 +154,15 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
         </div>
       </div>
     </header>
+  );
+
+  // The marker only has a job on the page that sticks its header.
+  if (!sticky) return header;
+
+  return (
+    <>
+      <div ref={sentinelRef} aria-hidden className="h-px" />
+      {header}
+    </>
   );
 };

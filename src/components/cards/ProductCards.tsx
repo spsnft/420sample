@@ -86,7 +86,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
     <button
       type="button"
       onClick={() => { triggerHaptic('light'); onClick(); }}
-      className={`relative w-full text-left rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden h-[200px] bg-brand-primary card-premium ${FOCUS_RING}`}
+      className={`relative w-full text-left rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden h-[200px] surface surface-press ${FOCUS_RING}`}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70 pointer-events-none" />
       <div className="absolute inset-0 opacity-40 pointer-events-none transition-opacity duration-500 group-hover:opacity-60" style={{ background: `radial-gradient(ellipse at 50% 80%, ${accentColor}22, transparent 70%)` }} />
