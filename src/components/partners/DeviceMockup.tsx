@@ -4,17 +4,15 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 
 // Composited screenshot of buds.digital (header + hero cards + the homepage
-// tagline), assembled from the live homepage and padded out to a true
-// iPhone 13/14 screen ratio of 390x844. Recapture and swap the PNG in
-// public/images/partners/customer-view.png whenever the live design changes.
-// It is out of date on exactly one point right now: the tagline in the
-// capture still reads "Cannabis. Done properly.", which the live homepage no
-// longer says. The composite is built with its own tight,
-// deliberate spacing (not a 1:1 crop of the live page's natural spacing)
-// and its header/tagline pieces are cropped clear of the source page's
-// hairline borders — those read as stray hard edges once tilted and
-// vignetted inside the small rotated mockup, so they're kept out of the
-// composite rather than papered over with CSS.
+// tagline), captured at a true iPhone 13/14 screen ratio of 390x844 at 2x.
+// Recapture and swap the PNG in public/images/partners/customer-view.png
+// whenever the homepage's top changes — scripts/capture-customer-view.mjs
+// does it, and says there what it stages before it shoots. The composite is
+// a poster of the page rather than a plain capture of it: the sections below
+// the tagline are dropped, the tagline is pulled up under the cards, and the
+// header's hairline and nav button are taken out — those read as stray hard
+// edges once tilted and vignetted inside the small rotated mockup, so they
+// are kept out of the composite rather than papered over with CSS.
 //
 // The frame keeps its full, realistic iPhone proportions, but only the
 // content-dense top of it is revealed — the empty lower screen and
