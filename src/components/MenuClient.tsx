@@ -23,6 +23,10 @@ const IDLE_GRACE_SECONDS = 20;
 // Strains read in the order a customer is used to seeing them, not
 // alphabetically; anything else — accessory kinds — falls in after, A to Z.
 const STRAIN_ORDER = ["indica", "sativa", "hybrid"];
+// The tab the menu opens on: every category in order, so the assortment is
+// seen before it is navigated. The category tabs stay for going straight to
+// one — browsing and targeting are different jobs and now have a control each.
+const ALL_CATEGORIES = "all";
 
 // Keeps a strain's variants side by side in a showcase row. The same name as a
 // bud and as a joint is two products at two prices, but four cards apart it
@@ -83,25 +87,31 @@ export default function MenuClient({
   // the struck-through price on the card come from the same number.
   const flashSales = React.useMemo(() => groupVariants(initialProducts.filter((p: any) => p?.discountPercent > 0)), [initialProducts]);
 
+  const categoryKeys = React.useMemo(() => sortCategoryKeys(categories), [categories]);
+
   const navCategories = React.useMemo(
-    () => sortCategoryKeys(categories).map(key => ({ key, title: getCategoryConfig(key, t).title })),
-    [categories, t]
+    () => [
+      { key: ALL_CATEGORIES, title: t.filterAll },
+      ...categoryKeys.map(key => ({ key, title: getCategoryConfig(key, t).title })),
+    ],
+    [categoryKeys, t]
   );
 
-  const currentCategory = React.useMemo(
-    () => (activeCategory && categories[activeCategory]?.length ? activeCategory : navCategories[0]?.key ?? null),
-    [activeCategory, categories, navCategories]
-  );
+  const currentCategory = activeCategory ?? ALL_CATEGORIES;
+  const isShowingAll = currentCategory === ALL_CATEGORIES;
 
   const categoryProducts = React.useMemo(
-    () => (currentCategory ? categories[currentCategory] ?? [] : []),
-    [categories, currentCategory]
+    () => (isShowingAll ? [] : categories[currentCategory] ?? []),
+    [categories, currentCategory, isShowingAll]
   );
 
   // The chips are whatever this category actually stocks — strains for flower
   // and joints, kinds for accessories. Offering a fixed indica/sativa/hybrid row
   // everywhere meant accessories were filtered by a property they do not have,
-  // and the whole section vanished when anyone touched it.
+  // and the whole section vanished when anyone touched it. Under "All" there
+  // are no chips at all: a filter belongs to a category, and one spanning
+  // strains and bongs together would have to hide half the page to mean
+  // anything.
   const filters = React.useMemo(() => {
     const present = Array.from(new Set(categoryProducts.map((p: any) => p?.type).filter(Boolean)));
     return present.sort((a: string, b: string) => {
@@ -194,7 +204,25 @@ export default function MenuClient({
               t={t}
             />
 
-            {currentCategory && (
+            {isShowingAll ? (
+              <div className="space-y-8">
+                {categoryKeys.map(key => {
+                  const config = getCategoryConfig(key, t);
+                  return (
+                    <section key={key} className="space-y-3">
+                      {/* Headings return only in this view: with one category
+                          on screen the active tab names it, but in a run of
+                          all three the reader needs to know where one ends. */}
+                      <div className="max-w-5xl mx-auto flex items-center gap-2 px-1">
+                        {config.icon}
+                        <h2 className="text-[15px] font-black uppercase tracking-tight text-brand-light">{config.title}</h2>
+                      </div>
+                      <ProductGrid category={key} products={categories[key]} t={t} onSelect={setSelectedProduct} />
+                    </section>
+                  );
+                })}
+              </div>
+            ) : (
               <ProductGrid
                 category={currentCategory}
                 products={visibleProducts}

@@ -25,6 +25,8 @@ export interface TranslationDictionary {
   catalogRetry: string;
   catalogEmpty: string;
   filterAll: string;
+  tagNew: string;
+  tagSale: string;
 
   // Product sheet
   taste: string;
@@ -91,6 +93,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogRetry: "Try again",
     catalogEmpty: "Nothing on the menu right now. Please ask our staff.",
     filterAll: "All",
+    tagNew: "New",
+    tagSale: "Sale",
 
     taste: "Taste",
     terpenes: "Terpenes",
@@ -155,6 +159,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogRetry: "Повторить",
     catalogEmpty: "Сейчас в меню ничего нет. Спросите у наших сотрудников.",
     filterAll: "Все",
+    tagNew: "Новое",
+    tagSale: "Скидка",
 
     taste: "Вкус",
     terpenes: "Терпены",
@@ -219,6 +225,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogRetry: "ลองอีกครั้ง",
     catalogEmpty: "ขณะนี้ยังไม่มีรายการในเมนู กรุณาสอบถามพนักงานของเรา",
     filterAll: "ทั้งหมด",
+    tagNew: "ใหม่",
+    tagSale: "ลดราคา",
 
     taste: "รสชาติ",
     terpenes: "เทอร์พีน",

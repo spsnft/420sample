@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Plus, Tag, Zap } from "lucide-react"
 import { triggerHaptic, accentFor } from "@/lib/utils"
 import { entryPrice } from "@/lib/pricing"
+import { TranslationDictionary } from "@/lib/translations"
 
 const FALLBACK_IMAGE = "/images/logo.svg";
 
@@ -46,24 +47,28 @@ const GRID_SIZES = "(min-width: 768px) 340px, 50vw";
 export const FOCUS_RING =
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary";
 
-// A discount is stated once, as a struck-through price beside the new one.
-// The percentage badge that used to sit alongside said the same thing a third
-// time, in the weaker of the two framings: at 150–3000฿ a struck 800 next to
-// 720 lands harder than "−10%", and dropping it is what lets the row's numbers
-// hold steady columns.
+// Set in the same type as the strain beside it, not in a pill. A bordered
+// badge at the strain's own size would outweigh it — two labels of equal
+// importance, one of them boxed, and the eye goes to the box. As plain
+// coloured words separated by a dot, the line reads as one strip of
+// attributes: "Indica · New".
 //
-// Blue, the colour the New row's own icon already uses, so no new meaning
-// enters the palette — and nothing collides with the strain colours.
-export const NewTag = React.memo(() => (
-  <span className="shrink-0 px-1.5 py-0.5 rounded-badge bg-blue-400/15 border border-blue-400/40 text-[9px] font-black uppercase tracking-wide text-blue-300">
-    New
+// Blue for new is the colour the New row's icon already uses; gold for sale is
+// the brand's own. Neither collides with a strain colour, which green or red
+// would.
+export const StatusTag = React.memo(({ label, kind }: { label: string; kind: 'new' | 'sale' }) => (
+  <span className="flex items-center gap-2 shrink-0">
+    <span aria-hidden className="text-brand-light/25 text-[11px] leading-none">·</span>
+    <span className={`text-[11px] font-black uppercase tracking-normal ${kind === 'new' ? 'text-blue-300' : 'text-brand-secondary'}`}>
+      {label}
+    </span>
   </span>
 ));
 
 // `categoryLabel` is passed in rather than derived here so it is literally the
 // tab's own word — "Buds", not "Bud". Two spellings of one category invite the
 // reader to look for a difference that does not exist.
-export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID_SIZES, categoryLabel }: { item: any, onClick: () => void, priority?: boolean, sizes?: string, categoryLabel?: string }) => {
+export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID_SIZES, categoryLabel, statusLabel }: { item: any, onClick: () => void, priority?: boolean, sizes?: string, categoryLabel?: string, statusLabel?: string }) => {
   // Above the empty-item bail-out: a hook behind a conditional return changes
   // the hook order between renders, which is a crash waiting for the first null.
   const [imgSrc, setImgSrc] = React.useState(item?.image || FALLBACK_IMAGE);
@@ -119,11 +124,14 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
             <span className="text-[9px] font-black uppercase tracking-wide text-brand-light/60 leading-none truncate">
               {categoryLabel}
             </span>
-          ) : (
-            // In a category grid the row heading no longer says what these are,
-            // so the slot the category label would occupy carries "new".
-            item.badge === 'NEW' ? <NewTag /> : null
-          )}
+          ) : statusLabel ? (
+            // In a category grid there is no row heading to say a product is
+            // new or reduced, so the slot the category label would occupy
+            // carries the status instead.
+            <span className={`text-[9px] font-black uppercase tracking-wide leading-none truncate ${item.discountPercent > 0 ? 'text-brand-secondary' : 'text-blue-300'}`}>
+              {statusLabel}
+            </span>
+          ) : null}
           <span className="text-[11px] font-black uppercase tracking-normal brightness-125 leading-none truncate" style={{ color: accentColor }}>
             {item.type}
           </span>
@@ -146,7 +154,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
   );
 });
 
-export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => void }) => {
+export const ProductRow = React.memo(({ p, onClick, t }: { p: any, onClick: () => void, t: TranslationDictionary }) => {
   // See HighlightCard: state has to be declared before the bail-out.
   const [imgSrc, setImgSrc] = React.useState(p?.image || FALLBACK_IMAGE);
 
@@ -190,7 +198,8 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
           <span className="text-[11px] font-black uppercase tracking-normal truncate" style={{ color: accentFor(p) }}>
             {p.type}
           </span>
-          {p.badge === 'NEW' && <NewTag />}
+          {p.badge === 'NEW' && <StatusTag label={t.tagNew} kind="new" />}
+          {rowDiscounted && <StatusTag label={t.tagSale} kind="sale" />}
         </span>
       </div>
 
