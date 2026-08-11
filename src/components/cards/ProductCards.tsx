@@ -46,17 +46,12 @@ const GRID_SIZES = "(min-width: 768px) 340px, 50vw";
 export const FOCUS_RING =
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary";
 
-// Status where the customer meets the product, not only in the row that
-// gathered it. A discount already shows as a struck price everywhere; a
-// percentage says how much at a glance, and "new" had no mark in the catalogue
-// at all — which is what made the showcase rows feel like the only place the
-// information lived, and therefore like a duplicate.
-export const DiscountChip = React.memo(({ percent }: { percent: number }) => (
-  <span className="shrink-0 px-1.5 py-0.5 rounded-badge bg-brand-secondary/15 border border-brand-secondary/40 text-[9px] font-black uppercase tracking-wide text-brand-secondary">
-    −{Math.round(percent)}%
-  </span>
-));
-
+// A discount is stated once, as a struck-through price beside the new one.
+// The percentage badge that used to sit alongside said the same thing a third
+// time, in the weaker of the two framings: at 150–3000฿ a struck 800 next to
+// 720 lands harder than "−10%", and dropping it is what lets the row's numbers
+// hold steady columns.
+//
 // Blue, the colour the New row's own icon already uses, so no new meaning
 // enters the palette — and nothing collides with the strain colours.
 export const NewTag = React.memo(() => (
@@ -89,7 +84,10 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
       <div className="absolute inset-0 opacity-30 pointer-events-none transition-opacity duration-500 group-hover:opacity-50" style={{ background: `radial-gradient(ellipse at 50% 80%, ${accentColor}15, transparent 70%)` }} />
 
       <div className="relative z-10 px-4 py-3 pb-0 flex-1 flex flex-col min-h-0">
-        <div className="min-w-0 pr-6">
+        {/* Two lines are reserved whether the name needs them or not, so a
+            short name does not give its card a taller picture than its
+            neighbour's and leave the row looking assembled by accident. */}
+        <div className="min-w-0 pr-6 min-h-[2.1rem]">
           <h3 className="text-[12px] font-black uppercase tracking-tight leading-tight text-brand-light group-hover:text-brand-secondary transition-colors line-clamp-2">
             {item.name}
           </h3>
@@ -123,8 +121,8 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
             </span>
           ) : (
             // In a category grid the row heading no longer says what these are,
-            // so the slot the category label would occupy carries the status.
-            item.badge === 'NEW' ? <NewTag /> : discounted ? <DiscountChip percent={item.discountPercent} /> : null
+            // so the slot the category label would occupy carries "new".
+            item.badge === 'NEW' ? <NewTag /> : null
           )}
           <span className="text-[11px] font-black uppercase tracking-normal brightness-125 leading-none truncate" style={{ color: accentColor }}>
             {item.type}
@@ -137,10 +135,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
             mirrors the category-over-type stack opposite. */}
         <p className="shrink-0 flex flex-col items-end leading-none text-brand-light">
           {discounted && (
-            <span className="flex items-center gap-1.5 mb-1">
-              <DiscountChip percent={item.discountPercent} />
-              <span className="text-[11px] font-bold text-brand-light/40 line-through">{listPrice}</span>
-            </span>
+            <span className="text-[11px] font-bold text-brand-light/40 line-through mb-1">{listPrice}</span>
           )}
           <span className="text-[16px] font-black tracking-tighter">
             {currentPrice > 0 ? (<>{currentPrice}<BahtSymbol /></>) : '—'}
@@ -159,6 +154,26 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
 
   const { price: displayPrice, listPrice: rowListPrice, discounted: rowDiscounted } = entryPrice(p);
 
+  // Fixed columns, so the numbers stand under each other down the whole list.
+  // As a plain flex row they landed wherever the text before them ended, and a
+  // discounted row shunted its neighbours' type and price sideways — the list
+  // read as if it had been shaken.
+  const numbers = (
+    <div className="flex items-center gap-3 shrink-0">
+      <span className="w-16 text-right text-[11px] font-black uppercase tracking-normal truncate" style={{ color: accentFor(p) }}>
+        {p.type}
+      </span>
+      {/* Reserved whether or not this product is discounted: an empty column
+          is what keeps an undiscounted row in line with a discounted one. */}
+      <span className="w-10 text-right text-[11px] font-bold text-brand-light/40 line-through">
+        {rowDiscounted ? rowListPrice : ''}
+      </span>
+      <span className="w-16 text-right text-[14px] font-black text-brand-light">
+        {displayPrice > 0 ? (<>{displayPrice}<BahtSymbol /></>) : '—'}
+      </span>
+    </div>
+  );
+
   return (
     <button
       type="button"
@@ -167,46 +182,32 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
       // container can then drop it from the first row of each column with one
       // rule, whatever the product count. A bottom border cannot — "last child"
       // is one cell, so the left column kept a stray line under it.
-      className={`w-full text-left flex items-center justify-between gap-3 px-4 py-4 text-brand-light border-t border-white/10 first:border-t-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group ${FOCUS_RING} focus-visible:ring-inset focus-visible:ring-offset-0`}
+      className={`w-full text-left flex items-center gap-3 px-4 py-3 md:py-4 text-brand-light border-t border-white/10 first:border-t-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group ${FOCUS_RING} focus-visible:ring-inset focus-visible:ring-offset-0`}
     >
-      <div className="flex items-center gap-3 truncate flex-1">
-        <div className="w-8 h-8 bg-black/10 rounded-badge overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5 relative">
-          <Image
-            src={imgSrc}
-            alt={p.name || "Product"}
-            fill
-            className="object-contain"
-            sizes="32px"
-            onError={() => setImgSrc(FALLBACK_IMAGE)}
-          />
-        </div>
-        {/* One line on a wide row, two on a narrow one. Beside the name the
-            mark costs about 55px, which cut "Super Boof Cherry" short on every
-            phone up to 414px; in a desktop column there is room to spare, and a
-            single line reads better. */}
-        <div className="min-w-0 md:flex md:items-center md:gap-2">
-          <span className="text-[13px] font-black uppercase tracking-tight text-brand-light/90 truncate leading-tight group-hover:text-brand-secondary transition-colors block">
-            {p.name}
-          </span>
-          {(p.badge === 'NEW' || rowDiscounted) && (
-            <span className="flex items-center gap-1.5 mt-1 md:mt-0 shrink-0">
-              {p.badge === 'NEW' && <NewTag />}
-              {rowDiscounted && <DiscountChip percent={p.discountPercent} />}
-            </span>
-          )}
-        </div>
+      <div className="w-8 h-8 bg-black/10 rounded-badge overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5 relative">
+        <Image
+          src={imgSrc}
+          alt={p.name || "Product"}
+          fill
+          className="object-contain"
+          sizes="32px"
+          onError={() => setImgSrc(FALLBACK_IMAGE)}
+        />
       </div>
 
-      <div className="flex items-center gap-3 shrink-0">
-        <span className="text-[11px] font-black uppercase tracking-normal" style={{ color: accentFor(p) }}>
-          {p.type}
-        </span>
-        <span className="text-[14px] font-black text-brand-light flex items-baseline gap-1.5">
-          {rowDiscounted && (
-            <span className="text-[11px] font-bold text-brand-light/40 line-through">{rowListPrice}</span>
-          )}
-          {displayPrice > 0 ? (<>{displayPrice}<BahtSymbol /></>) : '—'}
-        </span>
+      {/* The name gets a line of its own on a phone, where sharing one with
+          three columns of numbers left it about 115px and cut it short. On a
+          desktop column there is room for everything on one line. */}
+      <div className="flex-1 min-w-0 md:flex md:items-center md:gap-3">
+        <div className="flex items-center gap-2 min-w-0 md:flex-1">
+          <span className="text-[13px] font-black uppercase tracking-tight text-brand-light/90 truncate leading-tight group-hover:text-brand-secondary transition-colors">
+            {p.name}
+          </span>
+          {p.badge === 'NEW' && <NewTag />}
+        </div>
+        <div className="flex justify-end mt-1 md:mt-0">
+          {numbers}
+        </div>
       </div>
     </button>
   );

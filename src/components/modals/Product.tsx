@@ -6,7 +6,7 @@ import { X, ShoppingBag } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { Language, TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic, Baht } from "@/lib/utils"
-import { priceFor } from "@/lib/pricing"
+import { priceFor, savingFor } from "@/lib/pricing"
 import { useModalA11y } from "@/lib/use-modal-a11y"
 import { QuantityPicker } from "./QuantityPicker"
 
@@ -104,6 +104,10 @@ export const Product = ({
   const withAddition = priceFor(totalQty, product);
   const addPrice = withAddition.price - inCart.price;
   const addListPrice = withAddition.listPrice - inCart.listPrice;
+  // The buy button had a lot of empty space and the saving had a line to
+  // itself; together they say one thing — this is what you pay, and this is
+  // what the size earned you.
+  const saving = savingFor(quantity, product);
 
   const handleAdd = () => {
     triggerHaptic('success');
@@ -227,13 +231,22 @@ export const Product = ({
             onClick={handleAdd}
             className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-3 hover:brightness-110 shadow-xl"
           >
-            <ShoppingBag size={18} />
-            {isEditing && <span className="text-[11px] opacity-70">{t.updateCta}</span>}
-            {addListPrice > addPrice && (
-              <span className="text-[12px] opacity-50 line-through">{addListPrice}</span>
-            )}
-            <span>{addPrice}</span>
-            <Baht />
+            <ShoppingBag size={18} className="shrink-0" />
+            <span className="flex flex-col items-center leading-tight">
+              <span className="flex items-baseline gap-2">
+                {isEditing && <span className="text-[11px] opacity-70">{t.updateCta}</span>}
+                {addListPrice > addPrice && (
+                  <span className="text-[12px] opacity-50 line-through">{addListPrice}</span>
+                )}
+                <span>{addPrice}</span>
+                <Baht />
+              </span>
+              {saving > 0 && (
+                <span className="text-[10px] font-black tracking-wide opacity-70 normal-case">
+                  {t.savingLabel} {saving}฿
+                </span>
+              )}
+            </span>
           </button>
         </div>
 

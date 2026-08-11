@@ -14,10 +14,13 @@ interface ProductCarouselProps {
   t: TranslationDictionary;
 }
 
-// The cards are a fixed 160px so a phone always shows a sliver of the next one.
+// Fixed width so a phone always shows a sliver of the next card. 176 rather
+// than 160: at the smaller size a discounted card had to fit a category, a
+// strain, a struck price and a price across two columns, and names like "Glass
+// Pipe" were losing their second word.
 // next/image needs that number as `sizes` — the grid's wider default would make
 // it fetch a 2× oversized file for every card in the row.
-const CARD_SIZES = "160px";
+const CARD_SIZES = "176px";
 
 export const ProductCarousel: React.FC<ProductCarouselProps> = ({ type, title, products, onSelect, t }) => {
   // Before the empty-list bail-out: hooks cannot sit behind a conditional return.
@@ -50,7 +53,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({ type, title, p
           style={{ WebkitMaskImage: mask, maskImage: mask }}
         >
           {products.map((p: any, idx: number) => (
-            <div key={p?.id || idx} className="w-[160px] shrink-0 snap-start">
+            <div key={p?.id || idx} className="w-[176px] shrink-0 snap-start">
               <HighlightCard
                 item={p}
                 onClick={() => onSelect(p)}

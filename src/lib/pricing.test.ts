@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import {
+  savingFor,
   entryPrice,
   listPriceFor,
   nextBetterTier,
@@ -128,6 +129,22 @@ describe("priceFor", () => {
   it("ignores a blank or negative discount", () => {
     expect(priceFor(1, { ...flower, discountPercent: NaN }).price).toBe(200);
     expect(priceFor(1, { ...flower, discountPercent: -10 }).price).toBe(200);
+  });
+});
+
+describe("savingFor", () => {
+  it("measures the ladder against buying one unit at a time", () => {
+    // 5g at the 1g rate would be 1000฿; the 5g tier is 900฿.
+    expect(savingFor(5, flower)).toBe(100);
+    expect(savingFor(20, flower)).toBe(1000);
+  });
+
+  it("is nothing at the bottom of the ladder", () => {
+    expect(savingFor(1, flower)).toBe(0);
+  });
+
+  it("is nothing for a product with a single tier", () => {
+    expect(savingFor(3, bong)).toBe(0);
   });
 });
 

@@ -149,6 +149,15 @@ export function nextBetterTier(qty: number, product: Priced): TierUpsell | null 
   return { tier, add: tier.qty - qty, price: priceFor(tier.qty, product).price };
 }
 
+/** What the ladder saves at this quantity, against buying the same amount one
+ *  unit at a time. The one number that argues for taking more. */
+export function savingFor(qty: number, product: Priced): number {
+  const first = product.tiers[0];
+  if (!first || !Number.isFinite(qty) || qty <= 0) return 0;
+  const baseRate = first.price / first.qty;
+  return Math.max(0, Math.round(baseRate * qty - listPriceFor(qty, product.tiers)));
+}
+
 const UNIT_LABELS: Record<Language, Record<Unit, string>> = {
   en: { g: "g", pcs: "pcs" },
   ru: { g: "г", pcs: "шт" },
