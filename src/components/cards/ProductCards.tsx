@@ -86,7 +86,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
       className={`relative w-full text-left rounded-card active:scale-[0.98] transition-all cursor-pointer group flex flex-col overflow-hidden h-[200px] bg-brand-primary card-premium ${FOCUS_RING}`}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70 pointer-events-none" />
-      <div className="absolute inset-0 opacity-30 pointer-events-none transition-opacity duration-500 group-hover:opacity-50" style={{ background: `radial-gradient(ellipse at 50% 80%, ${accentColor}15, transparent 70%)` }} />
+      <div className="absolute inset-0 opacity-40 pointer-events-none transition-opacity duration-500 group-hover:opacity-60" style={{ background: `radial-gradient(ellipse at 50% 80%, ${accentColor}22, transparent 70%)` }} />
 
       <div className="relative z-10 px-4 py-3 pb-0 flex-1 flex flex-col min-h-0">
         {/* Two lines are reserved whether the name needs them or not, so a
@@ -98,9 +98,15 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
           </h3>
         </div>
         <div className="relative flex-1 w-full min-h-0 flex items-center justify-center my-1">
+          {/* The lamp behind the jar. It was dim enough to read as a smudge
+              rather than as light, which wasted the one place on the card
+              where the strain's own colour does any work — so the pool is
+              brighter, wider and softer, and the photo carries a matching
+              halo of its own below. Kept under half opacity: past that the
+              colour starts tinting the product instead of lighting it. */}
           <div
-            className="absolute inset-0 rounded-full blur-xl opacity-20 group-hover:opacity-35 transition-opacity duration-500"
-            style={{ background: `radial-gradient(circle at 50% 50%, ${accentColor}60, transparent 70%)` }}
+            className="absolute -inset-2 rounded-full blur-2xl opacity-45 group-hover:opacity-70 transition-opacity duration-500"
+            style={{ background: `radial-gradient(circle at 50% 50%, ${accentColor}80, transparent 72%)` }}
           />
           <Image
             src={imgSrc}
@@ -109,7 +115,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
             className="object-contain transform group-hover:scale-105 transition-transform duration-300 relative z-10"
             sizes={sizes}
             priority={priority}
-            style={{ filter: `drop-shadow(0 0 18px ${accentColor}40)` }}
+            style={{ filter: `drop-shadow(0 0 22px ${accentColor}66)` }}
             onError={() => setImgSrc(FALLBACK_IMAGE)}
           />
         </div>

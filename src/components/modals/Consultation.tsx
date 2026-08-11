@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { X, ShieldCheck } from "lucide-react"
 import { TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
+import { useModalA11y } from "@/lib/use-modal-a11y"
 import { ConsultationRequestForm } from "@/components/forms/ConsultationRequestForm"
 
 interface ConsultationProps {
@@ -15,7 +16,11 @@ interface ConsultationProps {
 export const Consultation = ({ t, onClose }: ConsultationProps) => {
   const [isClosing, setIsClosing] = React.useState(false);
   const [isDesktop, setIsDesktop] = React.useState(false);
-  const [mounted, setMounted] = React.useState(false);
+  // True on the very first client render, not one render later. The dialog is
+  // only ever mounted from client state (never during hydration), so there is
+  // no markup to mismatch — and waiting a render would have the focus trap set
+  // up against an element that does not exist yet.
+  const [mounted, setMounted] = React.useState(() => typeof document !== "undefined");
 
   React.useEffect(() => {
     setMounted(true);
@@ -35,6 +40,14 @@ export const Consultation = ({ t, onClose }: ConsultationProps) => {
     }, 300);
   }, [onClose]);
 
+  // The one dialog on the site that never got this: no Escape, no focus trap,
+  // and the page still scrolling behind it. It mattered less while the only way
+  // in was tapping a card on the home page; now that the header links straight
+  // to it from anywhere, it is a dialog people arrive at, and it should behave
+  // like the product sheet does. Closing runs through handleClose so the exit
+  // animation still plays.
+  const dialogRef = useModalA11y({ onClose: handleClose });
+
   // Portal straight to <body> so this overlay never inherits a stacking
   // context or clipping box from an ancestor (e.g. an overflow-hidden
   // section) — it is always positioned relative to the viewport, centered,
@@ -47,6 +60,10 @@ export const Consultation = ({ t, onClose }: ConsultationProps) => {
 
       <div className="gradient-ring w-full max-w-md sm:rounded-modal rounded-t-modal shadow-2xl">
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={t.consultCta}
           drag={isDesktop ? false : "y"}
           dragConstraints={{ top: 0 }}
           dragElastic={0.2}
@@ -63,6 +80,7 @@ export const Consultation = ({ t, onClose }: ConsultationProps) => {
           <button
             type="button"
             onClick={handleClose}
+            aria-label={t.close}
             className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full border border-white/10 transition-all text-brand-light z-20"
           >
             <X size={18} />

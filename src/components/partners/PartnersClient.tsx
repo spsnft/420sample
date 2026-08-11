@@ -61,6 +61,7 @@ export default function PartnersClient() {
           pitch of the page. */}
       <Header
         safeLang={safeLang}
+        surface="partners"
         byline={
           <Link
             href="https://tsvetkov.site"
@@ -121,7 +122,11 @@ export default function PartnersClient() {
           </div>
         </PitchBlock>
 
-        <section className="p-6 rounded-card card-premium text-center">
+        {/* No card around this one. The two pitch blocks above are cards
+            because each holds an argument; the closing line and its button are
+            the page speaking in its own voice, and a third bordered box after
+            them turned the ask into just another exhibit. */}
+        <section className="px-2 pt-4 pb-2 text-center">
           <p className="text-[14px] font-bold text-brand-light/80 leading-relaxed text-balance mb-4">
             {t.ctaTitle}
           </p>

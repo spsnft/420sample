@@ -175,7 +175,7 @@ export default function MenuClient({
         />
       )}
 
-      <Header safeLang={safeLang} />
+      <Header safeLang={safeLang} hideNav={kiosk} />
 
       {/* The page's own heading. Visually the wordmark in the header already
           says where you are, but the document had no h1 at all — headings

@@ -11,6 +11,11 @@ export interface TranslationDictionary {
   sales: string;
   accessories: string;
   menuTitle: string;
+  /** Accessible name of the header's destination chip and of the panel it opens. */
+  navLabel: string;
+  navHome: string;
+  navCertificate: string;
+  navBusiness: string;
   open: string;
   close: string;
   remove: string;
@@ -81,6 +86,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     sales: "Sales",
     accessories: "Accessories",
     menuTitle: "Menu",
+    navLabel: "Sections",
+    navHome: "Home",
+    navCertificate: "Medical certificate",
+    navBusiness: "For business",
     open: "Open",
     close: "Close",
     remove: "Remove",
@@ -147,6 +156,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     sales: "Распродажа",
     accessories: "Аксессуары",
     menuTitle: "Меню",
+    navLabel: "Разделы",
+    navHome: "Главная",
+    navCertificate: "Мед. справка",
+    navBusiness: "Для бизнеса",
     open: "Открыть",
     close: "Закрыть",
     remove: "Удалить",
@@ -213,6 +226,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     sales: "ลดราคา",
     accessories: "อุปกรณ์เสริม",
     menuTitle: "เมนู",
+    navLabel: "หมวดหมู่",
+    navHome: "หน้าแรก",
+    navCertificate: "ใบรับรองแพทย์",
+    navBusiness: "สำหรับธุรกิจ",
     open: "เปิด",
     close: "ปิด",
     remove: "ลบ",

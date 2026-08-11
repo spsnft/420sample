@@ -52,19 +52,25 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
   // per unit than what is selected.
   const upsell = nextBetterTier(value, product);
 
+  // The frame is as wide as the buy button under it, so the two read as one
+  // control stack. Its three parts are pushed to the edges and the middle
+  // rather than packed against the left — a row of buttons huddled in the
+  // left third of a full-width frame looks like a layout that failed, and
+  // it also puts − and + within a thumb's reach of each other at the far
+  // side of the phone.
   const stepper = (
-    <div className="gradient-ring rounded-button shrink-0">
-      <div className="flex items-center gap-3 bg-black/40 rounded-button p-2 h-14">
+    <div className="gradient-ring rounded-button w-full">
+      <div className="flex items-center justify-between bg-black/40 rounded-button p-2 h-14">
         <button
           type="button"
           onClick={() => { triggerHaptic('light'); onChange(Math.max(step, Number((value - step).toFixed(1)))); }}
           aria-label={`−${step} ${unit}`}
-          className={`w-10 h-10 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light/70 ${FOCUS_RING}`}
+          className={`w-10 h-10 shrink-0 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light/70 ${FOCUS_RING}`}
         >
           <Minus size={16} />
         </button>
 
-        <span className="text-[16px] font-black min-w-[3rem] text-center text-brand-light whitespace-nowrap" aria-live="polite">
+        <span className="flex-1 px-2 text-[16px] font-black text-center text-brand-light whitespace-nowrap" aria-live="polite">
           {formatQty(value)}<span className="text-[11px] text-brand-light/50 ml-0.5">{unit}</span>
         </span>
 
@@ -72,7 +78,7 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
           type="button"
           onClick={() => { triggerHaptic('light'); onChange(Number((value + step).toFixed(1))); }}
           aria-label={`+${step} ${unit}`}
-          className={`w-10 h-10 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light ${FOCUS_RING}`}
+          className={`w-10 h-10 shrink-0 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light ${FOCUS_RING}`}
         >
           <Plus size={16} />
         </button>
