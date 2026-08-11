@@ -13,9 +13,13 @@ interface OrderProps {
   total: number;
   t: TranslationDictionary;
   onClose: () => void;
+  /** Reopens a line's product sheet so the amount can be corrected. The basket
+   *  used to be a dead end: the only way to change 3g to 5g was to delete the
+   *  line and find the product again. */
+  onEdit?: (item: any) => void;
 }
 
-export const Order = ({ items, total, t, onClose }: OrderProps) => {
+export const Order = ({ items, total, t, onClose, onEdit }: OrderProps) => {
   const { removeItem, clearCart, getLinePrice, lang } = useCart();
 
   const [orderId, setOrderId] = React.useState<string | null>(null);
@@ -150,13 +154,17 @@ export const Order = ({ items, total, t, onClose }: OrderProps) => {
                 items.map((item) => (
                   <div key={item.id} className="gradient-ring rounded-button">
                     <div className="p-3 bg-white/5 rounded-button flex items-center justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-xs font-black uppercase text-brand-light truncate">{item.name}</h4>
+                      <button
+                        type="button"
+                        onClick={() => { triggerHaptic('light'); onEdit?.(item); }}
+                        className="flex-1 min-w-0 text-left group"
+                      >
+                        <h4 className="text-xs font-black uppercase text-brand-light truncate group-hover:text-brand-secondary transition-colors">{item.name}</h4>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[11px] font-bold text-brand-secondary px-2 py-0.5 bg-brand-secondary/10 rounded-md">{item.qty}{unitLabel(item.unit, lang)}</span>
                           <span className="text-xs font-black text-brand-light">{getLinePrice(item)}<Baht /></span>
                         </div>
-                      </div>
+                      </button>
                       <button
                         type="button"
                         onClick={() => { triggerHaptic('warning'); removeItem(item.id); }}

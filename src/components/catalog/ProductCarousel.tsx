@@ -2,13 +2,16 @@
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { HighlightCard, BadgeIcon } from "@/components/cards/ProductCards"
+import { getCategoryConfig } from "@/components/catalog/ProductGrid"
 import { useScrollEdges } from "@/lib/use-scroll-edges"
+import { TranslationDictionary } from "@/lib/translations"
 
 interface ProductCarouselProps {
   type: "NEW" | "SALE";
   title: string;
   products: any[];
   onSelect: (product: any) => void;
+  t: TranslationDictionary;
 }
 
 // The cards are a fixed 160px so a phone always shows a sliver of the next one.
@@ -16,7 +19,7 @@ interface ProductCarouselProps {
 // it fetch a 2× oversized file for every card in the row.
 const CARD_SIZES = "160px";
 
-export const ProductCarousel: React.FC<ProductCarouselProps> = ({ type, title, products, onSelect }) => {
+export const ProductCarousel: React.FC<ProductCarouselProps> = ({ type, title, products, onSelect, t }) => {
   // Before the empty-list bail-out: hooks cannot sit behind a conditional return.
   const { ref, mask, edges, scrollByPage } = useScrollEdges(products?.length);
 
@@ -48,7 +51,13 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({ type, title, p
         >
           {products.map((p: any, idx: number) => (
             <div key={p?.id || idx} className="w-[160px] shrink-0 snap-start">
-              <HighlightCard item={p} onClick={() => onSelect(p)} priority={idx < 4} sizes={CARD_SIZES} showCategory />
+              <HighlightCard
+                item={p}
+                onClick={() => onSelect(p)}
+                priority={idx < 4}
+                sizes={CARD_SIZES}
+                categoryLabel={getCategoryConfig(p?.category, t).title}
+              />
             </div>
           ))}
         </div>

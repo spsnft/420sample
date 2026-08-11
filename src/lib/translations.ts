@@ -29,6 +29,10 @@ export interface TranslationDictionary {
   // Product sheet
   taste: string;
   terpenes: string;
+  savingLabel: string;
+  /** {qty}, {unit} and {rate} are filled in with the next tier's numbers. */
+  nextTierHint: string;
+  updateCta: string;
 
   // Kiosk idle prompt
   idleTitle: string;
@@ -90,6 +94,9 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     taste: "Taste",
     terpenes: "Terpenes",
+    savingLabel: "saving",
+    nextTierHint: "{qty} {unit} → {rate}฿ each",
+    updateCta: "Update",
 
     idleTitle: "Still there?",
     idleBody: "This screen is shared. We'll clear your basket in {seconds} seconds so the next guest starts fresh.",
@@ -151,6 +158,9 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     taste: "Вкус",
     terpenes: "Терпены",
+    savingLabel: "выгода",
+    nextTierHint: "{qty} {unit} → {rate}฿ за шт.",
+    updateCta: "Обновить",
 
     idleTitle: "Вы ещё здесь?",
     idleBody: "Этим экраном пользуются гости по очереди. Через {seconds} сек. мы очистим корзину, чтобы следующий начал с чистого листа.",
@@ -212,6 +222,9 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     taste: "รสชาติ",
     terpenes: "เทอร์พีน",
+    savingLabel: "ประหยัด",
+    nextTierHint: "{qty} {unit} → {rate}฿ ต่อหน่วย",
+    updateCta: "อัปเดต",
 
     idleTitle: "ยังอยู่ไหม?",
     idleBody: "หน้าจอนี้ใช้ร่วมกัน เราจะล้างตะกร้าใน {seconds} วินาที เพื่อให้ลูกค้าคนถัดไปเริ่มใหม่",

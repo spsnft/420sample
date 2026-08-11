@@ -28,6 +28,10 @@ interface ProductModalProps {
   t: TranslationDictionary;
   onClose: () => void;
   style?: { color?: string };
+  /** Set when the sheet was opened from a basket line: it starts at that
+   *  line's quantity and replaces it, rather than adding a second helping of
+   *  something the customer was only trying to correct. */
+  editingQty?: number;
 }
 
 export const Product = ({
@@ -35,15 +39,17 @@ export const Product = ({
   product,
   t,
   onClose,
-  style
+  style,
+  editingQty
 }: ProductModalProps) => {
-  const [quantity, setQuantity] = React.useState(1);
+  const isEditing = editingQty !== undefined;
+  const [quantity, setQuantity] = React.useState(editingQty ?? 1);
   const [isClosing, setIsClosing] = React.useState(false);
   const [imgSrc, setImgSrc] = React.useState(
     product?.image || FALLBACK_IMAGE
   );
 
-  const { addItem, items, lang } = useCart();
+  const { addItem, setQty, items, lang } = useCart();
 
   const safeLang = (lang || 'en') as Language;
   const accentColor = style?.color || '#10B981';
@@ -59,15 +65,32 @@ export const Product = ({
 
   const dialogRef = useModalA11y({ onClose: handleClose });
 
-  // Drag-to-dismiss moves to the handle alone now that the sheet's body
-  // scrolls: with the whole sheet draggable, a swipe meant to scroll the
-  // description dragged the sheet off the screen instead.
   const dragControls = useDragControls();
+  const bodyRef = React.useRef<HTMLDivElement>(null);
+  const touchStartY = React.useRef(0);
+
+  // Swipe-to-dismiss from anywhere in the sheet's upper body, not just the
+  // 28px handle — reaching for a grab bar with a thumb already on the picture
+  // is a chore. The rule is the one every native sheet uses: a downward drag
+  // that begins while the content is scrolled to the top belongs to the sheet;
+  // anything else belongs to the content. Touch only, so a mouse drag stays a
+  // text selection.
+  const handleBodyPointerDown = (e: React.PointerEvent) => {
+    touchStartY.current = e.clientY;
+  };
+
+  const handleBodyPointerMove = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'touch') return;
+    if ((bodyRef.current?.scrollTop ?? 0) > 0) return;
+    if (e.clientY - touchStartY.current > 8) dragControls.start(e);
+  };
 
   if (!product || (!isOpen && !isClosing)) return null;
 
   const cartItem = items.find(i => i.id === product.id);
-  const cartQty = cartItem ? cartItem.qty : 0;
+  // While editing, the sheet stands for the whole line, so the basket's current
+  // quantity is what is being replaced rather than something to add on top of.
+  const cartQty = isEditing ? 0 : (cartItem ? cartItem.qty : 0);
   // The banner and the button both talk about the basket the customer would
   // leave with, not about this sheet in isolation — otherwise "add 4 more to
   // reach 900฿" contradicts a cart that already holds three.
@@ -84,7 +107,8 @@ export const Product = ({
 
   const handleAdd = () => {
     triggerHaptic('success');
-    addItem(product, quantity);
+    if (isEditing) setQty(product.id, quantity);
+    else addItem(product, quantity);
     handleClose();
   };
 
@@ -138,7 +162,12 @@ export const Product = ({
           <X size={18} />
         </button>
 
-        <div className="relative z-10 flex-1 min-h-0 overflow-y-auto no-scrollbar -mx-6 px-6">
+        <div
+          ref={bodyRef}
+          onPointerDown={handleBodyPointerDown}
+          onPointerMove={handleBodyPointerMove}
+          className="relative z-10 flex-1 min-h-0 overflow-y-auto no-scrollbar -mx-6 px-6"
+        >
         <div className="flex flex-col items-center mb-6">
           <div className="w-32 h-32 mb-4 relative flex items-center justify-center">
             <div
@@ -190,6 +219,7 @@ export const Product = ({
             onChange={setQuantity}
             lang={safeLang}
             accentColor={accentColor}
+            t={t}
           />
 
           <button
@@ -198,6 +228,7 @@ export const Product = ({
             className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-3 hover:brightness-110 shadow-xl"
           >
             <ShoppingBag size={18} />
+            {isEditing && <span className="text-[11px] opacity-70">{t.updateCta}</span>}
             {addListPrice > addPrice && (
               <span className="text-[12px] opacity-50 line-through">{addListPrice}</span>
             )}

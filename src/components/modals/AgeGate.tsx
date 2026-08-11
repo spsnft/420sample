@@ -37,8 +37,12 @@ const ageGateTranslations = {
 
 // Rendered only when the server has seen no age cookie, so there is no state to
 // resolve on the client and no frame in which the catalogue shows through.
-export const AgeGate = () => {
-  const [isVisible, setIsVisible] = React.useState(true);
+//
+// Confirming tells the parent, which stops rendering this component. It used to
+// hide itself by returning null — but a component that renders nothing is still
+// mounted, so the effect that freezes the page behind the gate never ran its
+// cleanup and the menu stayed unscrollable until the next page load.
+export const AgeGate: React.FC<{ onVerified: () => void }> = ({ onVerified }) => {
   const [isDenied, setIsDenied] = React.useState(false);
   const router = useRouter();
 
@@ -54,15 +58,13 @@ export const AgeGate = () => {
   const handleConfirm = () => {
     triggerHaptic('success');
     document.cookie = ageCookieValue();
-    setIsVisible(false);
+    onVerified();
   };
 
   const handleDeny = () => {
     triggerHaptic('warning');
     setIsDenied(true);
   };
-
-  if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 transition-opacity duration-300">
