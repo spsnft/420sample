@@ -56,6 +56,25 @@ const CATEGORY_LABELS: Record<string, string> = {
 export const FOCUS_RING =
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary";
 
+// Status where the customer meets the product, not only in the row that
+// gathered it. A discount already shows as a struck price everywhere; a
+// percentage says how much at a glance, and "new" had no mark in the catalogue
+// at all — which is what made the showcase rows feel like the only place the
+// information lived, and therefore like a duplicate.
+export const DiscountChip = React.memo(({ percent }: { percent: number }) => (
+  <span className="shrink-0 px-1.5 py-0.5 rounded-badge bg-brand-secondary/15 border border-brand-secondary/40 text-[9px] font-black uppercase tracking-wide text-brand-secondary">
+    −{Math.round(percent)}%
+  </span>
+));
+
+// Blue, the colour the New row's own icon already uses, so no new meaning
+// enters the palette — and nothing collides with the strain colours.
+export const NewTag = React.memo(() => (
+  <span className="shrink-0 px-1.5 py-0.5 rounded-badge bg-blue-400/15 border border-blue-400/40 text-[9px] font-black uppercase tracking-wide text-blue-300">
+    New
+  </span>
+));
+
 export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID_SIZES, showCategory }: { item: any, onClick: () => void, priority?: boolean, sizes?: string, showCategory?: boolean }) => {
   // Above the empty-item bail-out: a hook behind a conditional return changes
   // the hook order between renders, which is a crash waiting for the first null.
@@ -106,11 +125,15 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
           160px card a chip in the title row cost enough width to truncate
           "Lemon Cherry Bath" to "Lemon Cherr…". */}
       <div className="relative z-10 flex justify-between items-end px-4 pb-3 mt-auto gap-2">
-        <span className="min-w-0 flex flex-col">
-          {categoryLabel && (
-            <span className="text-[9px] font-black uppercase tracking-wide text-brand-light/45 leading-none mb-1 truncate">
+        <span className="min-w-0 flex flex-col items-start gap-1">
+          {categoryLabel ? (
+            <span className="text-[9px] font-black uppercase tracking-wide text-brand-light/60 leading-none truncate">
               {categoryLabel}
             </span>
+          ) : (
+            // In a category grid the row heading no longer says what these are,
+            // so the slot the category label would occupy carries the status.
+            item.badge === 'NEW' ? <NewTag /> : discounted ? <DiscountChip percent={item.discountPercent} /> : null
           )}
           <span className="text-[11px] font-black uppercase tracking-normal brightness-125 leading-none truncate" style={{ color: accentColor }}>
             {item.type}
@@ -163,14 +186,25 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
             onError={() => setImgSrc(FALLBACK_IMAGE)}
           />
         </div>
+        {/* The mark goes under the name, not beside it. On the same line it
+            cost about 55px — enough to cut "Super Boof Cherry" short on every
+            phone up to 414px, and a menu row exists to carry the name. Only
+            marked rows grow; the rest keep the height the taste line used to
+            occupy. */}
         <div className="truncate">
           <span className="text-[13px] font-black uppercase tracking-tight text-brand-light/90 truncate leading-tight group-hover:text-brand-secondary transition-colors block">
             {p.name}
           </span>
+          {(p.badge === 'NEW' || rowDiscounted) && (
+            <span className="flex items-center gap-1.5 mt-1">
+              {p.badge === 'NEW' && <NewTag />}
+              {rowDiscounted && <DiscountChip percent={p.discountPercent} />}
+            </span>
+          )}
         </div>
       </div>
 
-      <div className="flex items-center gap-4 shrink-0">
+      <div className="flex items-center gap-3 shrink-0">
         <span className="text-[11px] font-black uppercase tracking-normal" style={{ color: accentFor(p) }}>
           {p.type}
         </span>

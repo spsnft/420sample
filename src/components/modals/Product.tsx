@@ -2,12 +2,13 @@
 import * as React from "react"
 import Image from "next/image"
 import { motion, useDragControls } from "framer-motion"
-import { X, Plus, Minus, ShoppingBag, Sparkles } from "lucide-react"
+import { X, ShoppingBag } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { Language, TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic, Baht } from "@/lib/utils"
-import { priceFor, nextBetterTier, unitLabel } from "@/lib/pricing"
+import { priceFor } from "@/lib/pricing"
 import { useModalA11y } from "@/lib/use-modal-a11y"
+import { QuantityPicker } from "./QuantityPicker"
 
 const FALLBACK_IMAGE = "/images/logo.svg";
 
@@ -71,9 +72,6 @@ export const Product = ({
   // leave with, not about this sheet in isolation — otherwise "add 4 more to
   // reach 900฿" contradicts a cart that already holds three.
   const totalQty = cartQty + quantity;
-
-  const upsell = nextBetterTier(totalQty, product);
-  const unit = unitLabel(product.unit, safeLang);
 
   // What this sheet adds to the bill: the repriced line minus what the line
   // already costs. With an empty cart it is simply the price of the quantity
@@ -183,72 +181,21 @@ export const Product = ({
           </dl>
         )}
 
-        {upsell && (
-          <div
-            className="mb-6 p-4 rounded-button border bg-brand-secondary/10 flex items-center justify-between relative z-10"
-            style={{ borderColor: `${accentColor}30` }}
-          >
-            <div className="flex flex-col">
-              <span className="text-[11px] font-black uppercase text-brand-light/70 tracking-wider flex items-center gap-1.5">
-                <Sparkles size={13} className="text-brand-secondary" />
-                {safeLang === 'ru' && `Добавь еще ${upsell.add} ${unit}`}
-                {safeLang === 'th' && `เพิ่มอีก ${upsell.add} ${unit}`}
-                {safeLang === 'en' && `Add ${upsell.add} ${unit} more`}
-              </span>
-              <span className="text-[14px] font-black text-brand-secondary mt-0.5 tracking-tight">
-                {safeLang === 'ru' && `чтобы цена стала ${upsell.price}฿`}
-                {safeLang === 'th' && `เพื่อรับราคา ${upsell.price}฿`}
-                {safeLang === 'en' && `to unlock ${upsell.price}฿ price`}
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                triggerHaptic('light');
-                setQuantity(q => q + upsell.add);
-              }}
-              className="w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform shadow-md"
-              style={{ backgroundColor: `${accentColor}20`, color: accentColor }}
-            >
-              <Plus size={18} strokeWidth={3} />
-            </button>
-          </div>
-        )}
-
         </div>
 
-        <div className="flex items-center justify-between gap-4 relative z-10 pt-4 shrink-0">
-          <div className="gradient-ring rounded-button">
-          <div className="flex items-center gap-4 bg-black/40 rounded-button p-2 h-14">
-            <button
-              type="button"
-              onClick={() => { triggerHaptic('light'); setQuantity(Math.max(1, quantity - 1)); }}
-              aria-label={`−1 ${unit}`}
-              className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light/70"
-            >
-              <Minus size={16} />
-            </button>
-
-            <span className="text-[16px] font-black min-w-[2.5rem] text-center text-brand-light whitespace-nowrap" aria-live="polite">
-              {quantity}<span className="text-[11px] text-brand-light/50 ml-0.5">{unit}</span>
-            </span>
-
-            <button
-              type="button"
-              aria-label={`+1 ${unit}`}
-              onClick={() => { triggerHaptic('light'); setQuantity(quantity + 1); }}
-              className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-badge active:bg-white/10 transition-colors text-brand-light"
-            >
-              <Plus size={16} />
-            </button>
-          </div>
-          </div>
+        <div className="flex flex-col gap-3 relative z-10 pt-4 shrink-0">
+          <QuantityPicker
+            product={product}
+            value={quantity}
+            onChange={setQuantity}
+            lang={safeLang}
+            accentColor={accentColor}
+          />
 
           <button
             type="button"
             onClick={handleAdd}
-            className="flex-1 h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-3 hover:brightness-110 shadow-xl"
+            className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-3 hover:brightness-110 shadow-xl"
           >
             <ShoppingBag size={18} />
             {addListPrice > addPrice && (
