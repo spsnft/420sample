@@ -113,8 +113,13 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
                 {formatQty(tier.qty)} {unit}
               </span>
               <span className="block text-[11px] font-bold text-brand-light/70 whitespace-nowrap">{price}฿</span>
-              <span className="block text-[10px] font-bold text-brand-light/40 whitespace-nowrap">
-                {Math.round(price / tier.qty)}฿/{unit}
+              {/* A single unit's rate is the price again, word for word. The
+                  line still occupies its height so the quantity and price on
+                  this button stay level with the ones beside it. The baht sign
+                  is dropped here — it is already on the line above, and "200/g"
+                  reads as a rate rather than a second price. */}
+              <span className="block text-[10px] font-bold text-brand-light/40 whitespace-nowrap min-h-[0.9rem]">
+                {tier.qty === 1 ? '' : `${Math.round(price / tier.qty)}/${unit}`}
               </span>
             </button>
           );

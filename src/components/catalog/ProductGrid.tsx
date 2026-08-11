@@ -82,7 +82,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ category, products, t,
         <div className="gradient-ring rounded-card overflow-hidden">
           <div className="rounded-card overflow-hidden bg-brand-primary md:grid md:grid-cols-2 md:[&>*:nth-child(2)]:border-t-0 md:[&>*:nth-child(even)]:border-l">
             {products.map((p: any) => (
-              <ProductRow key={p.id} p={p} onClick={() => onSelect(p)} />
+              <ProductRow key={p.id} p={p} onClick={() => onSelect(p)} t={t} />
             ))}
           </div>
         </div>
@@ -94,7 +94,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ category, products, t,
     <div className="max-w-5xl mx-auto">
       <div className={gridClass(config.layout)}>
         {products.map((p: any) => (
-          <HighlightCard key={p.id} item={p} onClick={() => onSelect(p)} />
+          <HighlightCard
+            key={p.id}
+            item={p}
+            onClick={() => onSelect(p)}
+            statusLabel={p.discountPercent > 0 ? t.tagSale : p.badge === 'NEW' ? t.tagNew : undefined}
+          />
         ))}
       </div>
     </div>
