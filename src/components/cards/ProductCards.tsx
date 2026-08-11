@@ -154,26 +154,6 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
 
   const { price: displayPrice, listPrice: rowListPrice, discounted: rowDiscounted } = entryPrice(p);
 
-  // Fixed columns, so the numbers stand under each other down the whole list.
-  // As a plain flex row they landed wherever the text before them ended, and a
-  // discounted row shunted its neighbours' type and price sideways — the list
-  // read as if it had been shaken.
-  const numbers = (
-    <div className="flex items-center gap-3 shrink-0">
-      <span className="w-16 text-right text-[11px] font-black uppercase tracking-normal truncate" style={{ color: accentFor(p) }}>
-        {p.type}
-      </span>
-      {/* Reserved whether or not this product is discounted: an empty column
-          is what keeps an undiscounted row in line with a discounted one. */}
-      <span className="w-10 text-right text-[11px] font-bold text-brand-light/40 line-through">
-        {rowDiscounted ? rowListPrice : ''}
-      </span>
-      <span className="w-16 text-right text-[14px] font-black text-brand-light">
-        {displayPrice > 0 ? (<>{displayPrice}<BahtSymbol /></>) : '—'}
-      </span>
-    </div>
-  );
-
   return (
     <button
       type="button"
@@ -182,32 +162,51 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
       // container can then drop it from the first row of each column with one
       // rule, whatever the product count. A bottom border cannot — "last child"
       // is one cell, so the left column kept a stray line under it.
-      className={`w-full text-left flex items-center gap-3 px-4 py-3 md:py-4 text-brand-light border-t border-white/10 first:border-t-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group ${FOCUS_RING} focus-visible:ring-inset focus-visible:ring-offset-0`}
+      className={`w-full text-left flex items-center gap-3 px-4 py-3 text-brand-light border-t border-white/10 first:border-t-0 active:bg-white/5 hover:bg-white/5 transition-colors cursor-pointer group ${FOCUS_RING} focus-visible:ring-inset focus-visible:ring-offset-0`}
     >
-      <div className="w-8 h-8 bg-black/10 rounded-badge overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5 relative">
+      <div className="w-9 h-9 bg-black/10 rounded-badge overflow-hidden p-0.5 shrink-0 flex items-center justify-center border border-white/5 relative">
         <Image
           src={imgSrc}
           alt={p.name || "Product"}
           fill
           className="object-contain"
-          sizes="32px"
+          sizes="36px"
           onError={() => setImgSrc(FALLBACK_IMAGE)}
         />
       </div>
 
-      {/* The name gets a line of its own on a phone, where sharing one with
-          three columns of numbers left it about 115px and cut it short. On a
-          desktop column there is room for everything on one line. */}
-      <div className="flex-1 min-w-0 md:flex md:items-center md:gap-3">
-        <div className="flex items-center gap-2 min-w-0 md:flex-1">
-          <span className="text-[13px] font-black uppercase tracking-tight text-brand-light/90 truncate leading-tight group-hover:text-brand-secondary transition-colors">
-            {p.name}
+      {/* Name and strain stack on the left, price on the right. Putting the
+          strain in a column of its own on the right had it describing the name
+          from across the row, with a hole between them — and the hole grew on
+          the rows that had no discount to fill the next column along. */}
+      <div className="flex-1 min-w-0">
+        {/* The name has its line to itself. Sharing it with the tag left about
+            195px on a phone, and "Super Boof Cherry" plus a tag needs 200 —
+            the tag rides with the strain instead, on a line that has room. */}
+        <span className="block text-[13px] font-black uppercase tracking-tight text-brand-light/90 truncate leading-tight group-hover:text-brand-secondary transition-colors">
+          {p.name}
+        </span>
+        <span className="flex items-center gap-2 mt-0.5 min-w-0">
+          <span className="text-[11px] font-black uppercase tracking-normal truncate" style={{ color: accentFor(p) }}>
+            {p.type}
           </span>
           {p.badge === 'NEW' && <NewTag />}
-        </div>
-        <div className="flex justify-end mt-1 md:mt-0">
-          {numbers}
-        </div>
+        </span>
+      </div>
+
+      {/* The old price sits against the new one rather than in a column of its
+          own: an anchor works by being read alongside what it anchors. It is
+          also brighter than it was — a figure nobody can read is not doing the
+          job it is there for. The block is right-aligned and wide enough for
+          both, so the price a customer scans down the list stays in line
+          whether or not the row above it was discounted. */}
+      <div className="shrink-0 flex items-baseline justify-end gap-1.5 min-w-[5.5rem]">
+        {rowDiscounted && (
+          <span className="text-[11px] font-bold text-brand-light/55 line-through">{rowListPrice}</span>
+        )}
+        <span className="text-[15px] font-black text-brand-light whitespace-nowrap">
+          {displayPrice > 0 ? (<>{displayPrice}<BahtSymbol /></>) : '—'}
+        </span>
       </div>
     </button>
   );
