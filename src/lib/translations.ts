@@ -133,7 +133,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     hoursLabel: "Working hours",
     reviewsLabel: "Reviews",
     aboutLead: "What a modern dispensary should feel like",
-    aboutPhotoLabel: "Interior photo coming soon",
+    aboutPhotoLabel: "Photo coming soon",
     certSteps: [
       { title: "Send", description: "your request within a minute" },
       { title: "Confirm", description: "details with our manager" },
@@ -203,7 +203,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
     aboutLead: "Каким должен быть современный диспенсари",
-    aboutPhotoLabel: "Фото интерьера — скоро",
+    aboutPhotoLabel: "Фото заведения — скоро",
     certSteps: [
       { title: "Отправьте", description: "заявку в течение минуты" },
       { title: "Подтвердите", description: "детали с нашим менеджером" },
@@ -273,7 +273,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     hoursLabel: "เวลาทำการ",
     reviewsLabel: "รีวิว",
     aboutLead: "นี่คือสิ่งที่ร้านกัญชาสมัยใหม่ควรจะเป็น",
-    aboutPhotoLabel: "ภาพภายในร้าน — เร็วๆ นี้",
+    aboutPhotoLabel: "ภาพร้าน — เร็วๆ นี้",
     certSteps: [
       { title: "ส่ง", description: "คำขอของคุณภายในหนึ่งนาที" },
       { title: "ยืนยัน", description: "รายละเอียดกับผู้จัดการของเรา" },
