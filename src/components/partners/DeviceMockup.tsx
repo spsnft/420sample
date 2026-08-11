@@ -3,11 +3,13 @@ import * as React from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
 
-// Composited screenshot of buds.digital (header + hero cards + the
-// "Cannabis. Done properly." tagline), assembled from the live homepage
-// and padded out to a true iPhone 13/14 screen ratio of 390x844. Recapture
-// and swap the PNG in public/images/partners/customer-view.png whenever
-// the live design changes. The composite is built with its own tight,
+// Composited screenshot of buds.digital (header + hero cards + the homepage
+// tagline), assembled from the live homepage and padded out to a true
+// iPhone 13/14 screen ratio of 390x844. Recapture and swap the PNG in
+// public/images/partners/customer-view.png whenever the live design changes.
+// It is out of date on exactly one point right now: the tagline in the
+// capture still reads "Cannabis. Done properly.", which the live homepage no
+// longer says. The composite is built with its own tight,
 // deliberate spacing (not a 1:1 crop of the live page's natural spacing)
 // and its header/tagline pieces are cropped clear of the source page's
 // hairline borders — those read as stray hard edges once tilted and

@@ -9,6 +9,13 @@ export interface TranslationDictionary {
   // Header & Navigation
   updates: string;
   sales: string;
+  // The three category names, used for the menu's tabs, its section headings
+  // and the category label on a showcase card — one word per category, so the
+  // tab and the card never disagree. English and Russian both keep "Buds" and
+  // "Joints": those are the words the shop itself uses on its shelves, and a
+  // Russian customer reads them faster than a translation would be read.
+  buds: string;
+  joints: string;
   accessories: string;
   menuTitle: string;
   /** Accessible name of the header's destination chip and of the panel it opens. */
@@ -60,7 +67,7 @@ export interface TranslationDictionary {
   // Home page
   heroDoorCertLine: string;
   heroDoorMenuLine: string;
-  // "Cannabis. Done properly." is hardcoded in English across all locales
+  // "Flowers. Done properly." is hardcoded in English across all locales
   // (not translated) — see HomeClient. Hero card titles ("Get Medical
   // Certificate" / "Explore The Today's Menu") are hardcoded the same way.
   addressLabel: string;
@@ -87,6 +94,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     // Header & Navigation
     updates: "New",
     sales: "Sales",
+    buds: "Buds",
+    joints: "Joints",
     accessories: "Accessories",
     menuTitle: "Menu",
     navLabel: "Sections",
@@ -157,6 +166,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     // Header & Navigation
     updates: "Новинки",
     sales: "Распродажа",
+    buds: "Buds",
+    joints: "Joints",
     accessories: "Аксессуары",
     menuTitle: "Меню",
     navLabel: "Разделы",
@@ -227,6 +238,11 @@ export const translations: Record<Language, TranslationDictionary> = {
     // Header & Navigation
     updates: "มาใหม่",
     sales: "ลดราคา",
+    // The words a Thai dispensary prints on its own menu: the flower itself,
+    // and the loanword for a pre-roll, which is what the counter says out loud
+    // rather than the more literal กัญชามวน.
+    buds: "ดอกกัญชา",
+    joints: "พรีโรล",
     accessories: "อุปกรณ์เสริม",
     menuTitle: "เมนู",
     navLabel: "หมวดหมู่",

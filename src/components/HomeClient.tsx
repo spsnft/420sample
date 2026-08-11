@@ -138,7 +138,7 @@ export default function HomeClient() {
           <section className="py-8 lg:py-14 text-center space-y-3">
             {/* Hardcoded in English across all locales — not translated (see item 7). */}
             <p className="font-serif text-[28px] sm:text-[36px] lg:text-[44px] text-brand-light leading-snug tracking-tight">
-              Cannabis. Done properly.
+              Flowers. Done properly.
             </p>
             <p className="text-[15px] sm:text-[17px] font-bold text-brand-light/60">
               {t.aboutLead}

@@ -4,6 +4,10 @@ import type { Language } from "@/lib/translations"
 // shop owners. Kept separate from the public-site dictionary in
 // @/lib/translations since none of these keys are shared with buds.digital.
 export interface PartnersDictionary {
+  // Says what the system does for the shop, not what the shop does with the
+  // system. This page's job is to earn a demo click, and a promise of benefit
+  // does that better than a promise of reliability — which answers an
+  // objection and belongs further down, beside the PT.33 claim.
   heroTitle: string;
   // The USP line reads as a row of pills under the H1. heroPillAccent is the
   // single highlighted one and carries the urgency claim that used to sit in a
@@ -35,7 +39,7 @@ export interface PartnersDictionary {
 
 export const partnersTranslations: Record<Language, PartnersDictionary> = {
   ru: {
-    heroTitle: "Не просто сайт. Система, с которой вы работаете",
+    heroTitle: "Не просто сайт. Система, которая работает на вас",
     heroPills: [
       "Учёт PT.33",
       "Цифровое меню",
@@ -55,7 +59,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaButton: "Написать в WhatsApp",
   },
   en: {
-    heroTitle: "Not just a website. The system you run on",
+    heroTitle: "Not just a website. A system that works for you",
     heroPills: [
       "PT.33 records",
       "Digital menu",
@@ -75,7 +79,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaButton: "Message on WhatsApp",
   },
   th: {
-    heroTitle: "ไม่ใช่แค่เว็บไซต์ แต่คือระบบที่คุณใช้ขับเคลื่อนธุรกิจ",
+    heroTitle: "ไม่ใช่แค่เว็บไซต์ แต่คือระบบที่ทำงานให้คุณ",
     heroPills: [
       "ทะเบียน PT.33",
       "เมนูดิจิทัล",
