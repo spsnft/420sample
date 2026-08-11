@@ -167,11 +167,6 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
           <span className="text-[13px] font-black uppercase tracking-tight text-brand-light/90 truncate leading-tight group-hover:text-brand-secondary transition-colors block">
             {p.name}
           </span>
-          {p.taste && (
-            <span className="text-[11px] font-bold text-brand-light/40 uppercase tracking-normal block truncate">
-              {p.taste}
-            </span>
-          )}
         </div>
       </div>
 

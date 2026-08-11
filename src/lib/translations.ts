@@ -26,6 +26,10 @@ export interface TranslationDictionary {
   catalogEmpty: string;
   filterAll: string;
 
+  // Product sheet
+  taste: string;
+  terpenes: string;
+
   // Kiosk idle prompt
   idleTitle: string;
   idleBody: string;
@@ -83,6 +87,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogRetry: "Try again",
     catalogEmpty: "Nothing on the menu right now. Please ask our staff.",
     filterAll: "All",
+
+    taste: "Taste",
+    terpenes: "Terpenes",
 
     idleTitle: "Still there?",
     idleBody: "This screen is shared. We'll clear your basket in {seconds} seconds so the next guest starts fresh.",
@@ -142,6 +149,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogEmpty: "Сейчас в меню ничего нет. Спросите у наших сотрудников.",
     filterAll: "Все",
 
+    taste: "Вкус",
+    terpenes: "Терпены",
+
     idleTitle: "Вы ещё здесь?",
     idleBody: "Этим экраном пользуются гости по очереди. Через {seconds} сек. мы очистим корзину, чтобы следующий начал с чистого листа.",
     idleStay: "Я здесь",
@@ -199,6 +209,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     catalogRetry: "ลองอีกครั้ง",
     catalogEmpty: "ขณะนี้ยังไม่มีรายการในเมนู กรุณาสอบถามพนักงานของเรา",
     filterAll: "ทั้งหมด",
+
+    taste: "รสชาติ",
+    terpenes: "เทอร์พีน",
 
     idleTitle: "ยังอยู่ไหม?",
     idleBody: "หน้าจอนี้ใช้ร่วมกัน เราจะล้างตะกร้าใน {seconds} วินาที เพื่อให้ลูกค้าคนถัดไปเริ่มใหม่",
