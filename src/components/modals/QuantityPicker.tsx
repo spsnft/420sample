@@ -4,7 +4,7 @@ import { Minus, Plus } from "lucide-react"
 
 import { Language, TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
-import { listPriceFor, nextBetterTier, priceFor, unitLabel } from "@/lib/pricing"
+import { nextBetterTier, priceFor, unitLabel } from "@/lib/pricing"
 import { FOCUS_RING } from "@/components/cards/ProductCards"
 
 // Half a gram is a real amount to buy; half a joint and half a bong are not.
@@ -52,17 +52,6 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
   // per unit than what is selected.
   const upsell = nextBetterTier(value, product);
 
-  // Money saved against buying the same amount one unit at a time — the one
-  // number that argues for taking more, so it gets a line of its own rather
-  // than sharing one with rates and quantities. Per-unit prices live on the
-  // presets now, where the choice is made: reading 200฿/g, 180, 170, 150 down
-  // the row is the whole argument, and it needs no sentence.
-  const baseRate = tiers.length > 0 ? tiers[0].price / tiers[0].qty : 0;
-  const saving = Math.round(baseRate * value - listPriceFor(value, tiers));
-  // At the bottom of the ladder there is nothing saved yet, so the line names
-  // the first step that would save something instead of going blank.
-  const potential = upsell ? Math.round(baseRate * upsell.tier.qty - upsell.tier.price) : 0;
-
   const stepper = (
     <div className="gradient-ring rounded-button shrink-0">
       <div className="flex items-center gap-3 bg-black/40 rounded-button p-2 h-14">
@@ -97,7 +86,10 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
 
   return (
     <div className="w-full space-y-3">
-      <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1">
+      {/* Four buttons in a row that fits: they shared the sheet's width badly
+          as a scrolling strip, hugging the left edge with a gap on the right
+          for no reason a reader could see. */}
+      <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${tiers.length}, minmax(0, 1fr))` }}>
         {tiers.map(tier => {
           const isActive = value === tier.qty;
           const isSuggested = upsell?.tier.qty === tier.qty;
@@ -109,7 +101,7 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
               type="button"
               onClick={() => { triggerHaptic('light'); commit(tier.qty); }}
               aria-pressed={isActive}
-              className={`shrink-0 px-3 py-1.5 rounded-button border text-left transition-all active:scale-95 ${FOCUS_RING} ${
+              className={`px-1.5 py-1.5 rounded-button border text-center transition-all active:scale-95 ${FOCUS_RING} ${
                 isActive
                   ? "bg-brand-secondary/15 border-brand-secondary"
                   : isSuggested
@@ -166,19 +158,6 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
         </span>
       </div>
 
-      {/* One number, one line: what this amount saves, or — while nothing is
-          saved yet — what the first worthwhile step would save. The height is
-          held either way so the sheet does not shift as the slider moves. */}
-      <p className="min-h-[1rem] text-[11px] font-black uppercase tracking-wide text-brand-secondary leading-4" aria-live="polite">
-        {saving > 0
-          ? `${t.savingLabel} ${saving}฿`
-          : potential > 0
-            ? t.savingHint
-                .replace('{qty}', formatQty(upsell!.tier.qty))
-                .replace('{unit}', unit)
-                .replace('{amount}', String(potential))
-            : ''}
-      </p>
     </div>
   );
 };
