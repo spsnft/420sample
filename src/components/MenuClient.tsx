@@ -23,6 +23,24 @@ const IDLE_GRACE_SECONDS = 20;
 // alphabetically; anything else — accessory kinds — falls in after, A to Z.
 const STRAIN_ORDER = ["indica", "sativa", "hybrid"];
 
+// Keeps a strain's variants side by side in a showcase row. The same name as a
+// bud and as a joint is two products at two prices, but four cards apart it
+// reads as the same card printed twice; adjacent, with their BUD and JOINT
+// labels, it reads as what it is. Order is otherwise untouched — the first
+// appearance of a name keeps its sort_order place.
+function groupVariants(products: any[]): any[] {
+  const byName = new Map<string, any[]>();
+  const order: string[] = [];
+  for (const product of products) {
+    if (!byName.has(product.name)) {
+      byName.set(product.name, []);
+      order.push(product.name);
+    }
+    byName.get(product.name)!.push(product);
+  }
+  return order.flatMap(name => byName.get(name)!);
+}
+
 export default function MenuClient({
   initialProducts = [],
   categories = {},
@@ -55,10 +73,10 @@ export default function MenuClient({
   // sheet asked for instead of re-sorting by id — ids identify a product, they
   // do not rank it. Neither row is touched by the category filter: they are the
   // showcase, above and outside the catalogue's own controls.
-  const recentUpdates = React.useMemo(() => initialProducts.filter((p: any) => p?.badge === 'NEW'), [initialProducts]);
+  const recentUpdates = React.useMemo(() => groupVariants(initialProducts.filter((p: any) => p?.badge === 'NEW')), [initialProducts]);
   // A sale is a discount, not a label somebody remembered to type: the row and
   // the struck-through price on the card come from the same number.
-  const flashSales = React.useMemo(() => initialProducts.filter((p: any) => p?.discountPercent > 0), [initialProducts]);
+  const flashSales = React.useMemo(() => groupVariants(initialProducts.filter((p: any) => p?.discountPercent > 0)), [initialProducts]);
 
   const navCategories = React.useMemo(
     () => sortCategoryKeys(categories).map(key => ({ key, title: getCategoryConfig(key, t).title })),
