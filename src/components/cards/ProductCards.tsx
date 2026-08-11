@@ -2,7 +2,7 @@
 import * as React from "react"
 import Image from "next/image"
 import { Plus, Tag, Zap } from "lucide-react"
-import { triggerHaptic, accentFor } from "@/lib/utils"
+import { triggerHaptic, accentFor, strainAccentFor } from "@/lib/utils"
 import { entryPrice } from "@/lib/pricing"
 import { TranslationDictionary } from "@/lib/translations"
 
@@ -76,6 +76,9 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
   if (!item) return null;
 
   const accentColor = accentFor(item);
+  // The glow keeps the gold fallback — it is the card's lighting. The word
+  // under it does not: see strainAccentFor.
+  const strainColor = strainAccentFor(item);
 
   const { price: currentPrice, listPrice, discounted } = entryPrice(item);
 
@@ -138,7 +141,10 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
               {statusLabel}
             </span>
           ) : null}
-          <span className="text-[11px] font-black uppercase tracking-normal brightness-125 leading-none truncate" style={{ color: accentColor }}>
+          <span
+            className={`text-[11px] font-black uppercase tracking-normal brightness-125 leading-none truncate ${strainColor ? '' : 'text-brand-light/70'}`}
+            style={strainColor ? { color: strainColor } : undefined}
+          >
             {item.type}
           </span>
         </span>
@@ -167,6 +173,7 @@ export const ProductRow = React.memo(({ p, onClick, t }: { p: any, onClick: () =
   if (!p) return null;
 
   const { price: displayPrice, listPrice: rowListPrice, discounted: rowDiscounted } = entryPrice(p);
+  const strainColor = strainAccentFor(p);
 
   return (
     <button
@@ -201,7 +208,10 @@ export const ProductRow = React.memo(({ p, onClick, t }: { p: any, onClick: () =
           {p.name}
         </span>
         <span className="flex items-center gap-2 mt-0.5 min-w-0">
-          <span className="text-[11px] font-black uppercase tracking-normal truncate" style={{ color: accentFor(p) }}>
+          <span
+            className={`text-[11px] font-black uppercase tracking-normal truncate ${strainColor ? '' : 'text-brand-light/70'}`}
+            style={strainColor ? { color: strainColor } : undefined}
+          >
             {p.type}
           </span>
           {p.badge === 'NEW' && <StatusTag label={t.tagNew} kind="new" />}
