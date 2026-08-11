@@ -13,8 +13,11 @@ export interface TranslationDictionary {
   menuTitle: string;
   /** Accessible name of the header's destination chip and of the panel it opens. */
   navLabel: string;
-  navHome: string;
-  navCertificate: string;
+  // The three surfaces the product is made of, which is what the chip switches
+  // between: the shop's public site, the panel its staff run the med-card
+  // checks from, and the pitch page for other shop owners.
+  navSite: string;
+  navStaff: string;
   navBusiness: string;
   open: string;
   close: string;
@@ -87,8 +90,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     accessories: "Accessories",
     menuTitle: "Menu",
     navLabel: "Sections",
-    navHome: "Home",
-    navCertificate: "Medical certificate",
+    navSite: "Website",
+    navStaff: "Staff panel",
     navBusiness: "For business",
     open: "Open",
     close: "Close",
@@ -157,8 +160,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     accessories: "Аксессуары",
     menuTitle: "Меню",
     navLabel: "Разделы",
-    navHome: "Главная",
-    navCertificate: "Мед. справка",
+    navSite: "Сайт",
+    navStaff: "Панель персонала",
     navBusiness: "Для бизнеса",
     open: "Открыть",
     close: "Закрыть",
@@ -227,8 +230,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     accessories: "อุปกรณ์เสริม",
     menuTitle: "เมนู",
     navLabel: "หมวดหมู่",
-    navHome: "หน้าแรก",
-    navCertificate: "ใบรับรองแพทย์",
+    navSite: "เว็บไซต์",
+    navStaff: "แผงพนักงาน",
     navBusiness: "สำหรับธุรกิจ",
     open: "เปิด",
     close: "ปิด",
