@@ -79,8 +79,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ category, products, t,
       // being narrowed — which would have left it concentric with the
       // carousels above but not aligned to them.
       <div className="max-w-5xl mx-auto">
-        <div className="gradient-ring rounded-card overflow-hidden">
-          <div className="rounded-card overflow-hidden bg-brand-primary md:grid md:grid-cols-2 md:[&>*:nth-child(2)]:border-t-0 md:[&>*:nth-child(even)]:border-l">
+        <div className="surface rounded-card overflow-hidden">
+          <div className="rounded-card overflow-hidden md:grid md:grid-cols-2 md:[&>*:nth-child(2)]:border-t-0 md:[&>*:nth-child(even)]:border-l">
             {products.map((p: any) => (
               <ProductRow key={p.id} p={p} onClick={() => onSelect(p)} t={t} />
             ))}

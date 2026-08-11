@@ -54,7 +54,7 @@ const StorefrontPhoto: React.FC<{ label: string; alt: string }> = ({ label, alt 
   const src = STOREFRONT_PHOTOS[attempt];
 
   return (
-    <div className="gradient-ring rounded-card overflow-hidden">
+    <div className="surface rounded-card overflow-hidden">
       <div className="relative w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card overflow-hidden bg-black/20">
         {src ? (
           <Image
@@ -101,9 +101,16 @@ export default function HomeClient() {
       <BotanicalDecor className="fixed -top-10 -right-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] z-[105]" />
 
       {/* No fill of its own: an opaque brand-primary here covered the site's
-          backdrop, which is why the atmosphere used to exist on /menu alone. */}
-      <div className="relative min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans overflow-hidden">
-        <BotanicalDecor className="absolute -bottom-10 -left-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] rotate-180 z-0" />
+          backdrop, which is why the atmosphere used to exist on /menu alone.
+          No overflow-hidden either: it clipped the corner leaf below, but an
+          overflow other than visible on an ancestor also silently turns off
+          position: sticky for everything inside — so the header on this page
+          carried a sticky class it had never once obeyed, and scrolled away
+          like any other element. The clipping now belongs to the leaf. */}
+      <div className="relative min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans">
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden z-0">
+          <BotanicalDecor className="absolute -bottom-10 -left-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] rotate-180" />
+        </div>
 
         <Header safeLang={safeLang} sticky />
 
@@ -150,7 +157,7 @@ export default function HomeClient() {
           <section className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               <StorefrontPhoto label={t.aboutPhotoLabel} alt={siteConfig.name} />
-              <div className="gradient-ring rounded-card overflow-hidden">
+              <div className="surface rounded-card overflow-hidden">
                 <iframe
                   src={localizedMapSrc(siteConfig.mapEmbedSrc, safeLang)}
                   className="w-full h-56 lg:h-full lg:min-h-[224px] border-0 block"
@@ -183,18 +190,18 @@ export default function HomeClient() {
               {t.contactsTitle}
             </p>
             <div className="flex items-center justify-center gap-3">
-              <div className="gradient-ring rounded-button shadow-lg">
-                <Link href={siteConfig.contacts.line} target="_blank" aria-label="LINE" className="w-[46px] h-[46px] flex items-center justify-center rounded-button bg-white/5 active:scale-90 transition-all">
+              <div className="surface rounded-button">
+                <Link href={siteConfig.contacts.line} target="_blank" aria-label="LINE" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
                   <LineIcon size={20} className="opacity-80" />
                 </Link>
               </div>
-              <div className="gradient-ring rounded-button shadow-lg">
-                <Link href={siteConfig.contacts.whatsapp} target="_blank" aria-label="WhatsApp" className="w-[46px] h-[46px] flex items-center justify-center rounded-button bg-white/5 active:scale-90 transition-all">
+              <div className="surface rounded-button">
+                <Link href={siteConfig.contacts.whatsapp} target="_blank" aria-label="WhatsApp" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
                   <WhatsAppIcon size={20} className="opacity-80" />
                 </Link>
               </div>
-              <div className="gradient-ring rounded-button shadow-lg">
-                <Link href={siteConfig.contacts.instagram} target="_blank" aria-label="Instagram" className="w-[46px] h-[46px] flex items-center justify-center rounded-button bg-white/5 active:scale-90 transition-all">
+              <div className="surface rounded-button">
+                <Link href={siteConfig.contacts.instagram} target="_blank" aria-label="Instagram" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
                   <Instagram size={20} className="opacity-80" />
                 </Link>
               </div>

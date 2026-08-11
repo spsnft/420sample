@@ -4,6 +4,7 @@ import * as React from "react"
 import { TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
 import { useScrollEdges } from "@/lib/use-scroll-edges"
+import { useStuck } from "@/lib/use-stuck"
 import { FOCUS_RING } from "@/components/cards/ProductCards"
 
 interface CatalogNavProps {
@@ -44,21 +45,8 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
   // the column the tabs belong to — separating the tabs from the very products
   // they switch. Stuck to the top of the window the same rule is doing real
   // work: it marks the edge cards are sliding under. So it appears exactly
-  // then. The sentinel is the standard read: a 1px marker directly above the
-  // bar, out of view precisely when the bar has left the flow.
-  const [stuck, setStuck] = React.useState(false);
-  const sentinelRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setStuck(!entry.isIntersecting),
-      { threshold: 1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  // then.
+  const { ref: sentinelRef, stuck } = useStuck();
 
   const current = activeCategory ?? categories[0]?.key;
 

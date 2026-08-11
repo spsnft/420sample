@@ -31,8 +31,8 @@ export const InfoCard: React.FC<InfoCardProps> = ({
   radius = "rounded-card",
   padding = "p-4",
 }) => (
-  <div className={`gradient-ring ${radius} h-full ${className}`}>
-    <div className={`${padding} ${radius} bg-white/5 h-full min-h-[88px] flex items-center gap-3`}>
+  <div className={`surface ${radius} h-full ${className}`}>
+    <div className={`${padding} ${radius} h-full min-h-[88px] flex items-center gap-3`}>
       <div
         className="rounded-full border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0"
         style={{

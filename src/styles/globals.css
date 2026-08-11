@@ -268,10 +268,41 @@
     outline-offset: 6px;
   }
 
-  .card-premium {
-    border: 1px solid transparent;
-    background: linear-gradient(#161819, #161819) padding-box,
-                linear-gradient(135deg, rgba(200, 158, 88, 0.3), rgba(255, 255, 255, 0.05)) border-box;
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  /*
+   * The customer-facing surface: a card, a panel, a framed photo.
+   *
+   * It replaced an outline. Every one of these used to be drawn as a 1px gold
+   * ring around a fill of the page's own colour, which does two things wrong
+   * once there is light in the room behind it. The fill is darker than the wall
+   * it sits on, so the object reads as a hole cut in the page rather than as a
+   * thing resting on it; and the ring is the only way you can tell where the
+   * object ends, so the eye is asked to trace fifteen identical rectangles
+   * before it reaches a single product.
+   *
+   * This is how a physical object in a lit room actually presents itself:
+   * slightly lighter than its surroundings because it catches the light, with
+   * a bright top edge where the light lands first, and a shadow underneath
+   * that seats it. The fill is translucent, so a card near the gold pool is a
+   * shade warmer than a card in the corner — the room reaches the objects in
+   * it. No outline anywhere. The eye finds the edge by tone, which is how it
+   * finds edges everywhere else.
+   *
+   * The gold ring is not gone from the site: it is now reserved for dialogs
+   * (see .gradient-ring), which are moments rather than objects. One accent
+   * used in one place still reads as an accent.
+   */
+  .surface {
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.09),
+      0 14px 30px -16px rgba(0, 0, 0, 0.80);
+  }
+
+  /* Pressed, a surface should sink towards the page rather than just shrink:
+     the top highlight goes out and the shadow tucks in under it. */
+  .surface-press:active {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.03),
+      0 6px 14px -12px rgba(0, 0, 0, 0.80);
   }
 }
