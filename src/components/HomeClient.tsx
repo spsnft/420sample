@@ -15,7 +15,6 @@ import { Consultation } from "@/components/modals"
 import { InfoCard } from "@/components/cards/InfoCard"
 import { HeroCard } from "@/components/cards/HeroCard"
 import { siteConfig } from "@/config/site"
-import { CONSULT_EVENT, CONSULT_HASH } from "@/lib/consult-link"
 import { triggerHaptic } from "@/lib/utils"
 
 // Darker-than-panel flat tones for the oversized watermark icons — one tone
@@ -41,34 +40,10 @@ export default function HomeClient() {
     setShowConsultModal(true);
   };
 
-  // Two ways in, because there are two ways to be asked. Arriving from the menu
-  // is a page load and the hash is already on the address by the time this runs;
-  // asking from the home page itself is no navigation at all, so the nav tells
-  // us directly. See lib/consult-link.
-  React.useEffect(() => {
-    const open = () => setShowConsultModal(true);
-    const sync = () => { if (window.location.hash === CONSULT_HASH) open(); };
-    sync();
-    window.addEventListener('hashchange', sync);
-    window.addEventListener(CONSULT_EVENT, open);
-    return () => {
-      window.removeEventListener('hashchange', sync);
-      window.removeEventListener(CONSULT_EVENT, open);
-    };
-  }, []);
-
   // Stable identity: the dialog's focus trap keys off this callback, and a new
   // function on every render would re-run it — pulling focus back to the top of
   // the form mid-sentence.
-  const closeConsult = React.useCallback(() => {
-    setShowConsultModal(false);
-    // Leave the address as it was found, so the back button doesn't land on a
-    // hash that immediately reopens what was just dismissed — and so the same
-    // link works a second time.
-    if (window.location.hash === CONSULT_HASH) {
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
-  }, []);
+  const closeConsult = React.useCallback(() => setShowConsultModal(false), []);
 
   return (
     <>

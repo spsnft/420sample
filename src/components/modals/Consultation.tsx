@@ -41,11 +41,8 @@ export const Consultation = ({ t, onClose }: ConsultationProps) => {
   }, [onClose]);
 
   // The one dialog on the site that never got this: no Escape, no focus trap,
-  // and the page still scrolling behind it. It mattered less while the only way
-  // in was tapping a card on the home page; now that the header links straight
-  // to it from anywhere, it is a dialog people arrive at, and it should behave
-  // like the product sheet does. Closing runs through handleClose so the exit
-  // animation still plays.
+  // and the page still scrolling behind it. Closing runs through handleClose so
+  // the exit animation still plays.
   const dialogRef = useModalA11y({ onClose: handleClose });
 
   // Portal straight to <body> so this overlay never inherits a stacking

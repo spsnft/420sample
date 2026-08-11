@@ -2,27 +2,26 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, Home, Leaf, ShieldCheck, ArrowUpRight } from "lucide-react"
+import { Menu, X, Globe, ClipboardCheck, ArrowUpRight } from "lucide-react"
 
 import { translations, Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
 import { siteConfig } from "@/config/site"
-import { CONSULT_EVENT, CONSULT_HREF } from "@/lib/consult-link"
 
-// The site is three surfaces — the home page, the menu, and the B2B pitch —
-// and until now the only route between them was the wordmark, which goes home
-// and nowhere else. A customer who opened /menu from a QR code on the counter
-// had no way to reach the medical certificate form at all: it lives in a modal
-// behind one of the home page's hero cards, a scroll and a page away.
+// The product is three surfaces — the shop's public site, the staff panel the
+// med-card checks are run from, and the pitch page for other shop owners — and
+// until now the only route between any of them was the wordmark, which goes
+// home and nowhere else. Land on /menu from the QR code on the counter and that
+// was the whole of it.
 //
 // A row of text links doesn't fit: at 375px the header already carries the
 // wordmark and the language chip, and three more words would either wrap or
 // squeeze the logo. So the destinations live behind one chip the same size and
 // shape as the language one, which is a pattern the header already teaches.
 //
-// The certificate is a modal on the home page rather than a route; how it is
-// linked, and why it takes both a hash and an event, is written up in
-// lib/consult-link.
+// A rule separates the shop's own site from the two surfaces its operators use.
+// Both are still full-strength: this deployment is a showcase, and the panel is
+// as much a part of what is being shown as the menu is.
 
 interface NavItem {
   href: string;
@@ -30,10 +29,9 @@ interface NavItem {
   icon: React.ComponentType<{ size?: number | string; className?: string }>;
   /** Opens in a new tab — every link does once the panel is on another host. */
   external?: boolean;
-  /** The B2B entry: under a rule and dimmer than the rest. It is addressed to
-   *  one visitor in a hundred, and a customer looking for the menu should not
-   *  have to read past an offer to sell them a website. */
-  aside?: boolean;
+  /** Draws the rule above this entry: everything below it is for the people
+   *  running the shop, not for the person standing in it. */
+  dividerAbove?: boolean;
 }
 
 export interface SiteNavProps {
@@ -80,12 +78,12 @@ export const SiteNav: React.FC<SiteNavProps> = ({ safeLang, surface = 'site' }) 
   const at = (path: string) => (onPartners ? `${siteConfig.url}${path}` : path);
 
   const items: NavItem[] = [
-    { href: at("/"), label: t.navHome, icon: Home, external: onPartners },
-    { href: at("/menu"), label: t.menuTitle, icon: Leaf, external: onPartners },
-    { href: at(CONSULT_HREF), label: t.navCertificate, icon: ShieldCheck, external: onPartners },
+    { href: at("/"), label: t.navSite, icon: Globe, external: onPartners },
+    { href: at("/staff"), label: t.navStaff, icon: ClipboardCheck, external: onPartners, dividerAbove: true },
+    // Dropped on the pitch page itself — it is the page you are standing on.
     ...(onPartners
       ? []
-      : [{ href: siteConfig.partners.url, label: t.navBusiness, icon: ArrowUpRight, external: true, aside: true }]),
+      : [{ href: siteConfig.partners.url, label: t.navBusiness, icon: ArrowUpRight, external: true }]),
   ];
 
   return (
@@ -107,33 +105,25 @@ export const SiteNav: React.FC<SiteNavProps> = ({ safeLang, surface = 'site' }) 
           aria-label={t.navLabel}
           className="absolute top-full right-0 mt-2 w-60 rounded-button bg-brand-primary border border-white/10 shadow-2xl overflow-hidden z-20 py-1"
         >
-          {items.map(({ href, label, icon: Icon, external, aside }) => {
-            // "/#consult" is the home page too, but it is a different errand
-            // from "take me home" — only the plain route claims the mark.
+          {items.map(({ href, label, icon: Icon, external, dividerAbove }) => {
+            // The menu is inside the site, not beside it, so /menu leaves the
+            // site entry unmarked rather than claiming to be somewhere else.
             const isCurrent = !external && href === pathname;
 
             return (
               <React.Fragment key={href}>
-                {aside && <span aria-hidden className="block my-1 h-px bg-white/10" />}
+                {dividerAbove && <span aria-hidden className="block my-1 h-px bg-white/10" />}
                 <Link
                   href={href}
                   role="menuitem"
                   aria-current={isCurrent ? "page" : undefined}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
-                  onClick={() => {
-                    triggerHaptic('light');
-                    setIsOpen(false);
-                    // Harmless from another page — nothing is listening there,
-                    // and the hash takes over once the home page mounts.
-                    if (href === CONSULT_HREF) window.dispatchEvent(new Event(CONSULT_EVENT));
-                  }}
+                  onClick={() => { triggerHaptic('light'); setIsOpen(false); }}
                   className={`flex items-center gap-2.5 px-3 h-10 text-[12px] font-black uppercase tracking-wide transition-colors ${
                     isCurrent
                       ? 'text-brand-secondary bg-brand-secondary/10'
-                      : aside
-                        ? 'text-brand-light/40 hover:text-brand-light/70 hover:bg-white/5'
-                        : 'text-brand-light/70 hover:text-brand-light hover:bg-white/5'
+                      : 'text-brand-light/70 hover:text-brand-light hover:bg-white/5'
                   }`}
                 >
                   <Icon size={14} className="shrink-0" />

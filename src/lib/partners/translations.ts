@@ -9,7 +9,7 @@ export interface PartnersDictionary {
   // single highlighted one and carries the urgency claim that used to sit in a
   // separate badge above the H1 — it lives here instead so the page states it
   // once, not twice.
-  heroPills: [string, string, string, string];
+  heroPills: [string, string, string];
   heroPillAccent: string;
 
   // Blocks 1 and 2 are a deliberate pair — the same surface shown to the two
@@ -34,7 +34,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
       "Проверка мед. карты",
       "Цифровое меню",
       "Контакты и отзывы",
-      "По законам Таиланда",
     ],
     heroPillAccent: "⚡ Запуск за 1 день",
 
@@ -55,7 +54,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
       "Med card check",
       "Digital menu",
       "Contacts & Reviews",
-      "TH law compliant",
     ],
     heroPillAccent: "⚡ Live in 1 day",
 
@@ -76,7 +74,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
       "ตรวจสอบบัตรแพทย์",
       "เมนูดิจิทัล",
       "ติดต่อและรีวิว",
-      "ถูกต้องตามกฎหมายไทย",
     ],
     heroPillAccent: "⚡ พร้อมใช้งานภายใน 1 วัน",
 
