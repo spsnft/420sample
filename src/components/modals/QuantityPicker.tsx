@@ -52,15 +52,16 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
   // per unit than what is selected.
   const upsell = nextBetterTier(value, product);
 
-  // What the ladder is actually worth at the amount in hand, and what one more
-  // step up would be worth. A "+4" pinned to a preset said neither: it made the
-  // buttons different widths and told the customer to add four of something
-  // without saying why. This is the same sentence a person behind the counter
-  // says — this much works out at X a gram, and the next size down to Y.
+  // Money saved against buying the same amount one unit at a time — the one
+  // number that argues for taking more, so it gets a line of its own rather
+  // than sharing one with rates and quantities. Per-unit prices live on the
+  // presets now, where the choice is made: reading 200฿/g, 180, 170, 150 down
+  // the row is the whole argument, and it needs no sentence.
   const baseRate = tiers.length > 0 ? tiers[0].price / tiers[0].qty : 0;
-  const rate = value > 0 ? listPriceFor(value, tiers) / value : 0;
   const saving = Math.round(baseRate * value - listPriceFor(value, tiers));
-  const nextRate = upsell ? upsell.tier.price / upsell.tier.qty : 0;
+  // At the bottom of the ladder there is nothing saved yet, so the line names
+  // the first step that would save something instead of going blank.
+  const potential = upsell ? Math.round(baseRate * upsell.tier.qty - upsell.tier.price) : 0;
 
   const stepper = (
     <div className="gradient-ring rounded-button shrink-0">
@@ -119,7 +120,10 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
               <span className="block text-[12px] font-black uppercase tracking-tight text-brand-light whitespace-nowrap">
                 {formatQty(tier.qty)} {unit}
               </span>
-              <span className="block text-[11px] font-bold text-brand-light/50 whitespace-nowrap">{price}฿</span>
+              <span className="block text-[11px] font-bold text-brand-light/70 whitespace-nowrap">{price}฿</span>
+              <span className="block text-[10px] font-bold text-brand-light/40 whitespace-nowrap">
+                {Math.round(price / tier.qty)}฿/{unit}
+              </span>
             </button>
           );
         })}
@@ -162,20 +166,18 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
         </span>
       </div>
 
-      {/* One line, always present, that changes as the slider moves: the rate
-          being paid, what the ladder has already saved, and what the next step
-          up would cost per unit. */}
-      <p className="text-[11px] font-bold text-brand-light/50 leading-snug" aria-live="polite">
-        <span className="text-brand-light/80">{Math.round(rate)}฿/{unit}</span>
-        {saving > 0 && (
-          <span className="text-brand-secondary"> · {t.savingLabel} {saving}฿</span>
-        )}
-        {upsell && (
-          <span> · {t.nextTierHint
-            .replace('{qty}', formatQty(upsell.tier.qty))
-            .replace('{unit}', unit)
-            .replace('{rate}', String(Math.round(nextRate)))}</span>
-        )}
+      {/* One number, one line: what this amount saves, or — while nothing is
+          saved yet — what the first worthwhile step would save. The height is
+          held either way so the sheet does not shift as the slider moves. */}
+      <p className="min-h-[1rem] text-[11px] font-black uppercase tracking-wide text-brand-secondary leading-4" aria-live="polite">
+        {saving > 0
+          ? `${t.savingLabel} ${saving}฿`
+          : potential > 0
+            ? t.savingHint
+                .replace('{qty}', formatQty(upsell!.tier.qty))
+                .replace('{unit}', unit)
+                .replace('{amount}', String(potential))
+            : ''}
       </p>
     </div>
   );
