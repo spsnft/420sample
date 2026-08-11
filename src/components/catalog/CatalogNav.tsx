@@ -50,7 +50,10 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
       <div className="max-w-5xl mx-auto space-y-1.5">
         <div
           ref={ref}
-          className="flex items-center gap-2 overflow-x-auto no-scrollbar"
+          // Pulled left by the tab's own padding so the first tab's *word*
+          // starts on the page's left edge, level with the first filter chip
+          // below it. Padding stays for the sake of the touch target.
+          className="flex items-center gap-2 overflow-x-auto no-scrollbar -ml-3"
           style={{ WebkitMaskImage: mask, maskImage: mask }}
         >
           {categories.map(({ key, title }) => {
@@ -71,7 +74,7 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
               >
                 {title}
                 {isActive && (
-                  <span aria-hidden className="absolute left-2 right-2 bottom-0.5 h-[3px] rounded-full bg-brand-secondary" />
+                  <span aria-hidden className="absolute left-3 right-3 bottom-0.5 h-[3px] rounded-full bg-brand-secondary" />
                 )}
               </button>
             );

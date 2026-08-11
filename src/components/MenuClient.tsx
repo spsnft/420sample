@@ -212,12 +212,17 @@ export default function MenuClient({
           so a tap has a visible consequence. */}
       <AnimatePresence>
       {hasItems && (
+        // Centred by the wrapper, not by a transform on the animated element:
+        // framer-motion writes its own `transform` for the slide-in, which
+        // replaced the `-translate-x-1/2` that was doing the centring and left
+        // the bar hanging off the right edge.
+        <div className="fixed bottom-8 inset-x-0 z-[90] flex justify-center px-4 pointer-events-none">
         <motion.div
           initial={{ y: 90, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 90, opacity: 0 }}
           transition={{ type: "spring", damping: 22, stiffness: 300 }}
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] w-full max-w-sm px-4"
+          className="w-full max-w-sm pointer-events-auto"
         >
           <button onClick={() => { triggerHaptic('medium'); setIsOrderOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-brand-light py-3.5 px-6 rounded-modal border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
             <div className="flex items-center gap-3 relative z-10">
@@ -241,6 +246,7 @@ export default function MenuClient({
             </div>
           </button>
         </motion.div>
+        </div>
       )}
       </AnimatePresence>
 
