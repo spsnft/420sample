@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { Language } from "@/lib/translations"
+import { SiteNav, SiteNavProps } from "@/components/layout/SiteNav"
 import { triggerHaptic } from "@/lib/utils"
 import { siteConfig } from "@/config/site"
 
@@ -13,6 +14,12 @@ const LANGUAGES: Language[] = ['en', 'th', 'ru'];
 interface HeaderProps {
   safeLang: Language;
   sticky?: boolean;
+  // Kiosk tablets get the header without it: the shop's own screen is meant to
+  // stay on the menu, and "for business" is not an offer to make to a customer
+  // standing at that shop's counter.
+  hideNav?: boolean;
+  /** Passed through to SiteNav — see its note on the partners host. */
+  surface?: SiteNavProps['surface'];
   // Optional sub-line tucked under the wordmark, used by /partners to attribute
   // the build ("by FT.Agency"). It renders *outside* the home Link — it is a
   // link of its own, and an anchor cannot nest inside another anchor — so the
@@ -80,7 +87,7 @@ const LanguageDropdown: React.FC<{ safeLang: Language; onSelect: (l: Language) =
   );
 };
 
-export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline }) => {
+export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNav, surface }) => {
   const { setLang } = useCart();
 
   // The language lives in a persisted client store, so the server cannot render
@@ -91,6 +98,13 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline }) => {
   React.useEffect(() => {
     document.documentElement.lang = safeLang;
   }, [safeLang]);
+
+  // On partners.buds.digital "/" is rewritten straight back to the pitch page,
+  // so the wordmark was a link that did nothing. Named in full it goes where it
+  // says it goes — and in a new tab, like every other route off this page.
+  const onPartners = surface === 'partners';
+  const homeHref = onPartners ? siteConfig.url : "/";
+  const homeLinkProps = onPartners ? { target: "_blank", rel: "noopener" } : {};
 
   return (
     <header
@@ -105,12 +119,13 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline }) => {
     >
       <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0 shrink-0">
-          <Link href="/" className="shrink-0" aria-label={siteConfig.name}>
+          <Link href={homeHref} {...homeLinkProps} className="shrink-0" aria-label={siteConfig.name}>
             <Image src="/images/logo.svg" priority width={64} height={64} className="w-auto h-8 sm:h-9 md:h-10 object-contain shrink-0" alt={siteConfig.name} />
           </Link>
           <div className="min-w-0">
             <Link
-              href="/"
+              href={homeHref}
+              {...homeLinkProps}
               className="block text-[18px] sm:text-[21px] font-black uppercase tracking-wide text-brand-light whitespace-nowrap"
             >
               {siteConfig.name}
@@ -119,7 +134,10 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline }) => {
           </div>
         </div>
 
-        <LanguageDropdown safeLang={safeLang} onSelect={setLang} />
+        <div className="flex items-center gap-2 shrink-0">
+          <LanguageDropdown safeLang={safeLang} onSelect={setLang} />
+          {!hideNav && <SiteNav safeLang={safeLang} surface={surface} />}
+        </div>
       </div>
     </header>
   );

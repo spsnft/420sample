@@ -22,6 +22,11 @@ export const siteConfig = {
   // not the personal LINE/WhatsApp used on the public buds.digital.
   partners: {
     whatsapp: "https://wa.me/66650255229",
+    // Absolute, and its own host: the pitch page is a rewrite of /partners on
+    // the partners. subdomain (see middleware.ts), so a relative "/partners"
+    // link would keep a visitor on buds.digital and show them a page that
+    // believes it is somewhere else.
+    url: "https://partners.buds.digital",
   },
 
   // Static, non-clickable trust badge shown on the homepage. Demo instance —

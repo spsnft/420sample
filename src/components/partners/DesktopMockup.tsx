@@ -41,17 +41,26 @@ export function DesktopMockup() {
   const [entered, setEntered] = React.useState(false);
 
   return (
-    <div className="w-full -mb-6">
+    <div className="w-full -mb-10">
       <motion.div
-        initial={{ opacity: 0, y: 12, filter: "drop-shadow(0 0px 0px rgba(0,0,0,0))" }}
-        whileInView={{ opacity: 1, y: 0, filter: "drop-shadow(0 22px 38px rgba(0,0,0,0.55))" }}
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.4 }}
         onViewportEnter={() => setEntered(true)}
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="rounded-[0.9rem] overflow-hidden bg-black border-x border-t border-white/10"
         style={{
-          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 80%, transparent 100%)",
-          maskImage: "linear-gradient(to bottom, black 0%, black 80%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 74%, transparent 99%)",
+          maskImage: "linear-gradient(to bottom, black 0%, black 74%, transparent 99%)",
+          // A mask defaults to `repeat`, and the tile is the element's own box:
+          // one pixel below the frame the gradient starts over at fully opaque,
+          // which is why the drop-shadow this element used to cast reappeared
+          // underneath it as a hard-edged, square-cornered slab — landing right
+          // on the rounded CTA and reading as a tear. No-repeat is the fix; the
+          // shadow itself is gone with it, since a shadow that only shows
+          // inside its own box is not a shadow.
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
         }}
       >
         <div className="flex items-center gap-1.5 px-2.5 py-2 bg-white/[0.04] border-b border-white/10">
