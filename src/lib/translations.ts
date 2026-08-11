@@ -30,8 +30,8 @@ export interface TranslationDictionary {
   taste: string;
   terpenes: string;
   savingLabel: string;
-  /** {qty}, {unit} and {rate} are filled in with the next tier's numbers. */
-  nextTierHint: string;
+  /** {qty}, {unit} and {amount} name the tier that would start saving money. */
+  savingHint: string;
   updateCta: string;
 
   // Kiosk idle prompt
@@ -95,7 +95,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     taste: "Taste",
     terpenes: "Terpenes",
     savingLabel: "saving",
-    nextTierHint: "{qty} {unit} → {rate}฿ each",
+    savingHint: "{qty} {unit} — saving {amount}฿",
     updateCta: "Update",
 
     idleTitle: "Still there?",
@@ -159,7 +159,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     taste: "Вкус",
     terpenes: "Терпены",
     savingLabel: "выгода",
-    nextTierHint: "{qty} {unit} → {rate}฿ за шт.",
+    savingHint: "{qty} {unit} — выгода {amount}฿",
     updateCta: "Обновить",
 
     idleTitle: "Вы ещё здесь?",
@@ -223,7 +223,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     taste: "รสชาติ",
     terpenes: "เทอร์พีน",
     savingLabel: "ประหยัด",
-    nextTierHint: "{qty} {unit} → {rate}฿ ต่อหน่วย",
+    savingHint: "{qty} {unit} — ประหยัด {amount}฿",
     updateCta: "อัปเดต",
 
     idleTitle: "ยังอยู่ไหม?",
