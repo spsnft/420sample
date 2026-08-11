@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import Image from "next/image"
-import { motion } from "framer-motion"
+import { motion, useDragControls } from "framer-motion"
 import { X, Plus, Minus, ShoppingBag, Sparkles } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { Language, TranslationDictionary } from "@/lib/translations"
@@ -10,6 +10,16 @@ import { priceFor, nextBetterTier, unitLabel } from "@/lib/pricing"
 import { useModalA11y } from "@/lib/use-modal-a11y"
 
 const FALLBACK_IMAGE = "/images/logo.svg";
+
+// One fact about the product, in the sheet only. These never went on a list
+// row: a name, a strain and a price is what a list is scanned for, and "Cherry,
+// Earth" under every second row was noise at the moment of scanning.
+const Spec: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <div className="rounded-button border border-white/10 bg-white/[0.03] px-3 py-2">
+    <dt className="text-[9px] font-black uppercase tracking-widest text-brand-light/40 mb-1">{label}</dt>
+    <dd className="text-[12px] font-bold text-brand-light/80 leading-snug">{value}</dd>
+  </div>
+);
 
 interface ProductModalProps {
   isOpen?: boolean;
@@ -47,6 +57,11 @@ export const Product = ({
   }, [onClose]);
 
   const dialogRef = useModalA11y({ onClose: handleClose });
+
+  // Drag-to-dismiss moves to the handle alone now that the sheet's body
+  // scrolls: with the whole sheet draggable, a swipe meant to scroll the
+  // description dragged the sheet off the screen instead.
+  const dragControls = useDragControls();
 
   if (!product || (!isOpen && !isClosing)) return null;
 
@@ -88,6 +103,8 @@ export const Product = ({
       >
       <motion.div
         drag="y"
+        dragListener={false}
+        dragControls={dragControls}
         dragConstraints={{ top: 0 }}
         dragElastic={0.2}
         onDragEnd={(_: any, info: any) => {
@@ -96,9 +113,18 @@ export const Product = ({
         initial={{ y: "100%" }}
         animate={{ y: isClosing ? "100%" : 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="relative w-full bg-brand-primary sm:rounded-modal rounded-t-modal p-6 pt-8 flex flex-col"
+        // Capped and split into a scrolling body with a fixed foot: the sheet
+        // was 449px of fixed content, which fitted, and every line of
+        // description added to it would have pushed the buy button off a small
+        // phone with no way to reach it.
+        className="relative w-full bg-brand-primary sm:rounded-modal rounded-t-modal p-6 pt-8 flex flex-col max-h-[88vh]"
       >
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
+        <div
+          onPointerDown={(e) => dragControls.start(e)}
+          className="absolute top-0 inset-x-0 h-7 flex items-start justify-center pt-3 touch-none sm:hidden z-30"
+        >
+          <div className="w-12 h-1.5 bg-white/20 rounded-full" />
+        </div>
 
         <div
           className="absolute inset-0 opacity-20 pointer-events-none rounded-t-modal sm:rounded-modal"
@@ -114,7 +140,8 @@ export const Product = ({
           <X size={18} />
         </button>
 
-        <div className="relative z-10 flex flex-col items-center mb-6">
+        <div className="relative z-10 flex-1 min-h-0 overflow-y-auto no-scrollbar -mx-6 px-6">
+        <div className="flex flex-col items-center mb-6">
           <div className="w-32 h-32 mb-4 relative flex items-center justify-center">
             <div
               className="absolute inset-0 rounded-full blur-2xl opacity-40"
@@ -142,6 +169,19 @@ export const Product = ({
           </h2>
 
         </div>
+
+        {product.description && (
+          <p className="text-[13px] text-brand-light/70 leading-relaxed text-center text-balance mb-5">
+            {product.description}
+          </p>
+        )}
+
+        {(product.taste || product.terpenes) && (
+          <dl className="grid grid-cols-2 gap-2 mb-6">
+            {product.taste && <Spec label={t.taste} value={product.taste} />}
+            {product.terpenes && <Spec label={t.terpenes} value={product.terpenes} />}
+          </dl>
+        )}
 
         {upsell && (
           <div
@@ -176,7 +216,9 @@ export const Product = ({
           </div>
         )}
 
-        <div className="flex items-center justify-between gap-4 relative z-10">
+        </div>
+
+        <div className="flex items-center justify-between gap-4 relative z-10 pt-4 shrink-0">
           <div className="gradient-ring rounded-button">
           <div className="flex items-center gap-4 bg-black/40 rounded-button p-2 h-14">
             <button
