@@ -26,8 +26,17 @@ export const TYPE_COLORS: Record<string, string> = {
 // the list, gold on its card and green in its own modal.
 // Anything with no strain — accessories — takes the brand gold.
 export const accentFor = (product: any): string => {
+  return strainAccentFor(product) || GOLDEN_COLOR;
+};
+
+// The same decision for text rather than light: null when the product has no
+// strain, so an accessory's kind ("Grinder", "Papers") is set in the ordinary
+// body colour instead of the brand gold. Gold on that line was doing no work —
+// it names no strain — and it is the colour the Sale tag beside it uses, so two
+// unrelated words came out the same colour on one row.
+export const strainAccentFor = (product: any): string | null => {
   const type = String(product?.type || "").toLowerCase().trim();
-  return TYPE_COLORS[type] || GOLDEN_COLOR;
+  return TYPE_COLORS[type] || null;
 };
 
 export const triggerHaptic = (type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' = 'light') => {

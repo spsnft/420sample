@@ -15,7 +15,15 @@ interface ConsultationProps {
 
 export const Consultation = ({ t, onClose }: ConsultationProps) => {
   const [isClosing, setIsClosing] = React.useState(false);
-  const [isDesktop, setIsDesktop] = React.useState(false);
+  // Resolved on the first client render, not one render later. Starting at
+  // `false` on a desktop viewport mounted the motion element with the mobile
+  // sheet's `initial` (y: 100%) and then switched `animate` to the desktop
+  // variant, which only names opacity and scale — so nothing ever animated y
+  // back to 0 and the dialog sat one full height below centre, half off the
+  // bottom of the screen. Only mobile got away with it.
+  const [isDesktop, setIsDesktop] = React.useState(
+    () => typeof window !== "undefined" && window.matchMedia("(min-width: 640px)").matches
+  );
   // True on the very first client render, not one render later. The dialog is
   // only ever mounted from client state (never during hydration), so there is
   // no markup to mismatch — and waiting a render would have the focus trap set
@@ -68,7 +76,10 @@ export const Consultation = ({ t, onClose }: ConsultationProps) => {
             if (info.offset.y > 100) handleClose();
           }}
           initial={isDesktop ? { opacity: 0, scale: 0.95 } : { y: "100%" }}
-          animate={isDesktop ? { opacity: isClosing ? 0 : 1, scale: isClosing ? 0.95 : 1 } : { y: isClosing ? "100%" : 0 }}
+          // The desktop variant names y as well, so a viewport crossing the
+          // breakpoint while the dialog is open drops the sheet's offset
+          // instead of keeping it as a stuck transform.
+          animate={isDesktop ? { opacity: isClosing ? 0 : 1, scale: isClosing ? 0.95 : 1, y: 0 } : { y: isClosing ? "100%" : 0 }}
           transition={isDesktop ? { type: "spring", damping: 28, stiffness: 340 } : { type: "spring", damping: 30, stiffness: 300 }}
           className="relative w-full bg-brand-primary sm:rounded-modal rounded-t-modal max-h-[90dvh] sm:max-h-[85vh] flex flex-col overflow-hidden"
         >

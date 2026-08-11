@@ -5,7 +5,7 @@ import { motion, useDragControls } from "framer-motion"
 import { X, ShoppingBag } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
 import { Language, TranslationDictionary } from "@/lib/translations"
-import { triggerHaptic, Baht } from "@/lib/utils"
+import { triggerHaptic, Baht, strainAccentFor } from "@/lib/utils"
 import { priceFor, savingFor } from "@/lib/pricing"
 import { useModalA11y } from "@/lib/use-modal-a11y"
 import { QuantityPicker } from "./QuantityPicker"
@@ -53,6 +53,9 @@ export const Product = ({
 
   const safeLang = (lang || 'en') as Language;
   const accentColor = style?.color || '#10B981';
+  // The sheet's lighting stays on the accent; the chip naming the strain drops
+  // to the ordinary text colour when there is no strain to name.
+  const strainColor = strainAccentFor(product);
 
   const handleClose = React.useCallback(() => {
     triggerHaptic('light');
@@ -189,8 +192,8 @@ export const Product = ({
           </div>
 
           <span
-            className="text-[11px] font-black uppercase tracking-wide px-3 py-1 rounded-full border mb-3"
-            style={{ borderColor: `${accentColor}50`, color: accentColor, backgroundColor: `${accentColor}10` }}
+            className={`text-[11px] font-black uppercase tracking-wide px-3 py-1 rounded-full border mb-3 ${strainColor ? '' : 'border-white/15 bg-white/[0.04] text-brand-light/70'}`}
+            style={strainColor ? { borderColor: `${strainColor}50`, color: strainColor, backgroundColor: `${strainColor}10` } : undefined}
           >
             {product.type || product.category}
           </span>

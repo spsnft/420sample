@@ -13,12 +13,12 @@ interface CategoryConfig {
 export function getCategoryConfig(category: string, t: TranslationDictionary): CategoryConfig {
   const configs: Record<string, CategoryConfig> = {
     buds: {
-      title: "Buds",
+      title: t.buds,
       icon: <Leaf size={20} className="text-brand-secondary" />,
       layout: "list",
     },
     joints: {
-      title: "Joints",
+      title: t.joints,
       icon: <Cigarette size={20} className="text-brand-secondary" />,
       layout: "list",
     },
