@@ -1,6 +1,7 @@
 "use client"
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import {
   MapPin, Clock, ShieldCheck, Star, Instagram,
   Image as ImageIcon, Leaf,
@@ -28,6 +29,43 @@ const OLIVE_DOOR_WATERMARK = "#142117";
 function localizedMapSrc(src: string, lang: Language) {
   return `${src}&hl=${lang}`;
 }
+
+// The shop's own photograph, beside the map — the two together are the whole
+// answer to "is this a real place, and where".
+//
+// It falls back to the dashed placeholder if the file is not there, which is
+// deliberate rather than defensive: it means the photo can be dropped into
+// public/images/about/ at any time, by anyone, with no code change and no
+// deploy of ours — the page picks it up on its own. Same pattern the product
+// cards use for a missing product image. Shoot it 16:9 and at least 1400px
+// wide; next/image takes care of the rest.
+const STOREFRONT_PHOTO = "/images/about/storefront.jpg";
+
+const StorefrontPhoto: React.FC<{ label: string; alt: string }> = ({ label, alt }) => {
+  const [missing, setMissing] = React.useState(false);
+
+  return (
+    <div className="gradient-ring rounded-card overflow-hidden">
+      <div className="relative w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card overflow-hidden bg-black/20">
+        {missing ? (
+          <div className="absolute inset-0 border border-dashed border-brand-secondary/25 rounded-card flex flex-col items-center justify-center gap-2 text-brand-light/30">
+            <ImageIcon size={22} />
+            <span className="text-[10px] font-black uppercase tracking-wide">{label}</span>
+          </div>
+        ) : (
+          <Image
+            src={STOREFRONT_PHOTO}
+            alt={alt}
+            fill
+            className="object-cover"
+            sizes="(min-width: 1024px) 512px, 100vw"
+            onError={() => setMissing(true)}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default function HomeClient() {
   const { lang } = useCart();
@@ -100,12 +138,7 @@ export default function HomeClient() {
 
           <section className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              <div className="gradient-ring rounded-card overflow-hidden">
-                <div className="w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card bg-black/20 border border-dashed border-brand-secondary/25 flex flex-col items-center justify-center gap-2 text-brand-light/30">
-                  <ImageIcon size={22} />
-                  <span className="text-[10px] font-black uppercase tracking-wide">{t.aboutPhotoLabel}</span>
-                </div>
-              </div>
+              <StorefrontPhoto label={t.aboutPhotoLabel} alt={siteConfig.name} />
               <div className="gradient-ring rounded-card overflow-hidden">
                 <iframe
                   src={localizedMapSrc(siteConfig.mapEmbedSrc, safeLang)}

@@ -9,6 +9,12 @@ export interface PartnersDictionary {
   // single highlighted one and carries the urgency claim that used to sit in a
   // separate badge above the H1 — it lives here instead so the page states it
   // once, not twice.
+  //
+  // The first pill names the form, not the card: the panel does not check
+  // anyone's medical card, it keeps each client's PT.33 prescriptions — issued,
+  // valid, expired, revoked — and logs what was dispensed against them. A shop
+  // owner reading this page knows what PT.33 is; "med card check" described
+  // something the product does not do.
   heroPills: [string, string, string];
   heroPillAccent: string;
 
@@ -31,7 +37,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
   ru: {
     heroTitle: "Не просто сайт. Система, с которой вы работаете",
     heroPills: [
-      "Проверка мед. карты",
+      "Учёт PT.33",
       "Цифровое меню",
       "Контакты и отзывы",
     ],
@@ -51,7 +57,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
   en: {
     heroTitle: "Not just a website. The system you run on",
     heroPills: [
-      "Med card check",
+      "PT.33 records",
       "Digital menu",
       "Contacts & Reviews",
     ],
@@ -71,7 +77,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
   th: {
     heroTitle: "ไม่ใช่แค่เว็บไซต์ แต่คือระบบที่คุณใช้ขับเคลื่อนธุรกิจ",
     heroPills: [
-      "ตรวจสอบบัตรแพทย์",
+      "ทะเบียน PT.33",
       "เมนูดิจิทัล",
       "ติดต่อและรีวิว",
     ],
