@@ -109,16 +109,19 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
   return (
     <header
       className={
-        // Fully opaque (not translucent) so decorative background elements —
-        // e.g. the hero corner leaf — tuck cleanly under the header instead
-        // of showing a blurred, uneven smear at the seam.
+        // Translucent over a blur rather than a solid fill. Opaque was right
+        // when the page behind it was one flat colour; against the site's lit
+        // backdrop the same fill reads as a dark bar laid across a lit wall,
+        // with a seam at its lower edge. Frosted, the light carries through it
+        // and cards still pass under it unreadably, which is what the fill was
+        // for.
         //
         // Both variants carry the same vertical padding. Without it the
         // wordmark sat 12px higher on /menu than on /, and the whole page with
         // it — so moving between the two, which is the main path through the
         // site, nudged the header up and down for no reason a reader could see.
         sticky
-          ? "sticky top-0 z-[100] -mx-4 px-4 py-3 mb-4 bg-brand-primary border-b border-white/5"
+          ? "sticky top-0 z-[100] -mx-4 px-4 py-3 mb-4 bg-brand-primary/80 backdrop-blur-xl border-b border-white/5"
           : "relative z-[100] py-3 mb-4"
       }
     >

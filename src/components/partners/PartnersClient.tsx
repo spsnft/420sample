@@ -53,7 +53,7 @@ export default function PartnersClient() {
   const t = partnersTranslations[safeLang] || partnersTranslations.en;
 
   return (
-    <div className="min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans">
+    <div className="min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans">
       {/* The attribution belongs to the wordmark, not to the page: as a
           centred line of its own under a left-aligned header it read as an
           orphan and pushed the hero down. Tucked under "420 Store" it becomes

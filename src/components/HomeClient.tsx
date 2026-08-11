@@ -100,7 +100,9 @@ export default function HomeClient() {
           absolute placement without a containing block to escape. */}
       <BotanicalDecor className="fixed -top-10 -right-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] z-[105]" />
 
-      <div className="relative min-h-screen bg-brand-primary text-brand-light p-4 selection:bg-brand-secondary/30 font-sans overflow-hidden">
+      {/* No fill of its own: an opaque brand-primary here covered the site's
+          backdrop, which is why the atmosphere used to exist on /menu alone. */}
+      <div className="relative min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans overflow-hidden">
         <BotanicalDecor className="absolute -bottom-10 -left-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] rotate-180 z-0" />
 
         <Header safeLang={safeLang} sticky />

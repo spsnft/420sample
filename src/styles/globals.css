@@ -16,31 +16,12 @@
   }
 
   body {
+    /* Flat, and only the floor under the backdrop: everything atmospheric is
+       painted by PageBackdrop, in a fixed element rather than here. See that
+       component for why — background-attachment: fixed is not honoured on
+       iOS/iPadOS Safari, which measured every percentage in these gradients
+       against the document rather than the window. */
     @apply bg-brand-primary text-brand-light antialiased font-sans;
-    /* Depth without pattern: two very low-saturation pools of the brand's own
-       gold and green near the top, where the eye lands, falling away to a
-       darker floor so a long menu does not read as one flat grey sheet. Fixed,
-       so scrolling moves the cards against it instead of dragging it along.
-       The grain is finer and fainter than the old 0.06 at 256px, which at
-       phone density read as visible speckle rather than as texture.
-
-       The pools start below the very top edge, and the vertical ramp starts on
-       the brand primary rather than above it. The page's first painted row is
-       what meets the browser's own chrome, and it used to be the lightest,
-       warmest thing on screen — rgb(44,42,36) at the left against a theme
-       colour of #161819 — which read as a step across the top of the window
-       before the header even began. Everything the pools were doing they now
-       do a few percent lower, where there is page to light rather than an
-       edge to expose. */
-    background-color: var(--color-bg-deep);
-    background-image:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E"),
-      radial-gradient(ellipse 90% 38% at 12% 22%, rgba(200, 158, 88, 0.10) 0%, transparent 62%),
-      radial-gradient(ellipse 80% 38% at 92% 30%, rgba(58, 107, 88, 0.10) 0%, transparent 60%),
-      radial-gradient(ellipse 140% 90% at 50% 120%, rgba(0, 0, 0, 0.55) 0%, transparent 70%),
-      linear-gradient(178deg, var(--color-primary) 0%, var(--color-bg-from) 14%, var(--color-primary) 48%, var(--color-bg-deep) 100%);
-    background-attachment: fixed;
-    background-size: 180px 180px, auto, auto, auto, auto;
 
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -49,6 +30,134 @@
 
   span, p, div, h1, h2, h3 {
     font-variant-numeric: tabular-nums;
+  }
+}
+
+/* The site's backdrop. See components/decor/PageBackdrop.tsx for the why;
+   this is the how. Fixed to the viewport, behind everything, inert.
+
+   Nothing here is allowed to be noticed on its own. The room lifts the middle
+   of the screen about ten levels above the floor and drops the corners; the
+   light adds the brand's gold and green at a tenth of full strength and a
+   dapple at half of that again; the grain is 2.5%. Read the numbers as a
+   budget: the whole backdrop moves the base colour less than a product card's
+   own glow does, which is why a photograph still reads as the brightest thing
+   on the page. */
+.page-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background-color: var(--color-primary);
+  /* Its own stacking context, so no page ever has to think about it. */
+  isolation: isolate;
+  /* Paints under the browser's overscroll and iOS's bottom bar rather than
+     stopping at a hard edge partway through them. */
+  min-height: 100%;
+}
+
+.page-backdrop > * {
+  position: absolute;
+  inset: 0;
+}
+
+/* The room: a wall that catches a little light across the middle, a floor that
+   falls away, and corners that hold the eye in. The very first row stays on
+   the brand primary — that row meets the browser's own chrome, and any lift in
+   it reads as a step across the top of the window. */
+.page-backdrop__room {
+  background-image:
+    radial-gradient(ellipse 120% 70% at 50% 108%, rgba(0, 0, 0, 0.55) 0%, transparent 72%),
+    radial-gradient(ellipse 75% 55% at 50% 38%, rgba(227, 221, 209, 0.035) 0%, transparent 70%),
+    linear-gradient(178deg,
+      var(--color-primary) 0%,
+      var(--color-bg-from) 18%,
+      var(--color-primary) 52%,
+      var(--color-bg-deep) 100%);
+}
+
+/* The light, in two nested layers because it moves in two ways at once: the
+   outer one lags the scroll (see PageBackdrop), the inner one drifts on its
+   own across a minute and a half, so the room is never quite still — the
+   difference a shop window has over a printed sheet. The room itself does not
+   move: it owns the top edge of the window, and an edge that shifts is a seam
+   the eye will find.
+
+   Seven pools do the work of a texture without being one — no tile to spot, no
+   repeat to catch, and nothing that survives being looked at directly. */
+.page-backdrop__light {
+  /* Oversized in every direction so neither the drift nor the parallax can
+     ever pull an edge into view. */
+  inset: -14%;
+  transform: translate3d(0, var(--backdrop-parallax, 0px), 0);
+}
+
+.page-backdrop__drift {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 42% 30% at 18% 24%, rgba(200, 158, 88, 0.055) 0%, transparent 68%),
+    radial-gradient(ellipse 34% 26% at 72% 16%, rgba(227, 221, 209, 0.030) 0%, transparent 66%),
+    radial-gradient(ellipse 38% 30% at 86% 62%, rgba(58, 107, 88, 0.055) 0%, transparent 68%),
+    radial-gradient(ellipse 30% 24% at 34% 78%, rgba(200, 158, 88, 0.035) 0%, transparent 70%),
+    radial-gradient(ellipse 46% 34% at 8% 62%, rgba(58, 107, 88, 0.030) 0%, transparent 72%),
+    radial-gradient(ellipse 105% 44% at 10% 28%, rgba(200, 158, 88, 0.060) 0%, transparent 66%),
+    radial-gradient(ellipse 95% 44% at 96% 36%, rgba(58, 107, 88, 0.060) 0%, transparent 64%);
+  animation: backdrop-drift 90s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* One blade of light each: an ellipse far wider than it is tall, rotated off
+   the horizontal so the set never lines up into stripes. They are the only
+   shapes on the page that are not rectangles, which is the whole point — at
+   3-4% they are not seen so much as felt, and they keep the empty half of the
+   home page from reading as a switched-off screen. */
+.page-backdrop__blade {
+  position: absolute;
+  display: block;
+}
+
+.page-backdrop__blade--1 {
+  top: -12%; left: -30%; width: 115%; height: 48%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(200, 158, 88, 0.040) 0%, transparent 70%);
+  transform: rotate(-16deg);
+}
+
+.page-backdrop__blade--2 {
+  top: 20%; right: -32%; width: 110%; height: 42%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(58, 107, 88, 0.045) 0%, transparent 70%);
+  transform: rotate(12deg);
+}
+
+.page-backdrop__blade--3 {
+  top: 46%; left: -24%; width: 100%; height: 34%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(227, 221, 209, 0.018) 0%, transparent 72%);
+  transform: rotate(-6deg);
+}
+
+.page-backdrop__blade--4 {
+  top: 60%; right: -22%; width: 105%; height: 38%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(200, 158, 88, 0.026) 0%, transparent 72%);
+  transform: rotate(18deg);
+}
+
+/* Film grain, fine enough to be texture rather than speckle at phone density. */
+.page-backdrop__grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* Transform only: the compositor moves the layer, nothing repaints. */
+@keyframes backdrop-drift {
+  from { transform: translate3d(-1.5%, -1%, 0) scale(1.02); }
+  to   { transform: translate3d(1.5%, 1.5%, 0) scale(1.06); }
+}
+
+/* A backdrop is not worth a single frame to anyone who has asked the system to
+   stop moving things. */
+@media (prefers-reduced-motion: reduce) {
+  .page-backdrop__drift {
+    animation: none;
   }
 }
 

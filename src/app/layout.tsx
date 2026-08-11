@@ -2,6 +2,7 @@ import "@/styles/globals.css"
 import type { Metadata, Viewport } from "next"
 import { Montserrat } from "next/font/google"
 import { siteConfig } from "@/config/site"
+import { PageBackdrop } from "@/components/decor/PageBackdrop"
 
 // tailwind.config.ts sets `sans: ['var(--font-montserrat)', ...]`. Without this
 // the custom property is never defined, and an undefined var() with no fallback
@@ -71,6 +72,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://res.cloudinary.com" />
       </head>
       <body className="min-h-screen bg-brand-primary text-brand-light antialiased selection:bg-brand-secondary/30">
+        {/* First child and behind everything: every route gets the same room to
+            stand in, instead of each page carrying its own flat fill. */}
+        <PageBackdrop />
         {children}
       </body>
     </html>
