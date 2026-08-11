@@ -50,7 +50,7 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
       <div className="max-w-5xl mx-auto space-y-1.5">
         <div
           ref={ref}
-          className="flex items-center gap-1 overflow-x-auto no-scrollbar"
+          className="flex items-center gap-2 overflow-x-auto no-scrollbar"
           style={{ WebkitMaskImage: mask, maskImage: mask }}
         >
           {categories.map(({ key, title }) => {
@@ -61,13 +61,18 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
                 type="button"
                 onClick={() => { triggerHaptic('light'); onSelectCategory(key); }}
                 aria-current={isActive ? "page" : undefined}
-                className={`shrink-0 px-3 h-9 rounded-badge text-[14px] font-black uppercase tracking-wide transition-colors border-b-2 ${FOCUS_RING} ${
-                  isActive
-                    ? "text-brand-secondary border-brand-secondary"
-                    : "text-brand-light/60 border-transparent hover:text-brand-light"
+                // The underline is a child, not a bottom border. On a rounded
+                // button the border follows the corner radius and curves up at
+                // both ends — which read as a smudge under the word rather than
+                // as an underline.
+                className={`relative shrink-0 px-3 h-9 rounded-badge text-[14px] font-black uppercase tracking-wide transition-colors ${FOCUS_RING} ${
+                  isActive ? "text-brand-secondary" : "text-brand-light/50 hover:text-brand-light"
                 }`}
               >
                 {title}
+                {isActive && (
+                  <span aria-hidden className="absolute left-2 right-2 bottom-0.5 h-[3px] rounded-full bg-brand-secondary" />
+                )}
               </button>
             );
           })}
@@ -78,7 +83,7 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
         {filters.length > 1 && (
           <div
             ref={filterRef}
-            className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5"
+            className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5"
             style={{ WebkitMaskImage: filterMask, maskImage: filterMask }}
           >
             <FilterChip label={t.filterAll} isOn={activeFilter === null} onClick={() => onFilter(null)} />

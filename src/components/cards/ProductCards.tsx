@@ -41,16 +41,6 @@ export const BadgeIcon = React.memo(({ type, isSmall }: { type: string, isSmall?
 // rendered box makes next/image serve an upscaled, soft image.
 const GRID_SIZES = "(min-width: 768px) 340px, 50vw";
 
-// Shown on the New/Sales rows only. The same strain exists as a bud and as a
-// joint at different prices, so a card pulled out of its category and dropped
-// into a mixed row is ambiguous without it — inside the category sections the
-// heading already says which is which, and the chip would be noise.
-const CATEGORY_LABELS: Record<string, string> = {
-  buds: "Bud",
-  joints: "Joint",
-  accessories: "Accessory",
-};
-
 // Same ring on every tappable catalogue element, and only for keyboard users —
 // `focus-visible` keeps it off during touch and mouse presses.
 export const FOCUS_RING =
@@ -75,7 +65,10 @@ export const NewTag = React.memo(() => (
   </span>
 ));
 
-export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID_SIZES, showCategory }: { item: any, onClick: () => void, priority?: boolean, sizes?: string, showCategory?: boolean }) => {
+// `categoryLabel` is passed in rather than derived here so it is literally the
+// tab's own word — "Buds", not "Bud". Two spellings of one category invite the
+// reader to look for a difference that does not exist.
+export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID_SIZES, categoryLabel }: { item: any, onClick: () => void, priority?: boolean, sizes?: string, categoryLabel?: string }) => {
   // Above the empty-item bail-out: a hook behind a conditional return changes
   // the hook order between renders, which is a crash waiting for the first null.
   const [imgSrc, setImgSrc] = React.useState(item?.image || FALLBACK_IMAGE);
@@ -85,8 +78,6 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
   const accentColor = accentFor(item);
 
   const { price: currentPrice, listPrice, discounted } = entryPrice(item);
-
-  const categoryLabel = showCategory ? CATEGORY_LABELS[item.category] : null;
 
   return (
     <button
@@ -146,7 +137,10 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
             mirrors the category-over-type stack opposite. */}
         <p className="shrink-0 flex flex-col items-end leading-none text-brand-light">
           {discounted && (
-            <span className="text-[11px] font-bold text-brand-light/40 line-through mb-1">{listPrice}</span>
+            <span className="flex items-center gap-1.5 mb-1">
+              <DiscountChip percent={item.discountPercent} />
+              <span className="text-[11px] font-bold text-brand-light/40 line-through">{listPrice}</span>
+            </span>
           )}
           <span className="text-[16px] font-black tracking-tighter">
             {currentPrice > 0 ? (<>{currentPrice}<BahtSymbol /></>) : '—'}
@@ -186,17 +180,16 @@ export const ProductRow = React.memo(({ p, onClick }: { p: any, onClick: () => v
             onError={() => setImgSrc(FALLBACK_IMAGE)}
           />
         </div>
-        {/* The mark goes under the name, not beside it. On the same line it
-            cost about 55px — enough to cut "Super Boof Cherry" short on every
-            phone up to 414px, and a menu row exists to carry the name. Only
-            marked rows grow; the rest keep the height the taste line used to
-            occupy. */}
-        <div className="truncate">
+        {/* One line on a wide row, two on a narrow one. Beside the name the
+            mark costs about 55px, which cut "Super Boof Cherry" short on every
+            phone up to 414px; in a desktop column there is room to spare, and a
+            single line reads better. */}
+        <div className="min-w-0 md:flex md:items-center md:gap-2">
           <span className="text-[13px] font-black uppercase tracking-tight text-brand-light/90 truncate leading-tight group-hover:text-brand-secondary transition-colors block">
             {p.name}
           </span>
           {(p.badge === 'NEW' || rowDiscounted) && (
-            <span className="flex items-center gap-1.5 mt-1">
+            <span className="flex items-center gap-1.5 mt-1 md:mt-0 shrink-0">
               {p.badge === 'NEW' && <NewTag />}
               {rowDiscounted && <DiscountChip percent={p.discountPercent} />}
             </span>

@@ -110,6 +110,17 @@ describe("priceFor", () => {
     });
   });
 
+  it("lands a discounted price on a round ten", () => {
+    // 150 less 25% is 112.5 — a price nobody quotes and a till has to break.
+    expect(priceFor(1, { ...joint, discountPercent: 25 }).price).toBe(110);
+    expect(priceFor(1, { ...flower, discountPercent: 15 }).price).toBe(170);
+  });
+
+  it("never rounds a discounted price above the list price", () => {
+    const result = priceFor(1, { ...flower, discountPercent: 1 });
+    expect(result.price).toBeLessThanOrEqual(result.listPrice);
+  });
+
   it("caps an implausible discount rather than paying the customer", () => {
     expect(priceFor(1, { ...flower, discountPercent: 150 }).price).toBe(20);
   });

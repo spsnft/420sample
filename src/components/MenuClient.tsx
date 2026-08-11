@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import { ShoppingBag, Send } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
@@ -59,10 +60,14 @@ export default function MenuClient({
   ageVerified?: boolean,
 }) {
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
+  // Set when the sheet was opened from a basket line: the same sheet, but it
+  // replaces that line's quantity instead of adding to it.
+  const [editingLine, setEditingLine] = React.useState<any>(null);
   const [isOrderOpen, setIsOrderOpen] = React.useState(false);
   const [typeFilter, setTypeFilter] = React.useState<string | null>(null);
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
   const [isIdle, setIsIdle] = React.useState(false);
+  const [isVerified, setIsVerified] = React.useState(ageVerified);
 
   const { items, getTotal, lang, setLang, clearCart } = useCart();
 
@@ -149,7 +154,7 @@ export default function MenuClient({
   return (
     <div className={`min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans ${hasItems ? 'pb-44' : 'pb-4'}`}>
 
-      {!ageVerified && <AgeGate />}
+      {!isVerified && <AgeGate onVerified={() => setIsVerified(true)} />}
 
       {isIdle && (
         <IdlePrompt
@@ -172,8 +177,8 @@ export default function MenuClient({
         <CatalogFallback t={t} failed={failed} />
       ) : (
         <>
-          <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} />
-          <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} />
+          <ProductCarousel type="NEW" title={t.updates} products={recentUpdates} onSelect={setSelectedProduct} t={t} />
+          <ProductCarousel type="SALE" title={t.sales} products={flashSales} onSelect={setSelectedProduct} t={t} />
 
           {/* The catalogue and its controls, in that order: the tabs sit
               directly above the products they switch, not a screen away
@@ -201,13 +206,32 @@ export default function MenuClient({
         </>
       )}
 
+      {/* Adding something used to close the sheet and leave the page looking
+          exactly as it did — the only evidence was a bar that appeared without
+          ceremony. It springs in now, and the total flips whenever it changes,
+          so a tap has a visible consequence. */}
+      <AnimatePresence>
       {hasItems && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] w-full max-w-sm px-4">
+        <motion.div
+          initial={{ y: 90, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 90, opacity: 0 }}
+          transition={{ type: "spring", damping: 22, stiffness: 300 }}
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] w-full max-w-sm px-4"
+        >
           <button onClick={() => { triggerHaptic('medium'); setIsOrderOpen(true); }} className="w-full bg-white/10 backdrop-blur-2xl text-brand-light py-3.5 px-6 rounded-modal border border-white/20 shadow-2xl flex justify-between items-center active:scale-95 transition-all">
             <div className="flex items-center gap-3 relative z-10">
               <div className="p-2 bg-brand-secondary/20 rounded-badge"><ShoppingBag size={18} className="text-brand-secondary"/></div>
               <div className="text-left">
-                <div className="font-black uppercase text-[16px] leading-none mb-0.5">{getTotal()}<BahtSymbol /></div>
+                <motion.div
+                  key={getTotal()}
+                  initial={{ y: -8, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.25 }}
+                  className="font-black uppercase text-[16px] leading-none mb-0.5"
+                >
+                  {getTotal()}<BahtSymbol />
+                </motion.div>
                 <span className="font-black uppercase text-[11px] text-brand-secondary leading-none">{items.length} {t.items}</span>
               </div>
             </div>
@@ -216,15 +240,17 @@ export default function MenuClient({
               <span className="p-1.5 bg-white/10 rounded-full animate-pulse"><Send size={16}/></span>
             </div>
           </button>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {selectedProduct && (
         <Product
           product={selectedProduct}
           t={t}
           style={{ color: accentFor(selectedProduct) }}
-          onClose={() => setSelectedProduct(null)}
+          editingQty={editingLine?.id === selectedProduct.id ? editingLine.qty : undefined}
+          onClose={() => { setSelectedProduct(null); setEditingLine(null); }}
         />
       )}
 
@@ -233,6 +259,11 @@ export default function MenuClient({
           items={items}
           total={getTotal()}
           t={t}
+          onEdit={(item: any) => {
+            setIsOrderOpen(false);
+            setEditingLine(item);
+            setSelectedProduct(item);
+          }}
           onClose={() => setIsOrderOpen(false)}
         />
       )}

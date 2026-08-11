@@ -2,9 +2,9 @@
 import * as React from "react"
 import { Minus, Plus } from "lucide-react"
 
-import { Language } from "@/lib/translations"
+import { Language, TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
-import { nextBetterTier, priceFor, unitLabel } from "@/lib/pricing"
+import { listPriceFor, nextBetterTier, priceFor, unitLabel } from "@/lib/pricing"
 import { FOCUS_RING } from "@/components/cards/ProductCards"
 
 // Half a gram is a real amount to buy; half a joint and half a bong are not.
@@ -24,6 +24,7 @@ interface QuantityPickerProps {
   onChange: (value: number) => void;
   lang: Language;
   accentColor: string;
+  t: TranslationDictionary;
 }
 
 // The amount control and the price list, which are the same thing: the presets
@@ -32,7 +33,7 @@ interface QuantityPickerProps {
 // talks about the quantity this sheet is adding — the basket's own arithmetic
 // stays on the buy button, where the price is worked out against what is
 // already in it.
-export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, onChange, lang, accentColor }) => {
+export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, onChange, lang, accentColor, t }) => {
   const unit = unitLabel(product.unit, lang);
   const tiers: { qty: number; price: number }[] = product.tiers ?? [];
   const step = product.unit === "g" ? GRAM_STEP : 1;
@@ -48,9 +49,18 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
   }, [max, min, onChange, tiers]);
 
   // Which preset is worth pointing at: the next rung that actually costs less
-  // per unit than what is selected. It replaces the banner that used to say the
-  // same thing in a paragraph above.
+  // per unit than what is selected.
   const upsell = nextBetterTier(value, product);
+
+  // What the ladder is actually worth at the amount in hand, and what one more
+  // step up would be worth. A "+4" pinned to a preset said neither: it made the
+  // buttons different widths and told the customer to add four of something
+  // without saying why. This is the same sentence a person behind the counter
+  // says — this much works out at X a gram, and the next size down to Y.
+  const baseRate = tiers.length > 0 ? tiers[0].price / tiers[0].qty : 0;
+  const rate = value > 0 ? listPriceFor(value, tiers) / value : 0;
+  const saving = Math.round(baseRate * value - listPriceFor(value, tiers));
+  const nextRate = upsell ? upsell.tier.price / upsell.tier.qty : 0;
 
   const stepper = (
     <div className="gradient-ring rounded-button shrink-0">
@@ -108,9 +118,6 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
             >
               <span className="block text-[12px] font-black uppercase tracking-tight text-brand-light whitespace-nowrap">
                 {formatQty(tier.qty)} {unit}
-                {isSuggested && !isActive && (
-                  <span className="text-brand-secondary ml-1">+{formatQty(tier.qty - value)}</span>
-                )}
               </span>
               <span className="block text-[11px] font-bold text-brand-light/50 whitespace-nowrap">{price}฿</span>
             </button>
@@ -154,6 +161,22 @@ export const QuantityPicker: React.FC<QuantityPickerProps> = ({ product, value, 
           {formatQty(value)}<span className="text-[10px] text-brand-light/50 ml-0.5">{unit}</span>
         </span>
       </div>
+
+      {/* One line, always present, that changes as the slider moves: the rate
+          being paid, what the ladder has already saved, and what the next step
+          up would cost per unit. */}
+      <p className="text-[11px] font-bold text-brand-light/50 leading-snug" aria-live="polite">
+        <span className="text-brand-light/80">{Math.round(rate)}฿/{unit}</span>
+        {saving > 0 && (
+          <span className="text-brand-secondary"> · {t.savingLabel} {saving}฿</span>
+        )}
+        {upsell && (
+          <span> · {t.nextTierHint
+            .replace('{qty}', formatQty(upsell.tier.qty))
+            .replace('{unit}', unit)
+            .replace('{rate}', String(Math.round(nextRate)))}</span>
+        )}
+      </p>
     </div>
   );
 };

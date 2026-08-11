@@ -25,6 +25,9 @@ export interface Priced {
 
 const TIER_COLUMNS = 4;
 const MAX_DISCOUNT = 90;
+// A discounted price is rounded to the nearest ten. 153฿ is a number a till
+// has to make change for and a customer has to read twice; 150฿ is a price.
+const DISCOUNT_ROUNDING = 10;
 
 function clampDiscount(value: unknown): number {
   const n = Number(value);
@@ -105,7 +108,11 @@ export function priceFor(qty: number, product: Priced): PriceResult {
   // Rounded once, at the end, from the unrounded figure — rounding the list
   // price first and then discounting it drifts by a baht or two.
   const listPrice = Math.round(raw);
-  const price = discount > 0 ? Math.round(raw * (1 - discount / 100)) : listPrice;
+  // Never above the undiscounted price: rounding up a token discount would
+  // otherwise put the "sale" price a baht or two over the real one.
+  const price = discount > 0
+    ? Math.min(listPrice, Math.round(raw * (1 - discount / 100) / DISCOUNT_ROUNDING) * DISCOUNT_ROUNDING)
+    : listPrice;
   return { price, listPrice, discounted: discount > 0 && price < listPrice };
 }
 
