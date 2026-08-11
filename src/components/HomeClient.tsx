@@ -37,30 +37,39 @@ function localizedMapSrc(src: string, lang: Language) {
 // deliberate rather than defensive: it means the photo can be dropped into
 // public/images/about/ at any time, by anyone, with no code change and no
 // deploy of ours — the page picks it up on its own. Same pattern the product
-// cards use for a missing product image. Shoot it 16:9 and at least 1400px
-// wide; next/image takes care of the rest.
-const STOREFRONT_PHOTO = "/images/about/storefront.jpg";
+// cards use for a missing product image. Shoot it roughly 16:9 and at least
+// 1400px wide; next/image takes care of the format and the sizes it serves.
+//
+// Either extension works, tried in order. A photograph naturally saves as
+// either, and "drop the file in and it appears" is not much of a promise if it
+// only holds for one of the two names — this cost one line and removes the
+// only way left to get it wrong.
+const STOREFRONT_PHOTOS = [
+  "/images/about/storefront.png",
+  "/images/about/storefront.jpg",
+];
 
 const StorefrontPhoto: React.FC<{ label: string; alt: string }> = ({ label, alt }) => {
-  const [missing, setMissing] = React.useState(false);
+  const [attempt, setAttempt] = React.useState(0);
+  const src = STOREFRONT_PHOTOS[attempt];
 
   return (
     <div className="gradient-ring rounded-card overflow-hidden">
       <div className="relative w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card overflow-hidden bg-black/20">
-        {missing ? (
-          <div className="absolute inset-0 border border-dashed border-brand-secondary/25 rounded-card flex flex-col items-center justify-center gap-2 text-brand-light/30">
-            <ImageIcon size={22} />
-            <span className="text-[10px] font-black uppercase tracking-wide">{label}</span>
-          </div>
-        ) : (
+        {src ? (
           <Image
-            src={STOREFRONT_PHOTO}
+            src={src}
             alt={alt}
             fill
             className="object-cover"
             sizes="(min-width: 1024px) 512px, 100vw"
-            onError={() => setMissing(true)}
+            onError={() => setAttempt(a => a + 1)}
           />
+        ) : (
+          <div className="absolute inset-0 border border-dashed border-brand-secondary/25 rounded-card flex flex-col items-center justify-center gap-2 text-brand-light/30">
+            <ImageIcon size={22} />
+            <span className="text-[10px] font-black uppercase tracking-wide">{label}</span>
+          </div>
         )}
       </div>
     </div>
