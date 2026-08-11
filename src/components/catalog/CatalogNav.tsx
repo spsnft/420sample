@@ -38,14 +38,44 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
   const { ref, mask } = useScrollEdges(categories.length);
   const { ref: filterRef, mask: filterMask } = useScrollEdges(filters.join());
 
+  // A sticky bar looks like two different things depending on whether it is
+  // stuck. Parked in the flow it is a row of tabs, and the rule and the frosted
+  // panel under it draw a line across the full width of the window — wider than
+  // the column the tabs belong to — separating the tabs from the very products
+  // they switch. Stuck to the top of the window the same rule is doing real
+  // work: it marks the edge cards are sliding under. So it appears exactly
+  // then. The sentinel is the standard read: a 1px marker directly above the
+  // bar, out of view precisely when the bar has left the flow.
+  const [stuck, setStuck] = React.useState(false);
+  const sentinelRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setStuck(!entry.isIntersecting),
+      { threshold: 1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const current = activeCategory ?? categories[0]?.key;
 
   return (
+    <>
+    <div ref={sentinelRef} aria-hidden className="h-px" />
     <nav
       aria-label={t.menuTitle}
       // Translucent rather than solid: an opaque bar over the page's gradient
-      // shows as a band at every scroll position but the top.
-      className="sticky top-0 z-[95] -mx-4 px-4 py-2 mb-4 bg-brand-primary/80 backdrop-blur-xl border-b border-white/5"
+      // shows as a band at every scroll position but the top. The border is
+      // always declared, transparent until stuck, so switching it on does not
+      // move the row by a pixel.
+      className={`sticky top-0 z-[95] -mx-4 px-4 py-2 mt-6 mb-6 border-b transition-colors duration-200 ${
+        stuck
+          ? "bg-brand-primary/80 backdrop-blur-xl border-white/5"
+          : "border-transparent"
+      }`}
     >
       <div className="max-w-5xl mx-auto space-y-1.5">
         <div
@@ -104,6 +134,7 @@ export const CatalogNav: React.FC<CatalogNavProps> = ({
         )}
       </div>
     </nav>
+    </>
   );
 };
 

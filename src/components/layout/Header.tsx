@@ -112,9 +112,14 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
         // Fully opaque (not translucent) so decorative background elements —
         // e.g. the hero corner leaf — tuck cleanly under the header instead
         // of showing a blurred, uneven smear at the seam.
+        //
+        // Both variants carry the same vertical padding. Without it the
+        // wordmark sat 12px higher on /menu than on /, and the whole page with
+        // it — so moving between the two, which is the main path through the
+        // site, nudged the header up and down for no reason a reader could see.
         sticky
           ? "sticky top-0 z-[100] -mx-4 px-4 py-3 mb-4 bg-brand-primary border-b border-white/5"
-          : "relative z-[100] mb-4"
+          : "relative z-[100] py-3 mb-4"
       }
     >
       <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">

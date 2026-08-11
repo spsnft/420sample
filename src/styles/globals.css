@@ -22,14 +22,23 @@
        darker floor so a long menu does not read as one flat grey sheet. Fixed,
        so scrolling moves the cards against it instead of dragging it along.
        The grain is finer and fainter than the old 0.06 at 256px, which at
-       phone density read as visible speckle rather than as texture. */
+       phone density read as visible speckle rather than as texture.
+
+       The pools start below the very top edge, and the vertical ramp starts on
+       the brand primary rather than above it. The page's first painted row is
+       what meets the browser's own chrome, and it used to be the lightest,
+       warmest thing on screen — rgb(44,42,36) at the left against a theme
+       colour of #161819 — which read as a step across the top of the window
+       before the header even began. Everything the pools were doing they now
+       do a few percent lower, where there is page to light rather than an
+       edge to expose. */
     background-color: var(--color-bg-deep);
     background-image:
       url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E"),
-      radial-gradient(ellipse 90% 45% at 12% 0%, rgba(200, 158, 88, 0.10) 0%, transparent 62%),
-      radial-gradient(ellipse 80% 45% at 92% 12%, rgba(58, 107, 88, 0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 90% 38% at 12% 22%, rgba(200, 158, 88, 0.10) 0%, transparent 62%),
+      radial-gradient(ellipse 80% 38% at 92% 30%, rgba(58, 107, 88, 0.10) 0%, transparent 60%),
       radial-gradient(ellipse 140% 90% at 50% 120%, rgba(0, 0, 0, 0.55) 0%, transparent 70%),
-      linear-gradient(178deg, var(--color-bg-from) 0%, var(--color-primary) 45%, var(--color-bg-deep) 100%);
+      linear-gradient(178deg, var(--color-primary) 0%, var(--color-bg-from) 14%, var(--color-primary) 48%, var(--color-bg-deep) 100%);
     background-attachment: fixed;
     background-size: 180px 180px, auto, auto, auto, auto;
 
