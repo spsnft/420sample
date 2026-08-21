@@ -6,7 +6,6 @@ import { Menu, X, Globe, Leaf, ClipboardCheck, ArrowUpRight } from "lucide-react
 
 import { translations, Language } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
-import { siteConfig } from "@/config/site"
 
 // The product is three surfaces — the shop's public site, the staff panel the
 // med-card checks are run from, and the pitch page for other shop owners — and
@@ -28,8 +27,6 @@ interface NavItem {
   href: string;
   label: string;
   icon: React.ComponentType<{ size?: number | string; className?: string }>;
-  /** Opens in a new tab — every link does once the panel is on another host. */
-  external?: boolean;
   /** Draws the rule above this entry: everything below it is for the people
    *  running the shop, not for the person standing in it. */
   dividerAbove?: boolean;
@@ -37,11 +34,10 @@ interface NavItem {
 
 export interface SiteNavProps {
   safeLang: Language;
-  /** Which host the header is being served on. The pitch page lives at
-   *  buds.digital's apex, where a relative "/" is rewritten straight back to
-   *  itself (see middleware) — so from there every consumer destination has to
-   *  be named by its full address, and "for business" is dropped: it is the
-   *  page you are standing on. */
+  /** Which surface the header is being rendered on. Pitch and storefront demo
+   *  are both routes on the same host now (see middleware.ts) — this only
+   *  decides whether "for business" (the pitch itself) is offered as a
+   *  destination or dropped because it's the page you're standing on. */
   surface?: 'site' | 'partners';
 }
 
@@ -76,16 +72,15 @@ export const SiteNav: React.FC<SiteNavProps> = ({ safeLang, surface = 'site' }) 
   React.useEffect(() => { setIsOpen(false); }, [pathname]);
 
   const onPartners = surface === 'partners';
-  const at = (path: string) => (onPartners ? `${siteConfig.url}${path}` : path);
 
   const items: NavItem[] = [
-    { href: at("/"), label: t.navSite, icon: Globe, external: onPartners },
-    { href: at("/menu"), label: t.menuTitle, icon: Leaf, external: onPartners },
-    { href: at("/staff"), label: t.navStaff, icon: ClipboardCheck, external: onPartners, dividerAbove: true },
+    { href: "/demo", label: t.navSite, icon: Globe },
+    { href: "/menu", label: t.menuTitle, icon: Leaf },
+    { href: "/staff", label: t.navStaff, icon: ClipboardCheck, dividerAbove: true },
     // Dropped on the pitch page itself — it is the page you are standing on.
     ...(onPartners
       ? []
-      : [{ href: siteConfig.partners.url, label: t.navBusiness, icon: ArrowUpRight, external: true }]),
+      : [{ href: "/", label: t.navBusiness, icon: ArrowUpRight }]),
   ];
 
   return (
@@ -107,8 +102,8 @@ export const SiteNav: React.FC<SiteNavProps> = ({ safeLang, surface = 'site' }) 
           aria-label={t.navLabel}
           className="absolute top-full right-0 mt-2 w-60 rounded-button bg-brand-primary border border-white/10 shadow-2xl overflow-hidden z-20 py-1"
         >
-          {items.map(({ href, label, icon: Icon, external, dividerAbove }) => {
-            const isCurrent = !external && href === pathname;
+          {items.map(({ href, label, icon: Icon, dividerAbove }) => {
+            const isCurrent = href === pathname;
 
             return (
               <React.Fragment key={href}>
@@ -117,8 +112,6 @@ export const SiteNav: React.FC<SiteNavProps> = ({ safeLang, surface = 'site' }) 
                   href={href}
                   role="menuitem"
                   aria-current={isCurrent ? "page" : undefined}
-                  target={external ? "_blank" : undefined}
-                  rel={external ? "noopener noreferrer" : undefined}
                   onClick={() => { triggerHaptic('light'); setIsOpen(false); }}
                   className={`flex items-center gap-2.5 px-3 h-10 text-[12px] font-black uppercase tracking-wide transition-colors ${
                     isCurrent

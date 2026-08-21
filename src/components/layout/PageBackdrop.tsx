@@ -2,9 +2,9 @@ import type { ReactNode } from "react"
 import { BotanicalDecor } from "@/components/decor/BotanicalDecor"
 
 // Shared full-bleed chrome for staff surfaces: flat bg-brand-primary fill to
-// match the home page and /partners (both cover the body's own gradient/noise
-// the same way), plus the corner watermark accents so pages under /staff
-// don't each re-declare them.
+// match the storefront demo and the pitch page (both cover the body's own
+// gradient/noise the same way), plus the corner watermark accents so pages
+// under /staff don't each re-declare them.
 export function PageBackdrop({ children }: { children: ReactNode }) {
   return (
     <div className="relative min-h-screen bg-brand-primary text-brand-light font-sans overflow-hidden">

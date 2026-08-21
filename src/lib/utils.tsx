@@ -1,16 +1,21 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import * as React from "react"
+import { siteConfig } from "@/config/site"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// For QR codes and metadata only — every in-app link is relative (see
+// Header, SiteNav). siteConfig.partners.url is the one place the app's own
+// origin is resolved (env-driven, no hardcoded domain — see config/site.ts),
+// so nothing here needs its own fallback.
 export function absoluteUrl(path: string) {
-  // The consumer storefront's own address (see siteConfig.url) — buds.digital
-  // now serves the B2B pitch, so a menu QR code must keep pointing at the
-  // demo host or it sends an in-store scan to the wrong page.
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://partners.buds.digital"
+  // The site's bare origin — /staff and /menu both live at the apex, not
+  // under the storefront demo's own "/demo", so this must not carry that
+  // path segment the way siteConfig.url does.
+  const baseUrl = siteConfig.partners.url
   return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`
 }
 

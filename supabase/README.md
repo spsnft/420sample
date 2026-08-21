@@ -17,6 +17,9 @@ In the Supabase SQL editor, run, in order:
 - `migrations/0001_init.sql`
 - `migrations/0002_client_directory.sql`
 - `migrations/0003_intake_and_signup.sql`
+- `migrations/0004_client_directory_expiry.sql`
+- `migrations/20260821123437_reset_demo.sql` — **buds.digital demo project only** (see
+  "Nightly demo reset" below); skip this one on a real client instance.
 
 Together they create:
 
@@ -60,11 +63,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
 Sign in at `/staff/login` with the account from step 3.
 
-## Demo login for partners.buds.digital
+## Demo login for buds.digital
 
-The "Live Demo" button on the B2B pitch page (`/partners`, served at
-partners.buds.digital) does not bypass `/staff` auth — it signs in a
-dedicated demo account via a server action. Set in `.env`:
+The "Live Demo" button on the B2B pitch page (`/`, buds.digital's apex) does
+not bypass `/staff` auth — it signs in a dedicated demo account via a server
+action. Set in `.env`:
 
 ```
 DEMO_STAFF_EMAIL=demo@buds.digital
@@ -75,6 +78,44 @@ This must be the Auth user you created in step 3 above and seeded in step 4
 (`seed.sql`'s "Demo Owner"). Leave both unset on real client instances —
 the button just shows a "not configured" message instead of an auth bypass,
 so this never becomes a code path a real dispensary's deployment depends on.
+
+Separately, set `DEMO_AUTO_LOGIN=1` on the buds.digital demo instance to
+have `middleware.ts` sign an unauthenticated `/staff` visitor in as this
+same account instead of redirecting to `/staff/login` — so a bare `/staff`
+link never shows a prospect a login form either. Leave unset on real client
+instances; without it, auth behaves exactly as described above.
+
+## Nightly demo reset
+
+`migrations/20260821123437_reset_demo.sql` defines `reset_demo()` and
+schedules it via `pg_cron` (not Vercel Cron — this runs inside the Postgres
+instance, not the Next.js deployment) for 22:00 UTC / 05:00 ICT every day.
+It deletes whatever a prospect clicking around the live demo added, edited
+or revoked in
+`clients`/`prescriptions`/`purchases`/`client_views` and re-inserts the same
+five demo profiles `seed.sql` seeds — `public.staff` and
+`public.staff_invites` are never touched, so the demo login
+(`DEMO_STAFF_EMAIL`/`DEMO_AUTO_LOGIN` above) keeps working across every
+reset.
+
+This migration is **buds.digital-only** — do not run it on a real client's
+project; there's nothing there for it to reset, and it would just leave an
+unused nightly cron job in their database.
+
+Required order, on the buds.digital project:
+
+1. Run `seed.sql` (step 4) first so the "Demo Owner" staff row `reset_demo()`
+   looks up already exists.
+2. Enable the `pg_cron` extension — **Database → Extensions** in the
+   Supabase dashboard. This is a separate, one-time step the migration
+   deliberately doesn't attempt itself: unlike a normal extension, pg_cron
+   needs `shared_preload_libraries` set at the Postgres instance level,
+   which a plain `CREATE EXTENSION` run from a migration can't do on
+   Supabase — it errors.
+3. Only then run `migrations/20260821123437_reset_demo.sql`. Run out of
+   order (pg_cron not enabled yet), it fails with one clear error telling
+   you to enable the extension first, rather than a bare "schema cron does
+   not exist".
 
 ## Notes
 

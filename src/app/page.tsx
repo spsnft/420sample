@@ -1,27 +1,52 @@
 import type { Metadata } from "next"
-import HomeClient from "@/components/HomeClient"
+import PartnersClient from "@/components/partners/PartnersClient"
 import { siteConfig } from "@/config/site"
 
-// Reached at partners.buds.digital post domain-swap (see middleware.ts) — a
-// storefront demo shown to prospective dispensary owners, not a real shop's
-// public page. Noindex mirrors what the B2B pitch page carried before the
-// swap: it's meant to be opened from a link the pitch page hands out, not
-// found on its own.
+const TITLE = "buds.digital — Storefront, live menu & PT.33 records"
+const DESCRIPTION = "A ready-made storefront, live menu and PT.33 compliance panel for your dispensary — one system, built by FT.Agency."
+
+// B2B pitch page for dispensary/vape shop owners, served at buds.digital's
+// own apex — the product's main marketing surface, meant to be found by
+// search (see robots.ts — this is the one path left fully open, AI
+// crawlers included). The storefront demo it links out to (/demo) carries
+// the noindex instead (see app/demo/page.tsx).
+//
+// openGraph and twitter are both spelled out in full here rather than
+// relying on the root layout's defaults to carry over: Next.js replaces a
+// route's `openGraph`/`twitter` object wholesale rather than deep-merging
+// it, so a route that only overrides `title`/`description` silently loses
+// the layout's `images` (no og:image at all) while `twitter` keeps
+// pointing at the layout's "420 Store" copy untouched. This is the
+// product's main shared link — chat previews are the primary distribution
+// channel — so it gets its own complete set of both.
 export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: siteConfig.description,
-  robots: { index: false, follow: false },
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   openGraph: {
-    title: siteConfig.name,
-    description: siteConfig.description,
-    url: siteConfig.url,
+    title: TITLE,
+    description: DESCRIPTION,
+    url: siteConfig.partners.url,
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "buds.digital",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/opengraph-image.png"],
   },
 }
 
-export default function HomePage() {
+export default function PitchPage() {
   return (
     <main>
-      <HomeClient />
+      <PartnersClient />
     </main>
   );
 }

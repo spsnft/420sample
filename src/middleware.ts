@@ -4,19 +4,6 @@ import { NextResponse, type NextRequest } from "next/server"
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // buds.digital (the apex domain) serves the B2B pitch page (/partners) at
-  // its root — the product's main marketing surface, meant to be found by
-  // search. The consumer storefront demo lives at partners.buds.digital
-  // instead (see siteConfig.url); "partners." is now a legacy subdomain name
-  // for a demo host, not a description of what it serves. Host-based rewrite
-  // keeps this one deployment answering both without a second build.
-  const hostname = request.headers.get("host") || "";
-  if (pathname === "/" && (hostname === "buds.digital" || hostname === "www.buds.digital")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/partners";
-    return NextResponse.rewrite(url);
-  }
-
   if (!pathname.startsWith("/staff")) {
     return NextResponse.next();
   }
@@ -59,6 +46,26 @@ export async function middleware(request: NextRequest) {
   // same as the login page.
   const isPublicAuthRoute = pathname === "/staff/login" || pathname === "/staff/signup";
 
+  // Demo instance only (DEMO_AUTO_LOGIN, see .env.example — never set on a
+  // real client instance, so auth there is untouched by any of this): a
+  // visitor with no session lands straight in the panel as the pre-seeded
+  // demo staff account instead of hitting the login form. There is no
+  // "your account" to sign into here, and the pitch page's own "Live Demo"
+  // button (see app/actions.ts, unaffected by this and still working the
+  // same way) already exists to avoid making a prospect find credentials —
+  // this just closes the other way in: a bare /staff link with a stale or
+  // no cookie.
+  if (!user && !isPublicAuthRoute && process.env.DEMO_AUTO_LOGIN === "1") {
+    const demoEmail = process.env.DEMO_STAFF_EMAIL;
+    const demoPassword = process.env.DEMO_STAFF_PASSWORD;
+    if (demoEmail && demoPassword) {
+      const { error } = await supabase.auth.signInWithPassword({ email: demoEmail, password: demoPassword });
+      // Falls through to the normal login redirect below on failure (bad
+      // creds, Supabase unreachable) rather than looping or 500ing.
+      if (!error) return response;
+    }
+  }
+
   if (!user && !isPublicAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/staff/login";
@@ -75,5 +82,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/staff/:path*"],
+  matcher: ["/staff/:path*"],
 };

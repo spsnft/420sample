@@ -65,11 +65,13 @@ export interface TranslationDictionary {
   newOrderCta: string;
 
   // Home page
+  // "\n" marks the line break the card renders as a <br/> — see HomeClient.
+  heroDoorCertTitle: string;
+  heroDoorMenuTitle: string;
   heroDoorCertLine: string;
   heroDoorMenuLine: string;
   // "Flowers. Done properly." is hardcoded in English across all locales
-  // (not translated) — see HomeClient. Hero card titles ("Get Medical
-  // Certificate" / "Explore The Today's Menu") are hardcoded the same way.
+  // (not translated) — see HomeClient.
   addressLabel: string;
   hoursLabel: string;
   reviewsLabel: string;
@@ -78,6 +80,12 @@ export interface TranslationDictionary {
   certSteps: [CertStep, CertStep, CertStep];
   contactsTitle: string;
   footerDisclaimer: [string, string];
+
+  // Sticky strip above the header on the storefront demo (see DemoBar) —
+  // marks the page as sample data to a prospect who clicked in from the
+  // pitch page, and links back to it.
+  demoBarLabel: string;
+  demoBarCta: string;
 
   // Free consultation request form
   consultCta: string;
@@ -136,6 +144,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "Start New Order",
 
     // Home page
+    heroDoorCertTitle: "GET MEDICAL\nCERTIFICATE",
+    heroDoorMenuTitle: "EXPLORE\nTODAY'S MENU",
     heroDoorCertLine: "Free, next-day certificate — stay legally protected",
     heroDoorMenuLine: "Full selection, always in stock",
     addressLabel: "Address",
@@ -153,6 +163,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       "18+. Medical cannabis is dispensed only with a valid PT.33 medical card.",
       "Information on this site is for reference only and does not constitute cannabis advertising.",
     ],
+
+    demoBarLabel: "DEMO STORE — sample data",
+    demoBarCta: "Back to buds.digital",
 
     consultCta: "Free Consultation",
     consultNameLabel: "Name",
@@ -208,12 +221,14 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "Новый заказ",
 
     // Home page
+    heroDoorCertTitle: "ОФОРМИТЬ\nСПРАВКУ",
+    heroDoorMenuTitle: "МЕНЮ\nНА СЕГОДНЯ",
     heroDoorCertLine: "Бесплатно, справка на следующий день — под защитой закона",
     heroDoorMenuLine: "Полный ассортимент, всегда в наличии",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
-    aboutLead: "Каким должен быть современный диспенсари",
+    aboutLead: "Каким должен быть современный диспенсери",
     aboutPhotoLabel: "Фото заведения — скоро",
     certSteps: [
       { title: "Отправьте", description: "заявку в течение минуты" },
@@ -225,6 +240,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       "18+. Медицинский каннабис отпускается только при наличии действующей карты PT.33/гос.образца.",
       "Информация на сайте носит справочный характер и не является рекламой каннабиса.",
     ],
+
+    demoBarLabel: "ДЕМО-МАГАЗИН — тестовые данные",
+    demoBarCta: "Вернуться на buds.digital",
 
     consultCta: "Бесплатная консультация",
     consultNameLabel: "Имя",
@@ -283,6 +301,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "เริ่มคำสั่งซื้อใหม่",
 
     // Home page
+    heroDoorCertTitle: "รับใบรับรอง\nทางการแพทย์",
+    heroDoorMenuTitle: "ดูเมนู\nวันนี้",
     heroDoorCertLine: "ฟรี รับใบรับรองในวันถัดไป — อุ่นใจได้ตามกฎหมาย",
     heroDoorMenuLine: "สินค้าครบครัน พร้อมจำหน่ายเสมอ",
     addressLabel: "ที่อยู่",
@@ -300,6 +320,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       "อายุ 18 ปีขึ้นไป กัญชาทางการแพทย์จำหน่ายเฉพาะผู้ที่มีบัตรรับรองทางการแพทย์ (PT.33) ที่ยังไม่หมดอายุเท่านั้น",
       "ข้อมูลบนเว็บไซต์นี้มีไว้เพื่อการอ้างอิงเท่านั้น ไม่ถือเป็นการโฆษณากัญชา",
     ],
+
+    demoBarLabel: "ร้านสาธิต — ข้อมูลตัวอย่าง",
+    demoBarCta: "กลับไปที่ buds.digital",
 
     consultCta: "คำปรึกษาฟรี",
     consultNameLabel: "ชื่อ",

@@ -10,13 +10,30 @@ import {
 import { useCart } from "@/lib/cart-store"
 import { translations, Language } from "@/lib/translations"
 import { Header } from "@/components/layout/Header"
+import { DemoBar } from "@/components/layout/DemoBar"
 import { LineIcon, WhatsAppIcon } from "@/components/icons/BrandIcons"
 import { BotanicalDecor } from "@/components/decor/BotanicalDecor"
 import { Consultation } from "@/components/modals"
 import { InfoCard } from "@/components/cards/InfoCard"
 import { HeroCard } from "@/components/cards/HeroCard"
+import { SampleTag } from "@/components/cards/SampleTag"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
+
+// DemoBar's fixed height (h-9, 36px) — passed to Header so the two sticky
+// bars stack instead of both landing on top:0 and overlapping.
+const DEMO_BAR_HEIGHT = 36;
+
+// "\n" in a translation string marks the line break a card title renders as
+// a <br/> (see lib/translations.ts).
+function renderLines(text: string): React.ReactNode {
+  return text.split("\n").map((line, i) => (
+    <React.Fragment key={i}>
+      {i > 0 && <br />}
+      {line}
+    </React.Fragment>
+  ));
+}
 
 // Darker-than-panel flat tones for the oversized watermark icons — one tone
 // down from each door's own gradient, not white/accent-gold.
@@ -49,12 +66,13 @@ const STOREFRONT_PHOTOS = [
   "/images/about/storefront.jpg",
 ];
 
-const StorefrontPhoto: React.FC<{ label: string; alt: string }> = ({ label, alt }) => {
+const StorefrontPhoto: React.FC<{ label: string; alt: string; sample?: boolean }> = ({ label, alt, sample }) => {
   const [attempt, setAttempt] = React.useState(0);
   const src = STOREFRONT_PHOTOS[attempt];
 
   return (
-    <div className="surface rounded-card overflow-hidden">
+    <div className="relative surface rounded-card overflow-hidden">
+      {sample && <SampleTag />}
       <div className="relative w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card overflow-hidden bg-black/20">
         {src ? (
           <Image
@@ -112,7 +130,8 @@ export default function HomeClient() {
           <BotanicalDecor className="absolute -bottom-10 -left-10 w-40 h-40 sm:w-56 sm:h-56 opacity-[0.14] rotate-180" />
         </div>
 
-        <Header safeLang={safeLang} sticky />
+        <DemoBar label={t.demoBarLabel} cta={t.demoBarCta} />
+        <Header safeLang={safeLang} sticky stickyOffset={DEMO_BAR_HEIGHT} />
 
         <main className="max-w-xl lg:max-w-4xl mx-auto space-y-6 relative z-10 pt-3">
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
@@ -122,7 +141,7 @@ export default function HomeClient() {
               gradient="linear-gradient(135deg, #D4B67F 0%, #A67F3F 100%)"
               watermarkIcon={ShieldCheck}
               watermarkColor={GOLD_DOOR_WATERMARK}
-              title={<>GET MEDICAL<br />CERTIFICATE</>}
+              title={renderLines(t.heroDoorCertTitle)}
               titleClassName="text-brand-primary"
               tagline={t.heroDoorCertLine}
               taglineClassName="text-brand-primary/60"
@@ -135,7 +154,7 @@ export default function HomeClient() {
               gradient="linear-gradient(135deg, #3A543F 0%, #1E3322 100%)"
               watermarkIcon={Leaf}
               watermarkColor={OLIVE_DOOR_WATERMARK}
-              title={<>EXPLORE<br />TODAY&apos;S MENU</>}
+              title={renderLines(t.heroDoorMenuTitle)}
               titleClassName="text-brand-light"
               tagline={t.heroDoorMenuLine}
               taglineClassName="text-brand-light/60"
@@ -156,7 +175,7 @@ export default function HomeClient() {
 
           <section className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              <StorefrontPhoto label={t.aboutPhotoLabel} alt={siteConfig.name} />
+              <StorefrontPhoto label={t.aboutPhotoLabel} alt={siteConfig.name} sample />
               <div className="surface rounded-card overflow-hidden">
                 <iframe
                   src={localizedMapSrc(siteConfig.mapEmbedSrc, safeLang)}
@@ -169,7 +188,7 @@ export default function HomeClient() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-stretch">
-              <InfoCard icon={MapPin} label={t.addressLabel} value={siteConfig.address} />
+              <InfoCard icon={MapPin} label={t.addressLabel} value={siteConfig.address} sample />
 
               <InfoCard
                 icon={Clock}
@@ -177,10 +196,13 @@ export default function HomeClient() {
                 value={<span className="tracking-[0.1em]">{siteConfig.workingHours}</span>}
               />
 
+              {/* Non-clickable here: a real deployment would link this card
+                  out to that shop's own Google listing. */}
               <InfoCard
                 icon={Star}
                 label={t.reviewsLabel}
                 value={`${siteConfig.trustBadge.rating} · ${siteConfig.trustBadge.reviews}`}
+                sample
               />
             </div>
           </section>
@@ -189,20 +211,31 @@ export default function HomeClient() {
             <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-3 text-center">
               {t.contactsTitle}
             </p>
+            {/* Icon-only, unlike the pitch page's WhatsApp/LINE buttons —
+                these carry no visible label of their own, so aria-label is
+                their only accessible name, not a dedup of one that's also
+                visible. A visually-hidden span backs it up in case
+                aria-label ever gets dropped in a future edit (ТЗ №2,
+                "Вернуть aria-label иконкам контактов" — this must stay
+                scoped to icon-only links; the pitch page's icon+text
+                buttons keep the dedup from M5). */}
             <div className="flex items-center justify-center gap-3">
               <div className="surface rounded-button">
                 <Link href={siteConfig.contacts.line} target="_blank" aria-label="LINE" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
                   <LineIcon size={20} className="opacity-80" />
+                  <span className="sr-only">LINE</span>
                 </Link>
               </div>
               <div className="surface rounded-button">
                 <Link href={siteConfig.contacts.whatsapp} target="_blank" aria-label="WhatsApp" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
                   <WhatsAppIcon size={20} className="opacity-80" />
+                  <span className="sr-only">WhatsApp</span>
                 </Link>
               </div>
               <div className="surface rounded-button">
                 <Link href={siteConfig.contacts.instagram} target="_blank" aria-label="Instagram" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
                   <Instagram size={20} className="opacity-80" />
+                  <span className="sr-only">Instagram</span>
                 </Link>
               </div>
             </div>

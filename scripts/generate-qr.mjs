@@ -6,7 +6,7 @@ import QRCode from "qrcode";
 
 const TARGET_URL = process.env.NEXT_PUBLIC_APP_URL
   ? `${process.env.NEXT_PUBLIC_APP_URL}/menu`
-  : "https://partners.buds.digital/menu";
+  : "https://buds.digital/menu";
 
 const outDir = path.join(process.cwd(), "public", "qr");
 await mkdir(outDir, { recursive: true });

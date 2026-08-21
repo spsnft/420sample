@@ -21,10 +21,14 @@ import { motion } from "framer-motion"
 // rectangle. A browser frame that starts and ends inside the block reads as a
 // second card pasted onto the first one — a hard bottom edge plus a hairline
 // border tracing the full outline, sitting on a card that already has its own
-// border. Fading the bottom out and pulling the CTA up under the fade lets the
-// window continue past the block instead of terminating in it, which is what
-// gives the pair its sense of depth. Keep the fade and the negative margin in
-// step: the pull-up should land roughly where the frame has gone transparent.
+// border. Fading the bottom out lets the window continue past the block
+// instead of terminating in it, which is what gives the pair its sense of
+// depth.
+//
+// The CTA below this component sits in ordinary flow, clear of the fade —
+// it used to be pulled up into it with a negative margin, which put the
+// button on top of the last visible row of the screenshot instead of below
+// it (see ТЗ №2 M6).
 //
 // The screenshot is a real render of the live /staff search screen carrying the
 // demo data supabase/seed.sql seeds. Recapture and swap
@@ -41,7 +45,7 @@ export function DesktopMockup() {
   const [entered, setEntered] = React.useState(false);
 
   return (
-    <div className="w-full -mb-10">
+    <div className="w-full">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -50,8 +54,8 @@ export function DesktopMockup() {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="rounded-[0.9rem] overflow-hidden bg-black border-x border-t border-white/10"
         style={{
-          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 74%, transparent 99%)",
-          maskImage: "linear-gradient(to bottom, black 0%, black 74%, transparent 99%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 88%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, black 0%, black 88%, transparent 100%)",
           // A mask defaults to `repeat`, and the tile is the element's own box:
           // one pixel below the frame the gradient starts over at fully opaque,
           // which is why the drop-shadow this element used to cast reappeared

@@ -7,6 +7,7 @@ import { useCart } from "@/lib/cart-store"
 import { translations, Language, TranslationDictionary } from "@/lib/translations"
 import { Product, Order, AgeGate, IdlePrompt } from "@/components/modals"
 import { Header } from "@/components/layout/Header"
+import { DemoBar } from "@/components/layout/DemoBar"
 import { ProductCarousel } from "@/components/catalog/ProductCarousel"
 import { ProductGrid, sortCategoryKeys, getCategoryConfig } from "@/components/catalog/ProductGrid"
 import { CatalogFallback } from "@/components/catalog/CatalogFallback"
@@ -175,6 +176,9 @@ export default function MenuClient({
         />
       )}
 
+      {/* Kept out of kiosk mode: that view stands in for the real in-store
+          tablet, not for a prospect previewing the demo — see DemoBar. */}
+      {!kiosk && <DemoBar label={t.demoBarLabel} cta={t.demoBarCta} />}
       <Header safeLang={safeLang} hideNav={kiosk} />
 
       {/* The page's own heading. Visually the wordmark in the header already

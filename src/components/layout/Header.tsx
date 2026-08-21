@@ -19,10 +19,14 @@ interface HeaderProps {
   // stay on the menu, and "for business" is not an offer to make to a customer
   // standing at that shop's counter.
   hideNav?: boolean;
-  /** Passed through to SiteNav — see its note on the partners host. */
+  /** Passed through to SiteNav — see its note on the pitch surface. */
   surface?: SiteNavProps['surface'];
-  // Optional sub-line tucked under the wordmark, used by /partners to attribute
-  // the build ("by FT.Agency"). It renders *outside* the home Link — it is a
+  /** Pixels the sticky header should sit below the viewport's top edge —
+   *  set when a DemoBar (see components/layout/DemoBar) is pinned above it,
+   *  so the two stack instead of both landing on top:0 and overlapping. */
+  stickyOffset?: number;
+  // Optional sub-line tucked under the wordmark, used by the pitch page ("/")
+  // to attribute the build ("by FT.Agency"). It renders *outside* the home Link — it is a
   // link of its own, and an anchor cannot nest inside another anchor — so the
   // wordmark and the logo are two separate links to "/" rather than one.
   byline?: React.ReactNode;
@@ -88,7 +92,7 @@ const LanguageDropdown: React.FC<{ safeLang: Language; onSelect: (l: Language) =
   );
 };
 
-export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNav, surface }) => {
+export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNav, surface, stickyOffset }) => {
   const { setLang } = useCart();
 
   // The language lives in a persisted client store, so the server cannot render
@@ -100,12 +104,14 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
     document.documentElement.lang = safeLang;
   }, [safeLang]);
 
-  // On buds.digital "/" is rewritten straight back to the pitch page, so the
-  // wordmark was a link that did nothing. Named in full it goes where it says
-  // it goes — and in a new tab, like every other route off this page.
+  // Pitch and storefront demo are two routes on the same host now (see
+  // middleware.ts), so "home" is just whichever root belongs to the surface
+  // the header is rendered on — no more host branching, no new tab.
   const onPartners = surface === 'partners';
-  const homeHref = onPartners ? siteConfig.url : "/";
-  const homeLinkProps = onPartners ? { target: "_blank", rel: "noopener" } : {};
+  const homeHref = onPartners ? "/" : "/demo";
+  // The pitch page's own wordmark, not the demo shop's name — "420 Store" is
+  // the example the demo and its mockups show, buds.digital is the product.
+  const wordmark = onPartners ? "buds.digital" : siteConfig.name;
 
   // Same rule as the catalogue bar: a sticky bar earns its fill by having
   // something to hide. At the top of the page there is nothing under it, and a
@@ -117,6 +123,7 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
 
   const header = (
     <header
+      style={sticky && stickyOffset ? { top: stickyOffset } : undefined}
       className={
         // Both variants carry the same vertical padding. Without it the
         // wordmark sat 12px higher on /menu than on /, and the whole page with
@@ -133,16 +140,15 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
     >
       <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0 shrink-0">
-          <Link href={homeHref} {...homeLinkProps} className="shrink-0" aria-label={siteConfig.name}>
-            <Image src="/images/logo.svg" priority width={64} height={64} className="w-auto h-8 sm:h-9 md:h-10 object-contain shrink-0" alt={siteConfig.name} />
+          <Link href={homeHref} className="shrink-0" aria-label={wordmark}>
+            <Image src="/images/logo.svg" priority width={64} height={64} className="w-auto h-8 sm:h-9 md:h-10 object-contain shrink-0" alt={wordmark} />
           </Link>
           <div className="min-w-0">
             <Link
               href={homeHref}
-              {...homeLinkProps}
               className="block text-[18px] sm:text-[21px] font-black uppercase tracking-wide text-brand-light whitespace-nowrap"
             >
-              {siteConfig.name}
+              {wordmark}
             </Link>
             {byline}
           </div>
