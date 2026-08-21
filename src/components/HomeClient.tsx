@@ -211,20 +211,31 @@ export default function HomeClient() {
             <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-3 text-center">
               {t.contactsTitle}
             </p>
+            {/* Icon-only, unlike the pitch page's WhatsApp/LINE buttons —
+                these carry no visible label of their own, so aria-label is
+                their only accessible name, not a dedup of one that's also
+                visible. A visually-hidden span backs it up in case
+                aria-label ever gets dropped in a future edit (ТЗ №2,
+                "Вернуть aria-label иконкам контактов" — this must stay
+                scoped to icon-only links; the pitch page's icon+text
+                buttons keep the dedup from M5). */}
             <div className="flex items-center justify-center gap-3">
               <div className="surface rounded-button">
                 <Link href={siteConfig.contacts.line} target="_blank" aria-label="LINE" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
                   <LineIcon size={20} className="opacity-80" />
+                  <span className="sr-only">LINE</span>
                 </Link>
               </div>
               <div className="surface rounded-button">
                 <Link href={siteConfig.contacts.whatsapp} target="_blank" aria-label="WhatsApp" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
                   <WhatsAppIcon size={20} className="opacity-80" />
+                  <span className="sr-only">WhatsApp</span>
                 </Link>
               </div>
               <div className="surface rounded-button">
                 <Link href={siteConfig.contacts.instagram} target="_blank" aria-label="Instagram" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
                   <Instagram size={20} className="opacity-80" />
+                  <span className="sr-only">Instagram</span>
                 </Link>
               </div>
             </div>

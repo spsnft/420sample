@@ -18,7 +18,7 @@ In the Supabase SQL editor, run, in order:
 - `migrations/0002_client_directory.sql`
 - `migrations/0003_intake_and_signup.sql`
 - `migrations/0004_client_directory_expiry.sql`
-- `migrations/0005_reset_demo.sql` — **buds.digital demo project only** (see
+- `migrations/20260821123437_reset_demo.sql` — **buds.digital demo project only** (see
   "Nightly demo reset" below); skip this one on a real client instance.
 
 Together they create:
@@ -87,10 +87,11 @@ instances; without it, auth behaves exactly as described above.
 
 ## Nightly demo reset
 
-`migrations/0005_reset_demo.sql` defines `reset_demo()` and schedules it via
-`pg_cron` (not Vercel Cron — this runs inside the Postgres instance, not the
-Next.js deployment) for 22:00 UTC / 05:00 ICT every day. It deletes whatever
-a prospect clicking around the live demo added, edited or revoked in
+`migrations/20260821123437_reset_demo.sql` defines `reset_demo()` and
+schedules it via `pg_cron` (not Vercel Cron — this runs inside the Postgres
+instance, not the Next.js deployment) for 22:00 UTC / 05:00 ICT every day.
+It deletes whatever a prospect clicking around the live demo added, edited
+or revoked in
 `clients`/`prescriptions`/`purchases`/`client_views` and re-inserts the same
 five demo profiles `seed.sql` seeds — `public.staff` and
 `public.staff_invites` are never touched, so the demo login
@@ -111,9 +112,10 @@ Required order, on the buds.digital project:
    needs `shared_preload_libraries` set at the Postgres instance level,
    which a plain `CREATE EXTENSION` run from a migration can't do on
    Supabase — it errors.
-3. Only then run `migrations/0005_reset_demo.sql`. Run out of order (pg_cron
-   not enabled yet), it fails with one clear error telling you to enable the
-   extension first, rather than a bare "schema cron does not exist".
+3. Only then run `migrations/20260821123437_reset_demo.sql`. Run out of
+   order (pg_cron not enabled yet), it fails with one clear error telling
+   you to enable the extension first, rather than a bare "schema cron does
+   not exist".
 
 ## Notes
 

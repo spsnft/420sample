@@ -55,6 +55,9 @@ export default function PrivacyClient() {
           <p className="text-[13px] font-bold text-brand-light/60 leading-relaxed mb-4">
             {t.contactBody}
           </p>
+          {/* Icon-only, unlike the pitch page's WhatsApp/LINE buttons — a
+              visually-hidden span backs up aria-label as this link's only
+              accessible name (see HomeClient's contacts row). */}
           <div className="flex items-center justify-center gap-3">
             <div className="surface rounded-button">
               <Link
@@ -65,6 +68,7 @@ export default function PrivacyClient() {
                 className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all"
               >
                 <LineIcon size={20} className="opacity-80" />
+                <span className="sr-only">LINE</span>
               </Link>
             </div>
             <div className="surface rounded-button">
@@ -76,6 +80,7 @@ export default function PrivacyClient() {
                 className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all"
               >
                 <WhatsAppIcon size={20} className="opacity-80" />
+                <span className="sr-only">WhatsApp</span>
               </Link>
             </div>
           </div>
