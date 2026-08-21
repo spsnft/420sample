@@ -7,10 +7,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function absoluteUrl(path: string) {
-  // The consumer storefront's own address (see siteConfig.url) — buds.digital
-  // now serves the B2B pitch, so a menu QR code must keep pointing at the
-  // demo host or it sends an in-store scan to the wrong page.
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://partners.buds.digital"
+  // The site's bare origin (see siteConfig.partners.url) — /staff and /menu
+  // both live at the apex, not under the storefront demo's own "/demo", so
+  // this must not carry that path segment the way siteConfig.url does.
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://buds.digital"
   return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`
 }
 

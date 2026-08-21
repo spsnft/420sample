@@ -25,7 +25,10 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+  // The whole app's own origin, not the storefront demo's "/demo" — this is
+  // the base every route's relative metadata (icons, OG image) resolves
+  // against, and buds.digital's apex is what visitors actually land on.
+  metadataBase: new URL(siteConfig.partners.url),
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
@@ -34,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: siteConfig.locale || "en_US",
-    url: siteConfig.url,
+    url: siteConfig.partners.url,
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,

@@ -1,32 +1,40 @@
 "use client"
 import * as React from "react"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Check } from "lucide-react"
 
 import { useCart } from "@/lib/cart-store"
 import type { Language } from "@/lib/translations"
 import { partnersTranslations } from "@/lib/partners/translations"
 import { Header } from "@/components/layout/Header"
-import { WhatsAppIcon } from "@/components/icons/BrandIcons"
+import { Footer } from "@/components/layout/Footer"
+import { WhatsAppIcon, LineIcon } from "@/components/icons/BrandIcons"
 import { DemoLoginButton } from "@/components/partners/DemoLoginButton"
 import { DeviceMockup } from "@/components/partners/DeviceMockup"
 import { DesktopMockup } from "@/components/partners/DesktopMockup"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
 
-// Blocks 1 and 2 are the page's argument: the same product seen by the two
-// audiences a shop owner cares about — their customers, then themselves and
-// their staff. They are built from one shell so the pair reads as a matched
-// set; only the mockup inside and the CTA's destination differ. The step
-// number sits behind the heading as a watermark rather than as a label, since
-// the headings already say who each block is for.
+// The agency's own portfolio link, used both under the wordmark and again in
+// the trust block below. The domain itself is never printed as text — only
+// ever the FT.Agency name, which is what both links are signed with.
+const AGENCY_PORTFOLIO_URL = "https://tsvetkov.site";
+
+// Blocks 01 and 02 are the page's argument: the same product seen by the two
+// audiences a shop owner cares about — their own record-keeping, then their
+// customers. They are built from one shell so the pair reads as a matched
+// set; only the mockup inside, the heading and the CTA's destination differ.
+// The step number sits behind the heading as a watermark rather than as a
+// label, since the headings already say who each block is for.
 function PitchBlock({
   step,
   title,
+  subtitle,
   children,
 }: {
   step: string;
   title: string;
+  subtitle?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -38,9 +46,16 @@ function PitchBlock({
         >
           {step}
         </span>
-        <h2 className="relative text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light mb-5 whitespace-pre-line">
-          {title}
-        </h2>
+        <div className="relative mb-5">
+          <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light whitespace-pre-line">
+            {title}
+          </h2>
+          {subtitle && (
+            <p className="mt-1.5 text-[13px] font-bold text-brand-light/50 leading-snug max-w-sm">
+              {subtitle}
+            </p>
+          )}
+        </div>
         {children}
       </section>
     </div>
@@ -56,15 +71,15 @@ export default function PartnersClient() {
     <div className="min-h-screen text-brand-light p-4 selection:bg-brand-secondary/30 font-sans">
       {/* The attribution belongs to the wordmark, not to the page: as a
           centred line of its own under a left-aligned header it read as an
-          orphan and pushed the hero down. Tucked under "420 Store" it becomes
-          part of the lockup — "this shop, built by us" — which is the whole
-          pitch of the page. */}
+          orphan and pushed the hero down. Tucked under "buds.digital" it
+          becomes part of the lockup — "this product, built by us" — which is
+          the whole pitch of the page. */}
       <Header
         safeLang={safeLang}
         surface="partners"
         byline={
           <Link
-            href="https://tsvetkov.site"
+            href={AGENCY_PORTFOLIO_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="block -mt-0.5 text-[9px] font-black uppercase tracking-[0.18em] text-brand-light/30 hover:text-brand-light/60 transition-colors"
@@ -79,6 +94,9 @@ export default function PartnersClient() {
           <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-balance text-brand-light">
             {t.heroTitle}
           </h1>
+          <p className="mt-3 text-[13px] font-normal text-brand-light/60 text-balance">
+            {t.whiteGloveLine}
+          </p>
           <ul className="mt-4 flex flex-wrap justify-center gap-1.5">
             {t.heroPills.map((pill) => (
               <li
@@ -94,23 +112,12 @@ export default function PartnersClient() {
           </ul>
         </section>
 
-        <PitchBlock step="01" title={t.block1Title}>
-          <DeviceMockup />
-          <div className="gradient-ring rounded-button mt-6">
-            <Link
-              href={siteConfig.url}
-              target="_blank"
-              rel="noopener"
-              onClick={() => triggerHaptic('light')}
-              className="w-full h-12 bg-white/5 font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              {t.ctaLive}
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-        </PitchBlock>
-
-        <PitchBlock step="02" title={t.block2Title}>
+        {/* Block 01 — the PT.33 panel: the record-keeping the shop is
+            actually buying, so it leads. The mobile crop this block is meant
+            to carry (one client card, status + callouts) is blocked on the
+            /staff audit (see ТЗ part 3) — DesktopMockup's full search-screen
+            capture stands in for it until that lands. */}
+        <PitchBlock step="01" title={t.blockPt33Title} subtitle={t.blockPt33Subtitle}>
           <DesktopMockup />
           <div className="mt-6">
             <DemoLoginButton
@@ -119,35 +126,111 @@ export default function PartnersClient() {
               errorNotConfigured={t.ctaLiveErrorNotConfigured}
               errorFailed={t.ctaLiveErrorFailed}
             />
+            <p className="mt-2 text-center text-[10px] font-bold text-brand-light/40">
+              {t.demoSampleNote}
+            </p>
           </div>
         </PitchBlock>
 
-        {/* No card around this one. The two pitch blocks above are cards
-            because each holds an argument; the closing line and its button are
-            the page speaking in its own voice, and a third bordered box after
-            them turned the ask into just another exhibit. */}
+        {/* Block 02 — the client storefront the same system ships. */}
+        <PitchBlock step="02" title={t.blockStorefrontTitle}>
+          <DeviceMockup />
+          <div className="mt-6">
+            <Link
+              href="/demo"
+              target="_blank"
+              rel="noopener"
+              onClick={() => triggerHaptic('light')}
+              className="w-full h-12 btn-tonal-gold text-brand-light font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              {t.ctaLive}
+              <ArrowRight size={16} className="text-brand-secondary" />
+            </Link>
+            <p className="mt-2 text-center text-[10px] font-bold text-brand-light/40">
+              {t.demoSampleNote}
+            </p>
+          </div>
+        </PitchBlock>
+
+        {/* Trust block: who built this, proof of it, the guarantee, and what
+            "one system" above actually includes. No photos, no names, no
+            invented experience or project-count figures — see ТЗ A9. */}
+        <section className="px-2 pt-2 text-center space-y-4">
+          <div className="space-y-1.5">
+            <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40">
+              {t.trustLocation}
+            </p>
+            <Link
+              href={AGENCY_PORTFOLIO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-[12px] font-black uppercase tracking-wide text-brand-secondary hover:text-brand-light transition-colors"
+            >
+              {t.trustPortfolioLabel}
+            </Link>
+          </div>
+
+          <p className="text-[13px] font-bold text-brand-light/80 text-balance">
+            {t.trustGuarantee}
+          </p>
+
+          <div className="gradient-ring rounded-card text-left">
+            <div className="p-4 rounded-card bg-white/5">
+              <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-3">
+                {t.trustChecklistTitle}
+              </p>
+              <ul className="space-y-2">
+                {t.trustChecklistItems.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-[13px] font-bold text-brand-light/80">
+                    <Check size={15} className="shrink-0 mt-0.5 text-brand-secondary" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* No card around this one. The blocks above are cards because each
+            holds an argument; the closing line and its buttons are the page
+            speaking in its own voice, and a bordered box around them too
+            turned the ask into just another exhibit. */}
         <section className="px-2 pt-4 pb-2 text-center">
           <p className="text-[16px] font-black text-brand-light leading-snug text-balance">
             {t.ctaHeadline}
           </p>
-          {t.ctaSubtitle && (
-            <p className="mt-2 text-[13px] font-bold text-brand-light/60 leading-relaxed text-balance">
-              {t.ctaSubtitle}
-            </p>
-          )}
-          <div className="mt-4">
+          <p className="mt-2 text-[13px] font-bold text-brand-light/60 leading-relaxed text-balance">
+            {t.ctaSubtitle}
+          </p>
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Link
               href={siteConfig.partners.whatsapp}
               target="_blank"
               rel="noopener"
               onClick={() => triggerHaptic('medium')}
-              className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
+              className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
             >
               <WhatsAppIcon size={18} />
               {t.ctaButton}
             </Link>
+            {/* TODO(LINE OA): points at the same WhatsApp line until this
+                product's own LINE Official Account is set up. */}
+            <Link
+              href={siteConfig.partners.whatsapp}
+              target="_blank"
+              rel="noopener"
+              onClick={() => triggerHaptic('medium')}
+              className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
+            >
+              <LineIcon size={18} />
+              {t.ctaButtonLine}
+            </Link>
           </div>
+          <p className="mt-4 text-[12px] font-bold text-brand-light/50">{t.pricingLine}</p>
+          <p className="mt-0.5 text-[11px] text-brand-light/35">{t.pricingNote}</p>
         </section>
+
+        <Footer privacyLabel={t.footerPrivacy} />
       </main>
     </div>
   );

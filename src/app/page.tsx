@@ -1,27 +1,23 @@
 import type { Metadata } from "next"
-import HomeClient from "@/components/HomeClient"
-import { siteConfig } from "@/config/site"
+import PartnersClient from "@/components/partners/PartnersClient"
 
-// Reached at partners.buds.digital post domain-swap (see middleware.ts) — a
-// storefront demo shown to prospective dispensary owners, not a real shop's
-// public page. Noindex mirrors what the B2B pitch page carried before the
-// swap: it's meant to be opened from a link the pitch page hands out, not
-// found on its own.
+// B2B pitch page for dispensary/vape shop owners, served at buds.digital's
+// own apex — the product's main marketing surface, meant to be found by
+// search. The storefront demo it links out to (/demo) carries the noindex
+// instead (see app/demo/page.tsx).
 export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: siteConfig.description,
-  robots: { index: false, follow: false },
+  title: { absolute: "buds.digital — Storefront, live menu & PT.33 records" },
+  description: "A ready-made storefront, live menu and PT.33 compliance panel for your dispensary — one system, built by FT.Agency.",
   openGraph: {
-    title: siteConfig.name,
-    description: siteConfig.description,
-    url: siteConfig.url,
+    title: "buds.digital — Storefront, live menu & PT.33 records",
+    description: "A ready-made storefront, live menu and PT.33 compliance panel for your dispensary — one system, built by FT.Agency.",
   },
 }
 
-export default function HomePage() {
+export default function PitchPage() {
   return (
     <main>
-      <HomeClient />
+      <PartnersClient />
     </main>
   );
 }

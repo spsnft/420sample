@@ -1,8 +1,26 @@
 "use client"
 import * as React from "react"
+import Link from "next/link"
 import { Loader2, CheckCircle2 } from "lucide-react"
 import { TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
+
+// consultConsentLabel names PDPA literally, once, in every locale — split on
+// it so the word itself becomes the link to /privacy instead of duplicating
+// the sentence per-language just to wrap one word.
+function renderConsentLabel(text: string): React.ReactNode {
+  const [before, after] = text.split("PDPA");
+  if (after === undefined) return text;
+  return (
+    <>
+      {before}
+      <Link href="/privacy" className="underline underline-offset-2 hover:text-brand-light/80">
+        PDPA
+      </Link>
+      {after}
+    </>
+  );
+}
 
 interface ConsultationRequestFormProps {
   t: TranslationDictionary;
@@ -82,7 +100,7 @@ export const ConsultationRequestForm: React.FC<ConsultationRequestFormProps> = (
           required
           className="mt-0.5 w-4 h-4 shrink-0 accent-brand-secondary"
         />
-        <span className="text-[11px] text-brand-light/60 leading-snug">{t.consultConsentLabel}</span>
+        <span className="text-[11px] text-brand-light/60 leading-snug">{renderConsentLabel(t.consultConsentLabel)}</span>
       </label>
 
       {status === "error" && (

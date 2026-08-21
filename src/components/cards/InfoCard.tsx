@@ -1,5 +1,6 @@
 import * as React from "react"
 import { LucideIcon } from "lucide-react"
+import { SampleTag } from "@/components/cards/SampleTag"
 
 interface InfoCardProps {
   icon: LucideIcon;
@@ -16,6 +17,8 @@ interface InfoCardProps {
   radius?: string;
   /** Tailwind padding class for the inner card. */
   padding?: string;
+  /** Marks the value as demo placeholder data — see SampleTag. */
+  sample?: boolean;
 }
 
 // Single source of truth for the Address / Working Hours / Reviews cards —
@@ -30,8 +33,10 @@ export const InfoCard: React.FC<InfoCardProps> = ({
   bgOpacity = 15,
   radius = "rounded-card",
   padding = "p-4",
+  sample = false,
 }) => (
-  <div className={`surface ${radius} h-full ${className}`}>
+  <div className={`relative surface ${radius} h-full ${className}`}>
+    {sample && <SampleTag />}
     <div className={`${padding} ${radius} h-full min-h-[88px] flex items-center gap-3`}>
       <div
         className="rounded-full border border-brand-secondary/30 flex items-center justify-center text-brand-secondary shrink-0"

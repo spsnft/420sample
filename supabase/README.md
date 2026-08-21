@@ -60,11 +60,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
 Sign in at `/staff/login` with the account from step 3.
 
-## Demo login for partners.buds.digital
+## Demo login for buds.digital
 
-The "Live Demo" button on the B2B pitch page (`/partners`, served at
-partners.buds.digital) does not bypass `/staff` auth — it signs in a
-dedicated demo account via a server action. Set in `.env`:
+The "Live Demo" button on the B2B pitch page (`/`, buds.digital's apex) does
+not bypass `/staff` auth — it signs in a dedicated demo account via a server
+action. Set in `.env`:
 
 ```
 DEMO_STAFF_EMAIL=demo@buds.digital

@@ -1,5 +1,5 @@
 // Recaptures public/images/partners/customer-view.png — the phone screen inside
-// the device mockup on /partners.
+// the device mockup on the pitch page ("/").
 //
 // Run with a dev server already up on the port below:
 //   npm run dev
@@ -47,7 +47,7 @@ await context.addInitScript(() => {
 });
 
 const page = await context.newPage();
-await page.goto(ORIGIN, { waitUntil: "networkidle" });
+await page.goto(`${ORIGIN}/demo`, { waitUntil: "networkidle" });
 await page.waitForTimeout(800);
 
 await page.evaluate((pad) => {

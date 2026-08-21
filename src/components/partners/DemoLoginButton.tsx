@@ -2,7 +2,7 @@
 import * as React from "react"
 import { useFormState, useFormStatus } from "react-dom"
 import { ArrowRight } from "lucide-react"
-import { demoSignIn } from "@/app/partners/actions"
+import { demoSignIn } from "@/app/actions"
 import { triggerHaptic } from "@/lib/utils"
 
 interface DemoLoginButtonProps {
@@ -12,23 +12,22 @@ interface DemoLoginButtonProps {
   errorFailed: string;
 }
 
-// Styled to match the block 1 CTA exactly: both blocks open a real live
-// surface, so neither outranks the other. The solid btn-metal treatment stays
-// reserved for the page's single closing WhatsApp action.
+// Styled to match the storefront block's CTA exactly (see btn-tonal-gold):
+// both blocks open a real live surface, so neither outranks the other. The
+// solid btn-metal treatment stays reserved for the page's single closing
+// WhatsApp/LINE actions.
 function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: string }) {
   const { pending } = useFormStatus();
   return (
-    <div className="gradient-ring rounded-button">
-      <button
-        type="submit"
-        disabled={pending}
-        onClick={() => triggerHaptic('medium')}
-        className="w-full h-12 bg-white/5 font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
-      >
-        {pending ? pendingLabel : label}
-        {!pending && <ArrowRight size={16} />}
-      </button>
-    </div>
+    <button
+      type="submit"
+      disabled={pending}
+      onClick={() => triggerHaptic('medium')}
+      className="w-full h-12 btn-tonal-gold text-brand-light font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+    >
+      {pending ? pendingLabel : label}
+      {!pending && <ArrowRight size={16} className="text-brand-secondary" />}
+    </button>
   );
 }
 

@@ -2,24 +2,20 @@ import { type MetadataRoute } from "next"
 
 import { siteConfig } from "@/config/site"
 
-// "/partners" stays disallowed regardless of host: on buds.digital it is a
-// duplicate of the rewritten "/" (see middleware.ts) and would only split
-// search value between two URLs for the same page; on partners.buds.digital
-// it isn't reachable at all. "/" itself is intentionally left crawlable here
-// — the per-host split between the indexable pitch page and the noindex
-// storefront demo is enforced by each route's own metadata, not by path.
+// buds.digital's apex ("/") is the B2B pitch page — the product's main
+// marketing surface, meant to be found by search. Everything reached from
+// it (the storefront demo at /demo, the public menu, the staff panel) is a
+// walkthrough for a prospect who already clicked in from the pitch, not a
+// page meant to rank on its own — so only "/" stays crawlable.
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/menu", "/partners"],
+        disallow: ["/demo", "/menu", "/staff"],
       },
     ],
-    // Points at the marketing domain's sitemap regardless of which host
-    // served this robots.txt — buds.digital is the only surface meant to be
-    // indexed post domain-swap (see siteConfig.partners.url).
     sitemap: `${siteConfig.partners.url}/sitemap.xml`,
   }
 }
