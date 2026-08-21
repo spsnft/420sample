@@ -119,7 +119,7 @@ export function ClientCard({ data }: { data: ClientCardData }) {
                     {formatDate(p.date)} · {p.quantity}g{p.staff?.name ? ` · ${p.staff.name}` : ""}
                   </p>
                 </div>
-                <span className="text-[13px] font-black text-brand-secondary shrink-0">{p.price}<Baht /></span>
+                <span className="text-[13px] font-black text-brand-secondary shrink-0">{p.price.toLocaleString("en-US")}<Baht /></span>
               </div>
             ))}
           </div>

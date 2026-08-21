@@ -135,7 +135,7 @@ export default function HomeClient() {
               gradient="linear-gradient(135deg, #3A543F 0%, #1E3322 100%)"
               watermarkIcon={Leaf}
               watermarkColor={OLIVE_DOOR_WATERMARK}
-              title={<>EXPLORE THE<br />TODAY&apos;S MENU</>}
+              title={<>EXPLORE<br />TODAY&apos;S MENU</>}
               titleClassName="text-brand-light"
               tagline={t.heroDoorMenuLine}
               taglineClassName="text-brand-light/60"

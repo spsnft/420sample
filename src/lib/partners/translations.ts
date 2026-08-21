@@ -1,8 +1,9 @@
 import type { Language } from "@/lib/translations"
 
-// Copy for partners.buds.digital — the B2B pitch page for dispensary/vape
-// shop owners. Kept separate from the public-site dictionary in
-// @/lib/translations since none of these keys are shared with buds.digital.
+// Copy for buds.digital (rewritten from /partners at the apex — see
+// middleware.ts) — the B2B pitch page for dispensary/vape shop owners. Kept
+// separate from the public-site dictionary in @/lib/translations since none
+// of these keys are shared with the storefront demo.
 export interface PartnersDictionary {
   // Says what the system does for the shop, not what the shop does with the
   // system. This page's job is to earn a demo click, and a promise of benefit
@@ -33,17 +34,22 @@ export interface PartnersDictionary {
   ctaLiveErrorNotConfigured: string;
   ctaLiveErrorFailed: string;
 
-  ctaTitle: string;
+  // Pre-footer close. ctaHeadline is the bold claim ("live in 24 hours");
+  // ctaSubtitle is the White-Glove Onboarding proof underneath it. Optional
+  // so a locale can ship the headline alone (see ru/th) without an empty
+  // paragraph rendering under it.
+  ctaHeadline: string;
+  ctaSubtitle?: string;
   ctaButton: string;
 }
 
 export const partnersTranslations: Record<Language, PartnersDictionary> = {
   ru: {
-    heroTitle: "Не просто сайт. Система, которая работает на вас",
+    heroTitle: "Полноценная цифровая экосистема для диспансеров",
     heroPills: [
-      "Учёт PT.33",
-      "Цифровое меню",
-      "Контакты и отзывы",
+      "Витрина для клиентов",
+      "Живое цифровое меню",
+      "Автоматизированный CRM для PT.33",
     ],
     heroPillAccent: "⚡ Запуск за 1 день",
 
@@ -55,15 +61,16 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaLiveErrorNotConfigured: "Демо-доступ ещё не настроен. Напишите нам, и мы покажем панель лично.",
     ctaLiveErrorFailed: "Не получилось открыть демо. Попробуйте ещё раз или напишите нам.",
 
-    ctaTitle: "Ваше заведение, ваш бренд, запуск за день. Оставляйте заявку.",
+    ctaHeadline: "Ваша цифровая экосистема под ключ — запуск за 24 часа.",
+    ctaSubtitle: "Система корпоративного уровня, разворачивается без простоя вашей работы. Пришлите нам меню и брендинг — мы возьмём на себя всю настройку, пока вы занимаетесь бизнесом. Оставляйте заявку.",
     ctaButton: "Написать в WhatsApp",
   },
   en: {
-    heroTitle: "Not just a website. A system that works for you",
+    heroTitle: "The complete digital ecosystem for dispensaries",
     heroPills: [
-      "PT.33 records",
-      "Digital menu",
-      "Contacts & Reviews",
+      "Client storefront",
+      "Live digital menu",
+      "Automated PT.33 CRM",
     ],
     heroPillAccent: "⚡ Live in 1 day",
 
@@ -75,15 +82,16 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaLiveErrorNotConfigured: "The demo isn't set up yet. Message us and we'll show you the panel directly.",
     ctaLiveErrorFailed: "Couldn't open the demo. Try again or message us.",
 
-    ctaTitle: "Your shop, your brand, live in a day. Let's talk.",
+    ctaHeadline: "Your complete digital ecosystem, operational in 24 hours.",
+    ctaSubtitle: "Enterprise-grade system, deployed without downtime. Send us your menu and branding — our team handles the entire setup while you focus on your business. Let's talk.",
     ctaButton: "Message on WhatsApp",
   },
   th: {
-    heroTitle: "ไม่ใช่แค่เว็บไซต์ แต่คือระบบที่ทำงานให้คุณ",
+    heroTitle: "ระบบดิจิทัลครบวงจรสำหรับร้านจำหน่ายกัญชา",
     heroPills: [
-      "ทะเบียน PT.33",
-      "เมนูดิจิทัล",
-      "ติดต่อและรีวิว",
+      "หน้าร้านสำหรับลูกค้า",
+      "เมนูดิจิทัลแบบเรียลไทม์",
+      "ระบบ CRM PT.33 อัตโนมัติ",
     ],
     heroPillAccent: "⚡ พร้อมใช้งานภายใน 1 วัน",
 
@@ -95,7 +103,8 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaLiveErrorNotConfigured: "ยังไม่ได้ตั้งค่าเดโม ทักหาเราแล้วเราจะโชว์แผงควบคุมให้โดยตรง",
     ctaLiveErrorFailed: "เปิดเดโมไม่สำเร็จ ลองใหม่อีกครั้งหรือทักหาเรา",
 
-    ctaTitle: "ร้านของคุณ แบรนด์ของคุณ พร้อมใช้งานใน 1 วัน ทักมาได้เลย",
+    ctaHeadline: "ระบบดิจิทัลครบวงจรของคุณ พร้อมใช้งานภายใน 24 ชั่วโมง",
+    ctaSubtitle: "ระบบระดับองค์กร ติดตั้งได้โดยไม่กระทบการทำงานของร้าน ส่งเมนูและแบรนด์ของคุณมาให้เรา ทีมงานของเราจะดูแลการตั้งค่าทั้งหมด ขณะที่คุณโฟกัสกับธุรกิจ ทักมาได้เลย",
     ctaButton: "ทักผ่าน WhatsApp",
   },
 };

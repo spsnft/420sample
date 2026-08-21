@@ -7,7 +7,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function absoluteUrl(path: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://buds.digital"
+  // The consumer storefront's own address (see siteConfig.url) — buds.digital
+  // now serves the B2B pitch, so a menu QR code must keep pointing at the
+  // demo host or it sends an in-store scan to the wrong page.
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://partners.buds.digital"
   return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`
 }
 

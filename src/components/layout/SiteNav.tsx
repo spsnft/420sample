@@ -38,7 +38,7 @@ interface NavItem {
 export interface SiteNavProps {
   safeLang: Language;
   /** Which host the header is being served on. The pitch page lives at
-   *  partners.buds.digital, where a relative "/" is rewritten straight back to
+   *  buds.digital's apex, where a relative "/" is rewritten straight back to
    *  itself (see middleware) — so from there every consumer destination has to
    *  be named by its full address, and "for business" is dropped: it is the
    *  page you are standing on. */
