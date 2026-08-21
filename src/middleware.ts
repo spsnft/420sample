@@ -4,11 +4,14 @@ import { NextResponse, type NextRequest } from "next/server"
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // partners.buds.digital serves the B2B pitch page (/partners) at its root.
-  // Host-based rewrite keeps it a separate surface from buds.digital without
-  // a second deployment — the public site never links here and vice versa.
+  // buds.digital (the apex domain) serves the B2B pitch page (/partners) at
+  // its root — the product's main marketing surface, meant to be found by
+  // search. The consumer storefront demo lives at partners.buds.digital
+  // instead (see siteConfig.url); "partners." is now a legacy subdomain name
+  // for a demo host, not a description of what it serves. Host-based rewrite
+  // keeps this one deployment answering both without a second build.
   const hostname = request.headers.get("host") || "";
-  if (pathname === "/" && hostname.startsWith("partners.")) {
+  if (pathname === "/" && (hostname === "buds.digital" || hostname === "www.buds.digital")) {
     const url = request.nextUrl.clone();
     url.pathname = "/partners";
     return NextResponse.rewrite(url);

@@ -7,7 +7,7 @@ export interface DemoSignInState {
   error: "not_configured" | "failed" | null;
 }
 
-// Powers the "Live Demo" button on partners.buds.digital. It never disables
+// Powers the "Live Demo" button on the B2B pitch page (buds.digital). It never disables
 // /staff auth — instead it signs in a dedicated, pre-seeded demo account
 // (DEMO_STAFF_EMAIL/PASSWORD, see supabase/seed.sql) so the same code that
 // ships to real single-tenant client instances never needs an

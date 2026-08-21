@@ -100,9 +100,9 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
     document.documentElement.lang = safeLang;
   }, [safeLang]);
 
-  // On partners.buds.digital "/" is rewritten straight back to the pitch page,
-  // so the wordmark was a link that did nothing. Named in full it goes where it
-  // says it goes — and in a new tab, like every other route off this page.
+  // On buds.digital "/" is rewritten straight back to the pitch page, so the
+  // wordmark was a link that did nothing. Named in full it goes where it says
+  // it goes — and in a new tab, like every other route off this page.
   const onPartners = surface === 'partners';
   const homeHref = onPartners ? siteConfig.url : "/";
   const homeLinkProps = onPartners ? { target: "_blank", rel: "noopener" } : {};

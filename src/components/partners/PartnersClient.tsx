@@ -98,7 +98,7 @@ export default function PartnersClient() {
           <DeviceMockup />
           <div className="gradient-ring rounded-button mt-6">
             <Link
-              href="https://buds.digital"
+              href={siteConfig.url}
               target="_blank"
               rel="noopener"
               onClick={() => triggerHaptic('light')}
@@ -127,19 +127,26 @@ export default function PartnersClient() {
             the page speaking in its own voice, and a third bordered box after
             them turned the ask into just another exhibit. */}
         <section className="px-2 pt-4 pb-2 text-center">
-          <p className="text-[14px] font-bold text-brand-light/80 leading-relaxed text-balance mb-4">
-            {t.ctaTitle}
+          <p className="text-[16px] font-black text-brand-light leading-snug text-balance">
+            {t.ctaHeadline}
           </p>
-          <Link
-            href={siteConfig.partners.whatsapp}
-            target="_blank"
-            rel="noopener"
-            onClick={() => triggerHaptic('medium')}
-            className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
-          >
-            <WhatsAppIcon size={18} />
-            {t.ctaButton}
-          </Link>
+          {t.ctaSubtitle && (
+            <p className="mt-2 text-[13px] font-bold text-brand-light/60 leading-relaxed text-balance">
+              {t.ctaSubtitle}
+            </p>
+          )}
+          <div className="mt-4">
+            <Link
+              href={siteConfig.partners.whatsapp}
+              target="_blank"
+              rel="noopener"
+              onClick={() => triggerHaptic('medium')}
+              className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
+            >
+              <WhatsAppIcon size={18} />
+              {t.ctaButton}
+            </Link>
+          </div>
         </section>
       </main>
     </div>

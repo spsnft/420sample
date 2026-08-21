@@ -136,7 +136,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "Start New Order",
 
     // Home page
-    heroDoorCertLine: "Free, on the spot — stay legally protected",
+    heroDoorCertLine: "Free, next-day certificate — stay legally protected",
     heroDoorMenuLine: "Full selection, always in stock",
     addressLabel: "Address",
     hoursLabel: "Working hours",
@@ -208,7 +208,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "Новый заказ",
 
     // Home page
-    heroDoorCertLine: "Бесплатно, на месте — под защитой закона",
+    heroDoorCertLine: "Бесплатно, справка на следующий день — под защитой закона",
     heroDoorMenuLine: "Полный ассортимент, всегда в наличии",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
@@ -283,7 +283,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     newOrderCta: "เริ่มคำสั่งซื้อใหม่",
 
     // Home page
-    heroDoorCertLine: "ฟรี ออกทันทีที่ร้าน — อุ่นใจได้ตามกฎหมาย",
+    heroDoorCertLine: "ฟรี รับใบรับรองในวันถัดไป — อุ่นใจได้ตามกฎหมาย",
     heroDoorMenuLine: "สินค้าครบครัน พร้อมจำหน่ายเสมอ",
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
