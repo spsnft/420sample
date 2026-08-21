@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
+import { isDemoInstance } from "@/lib/demo"
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -55,7 +56,7 @@ export async function middleware(request: NextRequest) {
   // same way) already exists to avoid making a prospect find credentials —
   // this just closes the other way in: a bare /staff link with a stale or
   // no cookie.
-  if (!user && !isPublicAuthRoute && process.env.DEMO_AUTO_LOGIN === "1") {
+  if (!user && !isPublicAuthRoute && isDemoInstance()) {
     const demoEmail = process.env.DEMO_STAFF_EMAIL;
     const demoPassword = process.env.DEMO_STAFF_PASSWORD;
     if (demoEmail && demoPassword) {

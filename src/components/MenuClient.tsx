@@ -53,6 +53,7 @@ export default function MenuClient({
   failed = false,
   kiosk = false,
   ageVerified = false,
+  demoInstance = false,
 }: {
   initialProducts: any[],
   initialDescriptions?: any[],
@@ -63,6 +64,8 @@ export default function MenuClient({
   /** Decided on the server from the age cookie, so the catalogue is never
    *  rendered to someone who has not answered. */
   ageVerified?: boolean,
+  /** buds.digital's own demo instance only — see Header's demoInstance prop. */
+  demoInstance?: boolean,
 }) {
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   // Set when the sheet was opened from a basket line: the same sheet, but it
@@ -179,7 +182,7 @@ export default function MenuClient({
       {/* Kept out of kiosk mode: that view stands in for the real in-store
           tablet, not for a prospect previewing the demo — see DemoBar. */}
       {!kiosk && <DemoBar label={t.demoBarLabel} cta={t.demoBarCta} />}
-      <Header safeLang={safeLang} hideNav={kiosk} />
+      <Header safeLang={safeLang} hideNav={kiosk} demoInstance={demoInstance} />
 
       {/* The page's own heading. Visually the wordmark in the header already
           says where you are, but the document had no h1 at all — headings

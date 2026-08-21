@@ -3,6 +3,7 @@ import { cookies } from "next/headers"
 import MenuClient from "@/components/MenuClient"
 import { getProducts } from "@/lib/product"
 import { AGE_COOKIE } from "@/lib/age-gate"
+import { isDemoInstance } from "@/lib/demo"
 
 export const revalidate = 60;
 
@@ -39,6 +40,7 @@ export default async function MenuPage({
         failed={failed}
         kiosk={kiosk}
         ageVerified={ageVerified}
+        demoInstance={isDemoInstance()}
       />
     </main>
   );

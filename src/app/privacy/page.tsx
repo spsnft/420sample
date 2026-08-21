@@ -8,7 +8,7 @@ const DESCRIPTION = "What personal data this site collects, why, and how it is u
 // Linked from the consultation form's PDPA consent line (see
 // ConsultationRequestForm) and from the pitch page's footer.
 export const metadata: Metadata = {
-  // `absolute` bypasses the root layout's `%s - 420 Store` title template —
+  // `absolute` bypasses the root layout's `%s - YOUR STORE` title template —
   // this title already ends in "buds.digital" on its own.
   title: { absolute: TITLE },
   description: DESCRIPTION,
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   // Next replaces the whole `twitter` object per route rather than merging
   // it with the root layout's — see app/page.tsx's note — so this needs its
-  // own copy too, or it keeps the layout's "420 Store" title/description.
+  // own copy too, or it keeps the layout's "YOUR STORE" title/description.
   twitter: {
     card: "summary",
     title: TITLE,

@@ -79,11 +79,13 @@ This must be the Auth user you created in step 3 above and seeded in step 4
 the button just shows a "not configured" message instead of an auth bypass,
 so this never becomes a code path a real dispensary's deployment depends on.
 
-Separately, set `DEMO_AUTO_LOGIN=1` on the buds.digital demo instance to
-have `middleware.ts` sign an unauthenticated `/staff` visitor in as this
-same account instead of redirecting to `/staff/login` — so a bare `/staff`
-link never shows a prospect a login form either. Leave unset on real client
-instances; without it, auth behaves exactly as described above.
+Separately, set `DEMO_AUTO_LOGIN=1` (or `true` — see `lib/demo.ts`) on the
+buds.digital demo instance to have `middleware.ts` sign an unauthenticated
+`/staff` visitor in as this same account instead of redirecting to
+`/staff/login` — so a bare `/staff` link never shows a prospect a login
+form either. The same flag also points the storefront header's logo at the
+pitch page (`/`) instead of its own `/demo` homepage. Leave unset on real
+client instances; without it, both behave exactly as described above.
 
 ## Nightly demo reset
 
