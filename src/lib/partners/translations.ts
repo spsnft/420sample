@@ -43,8 +43,6 @@ export interface PartnersDictionary {
   ctaLivePending: string;
   ctaLiveErrorNotConfigured: string;
   ctaLiveErrorFailed: string;
-  // Small print under each demo CTA — sets expectations before the click.
-  demoSampleNote: string;
 
   // Trust block, just above the final CTA: one attribution line (who built
   // this, linking "FT.Agency" — never the bare domain — to the portfolio),
@@ -64,15 +62,13 @@ export interface PartnersDictionary {
 
   // Final CTA. ctaHeadline + ctaSubtitle are the ask; ctaButton (WhatsApp)
   // and ctaButtonLine (LINE) are how to answer it — deliberately just the
-  // brand name on both, equal weight (see ТЗ №2 M5/M9). pricingLine/
-  // pricingNote are placeholder figures — swap for real numbers before
-  // release.
+  // brand name on both, equal weight (see ТЗ №2 M5/M9). pricingLine is a
+  // placeholder figure — swap for real numbers before release.
   ctaHeadline: string;
   ctaSubtitle: string;
   ctaButton: string;
   ctaButtonLine: string;
   pricingLine: string;
-  pricingNote: string;
 
   footerPrivacy: string;
 }
@@ -98,7 +94,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaLivePending: "Входим в демо…",
     ctaLiveErrorNotConfigured: "Демо-доступ ещё не настроен. Напишите нам, и мы покажем панель лично.",
     ctaLiveErrorFailed: "Не получилось открыть демо. Попробуйте ещё раз или напишите нам.",
-    demoSampleNote: "Живое демо с тестовыми данными.",
 
     trustBuiltByBefore: "Разработано ",
     trustPortfolioLabel: "FT.Agency",
@@ -118,7 +113,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaButton: "WhatsApp",
     ctaButtonLine: "LINE",
     pricingLine: "От ฿12,000 за настройку + ฿2,900/мес.",
-    pricingNote: "В настройку входят меню, брендинг и обучение персонала.",
 
     footerPrivacy: "Конфиденциальность",
   },
@@ -142,7 +136,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaLivePending: "Signing in to demo…",
     ctaLiveErrorNotConfigured: "The demo isn't set up yet. Message us and we'll show you the panel directly.",
     ctaLiveErrorFailed: "Couldn't open the demo. Try again or message us.",
-    demoSampleNote: "Live demo with sample data.",
 
     trustBuiltByBefore: "Built by ",
     trustPortfolioLabel: "FT.Agency",
@@ -162,7 +155,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaButton: "WhatsApp",
     ctaButtonLine: "LINE",
     pricingLine: "From ฿12,000 setup + ฿2,900/month",
-    pricingNote: "Setup includes menu, branding and staff training.",
 
     footerPrivacy: "Privacy",
   },
@@ -186,7 +178,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaLivePending: "กำลังเข้าสู่เดโม…",
     ctaLiveErrorNotConfigured: "ยังไม่ได้ตั้งค่าเดโม ทักหาเราแล้วเราจะโชว์แผงควบคุมให้โดยตรง",
     ctaLiveErrorFailed: "เปิดเดโมไม่สำเร็จ ลองใหม่อีกครั้งหรือทักหาเรา",
-    demoSampleNote: "เดโมจริงพร้อมข้อมูลตัวอย่าง",
 
     trustBuiltByBefore: "พัฒนาโดย ",
     trustPortfolioLabel: "FT.Agency",
@@ -206,7 +197,6 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaButton: "WhatsApp",
     ctaButtonLine: "LINE",
     pricingLine: "เริ่มต้น ฿12,000 ค่าติดตั้ง + ฿2,900/เดือน",
-    pricingNote: "ค่าติดตั้งรวมเมนู แบรนด์ และการอบรมพนักงาน",
 
     footerPrivacy: "ความเป็นส่วนตัว",
   },

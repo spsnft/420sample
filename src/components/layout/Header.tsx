@@ -21,6 +21,11 @@ interface HeaderProps {
   hideNav?: boolean;
   /** Passed through to SiteNav — see its note on the pitch surface. */
   surface?: SiteNavProps['surface'];
+  /** buds.digital's own demo instance only (see lib/demo.ts) — sends the
+   *  storefront logo/wordmark back to the pitch page instead of to this
+   *  store's own homepage. Never set on a real client instance, where the
+   *  logo should stay on the store's own site. */
+  demoInstance?: boolean;
   /** Pixels the sticky header should sit below the viewport's top edge —
    *  set when a DemoBar (see components/layout/DemoBar) is pinned above it,
    *  so the two stack instead of both landing on top:0 and overlapping. */
@@ -92,7 +97,7 @@ const LanguageDropdown: React.FC<{ safeLang: Language; onSelect: (l: Language) =
   );
 };
 
-export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNav, surface, stickyOffset }) => {
+export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNav, surface, stickyOffset, demoInstance }) => {
   const { setLang } = useCart();
 
   // The language lives in a persisted client store, so the server cannot render
@@ -106,11 +111,16 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
 
   // Pitch and storefront demo are two routes on the same host now (see
   // middleware.ts), so "home" is just whichever root belongs to the surface
-  // the header is rendered on — no more host branching, no new tab.
+  // the header is rendered on — no more host branching, no new tab. On the
+  // buds.digital demo instance the storefront's own "home" is overridden to
+  // send visitors back to the pitch instead: that's the one place a demo
+  // visitor can otherwise get stuck, since the sticky DemoBar's return link
+  // is easy to miss. A real client instance never sets demoInstance, so its
+  // logo keeps pointing at its own storefront.
   const onPartners = surface === 'partners';
-  const homeHref = onPartners ? "/" : "/demo";
-  // The pitch page's own wordmark, not the demo shop's name — "420 Store" is
-  // the example the demo and its mockups show, buds.digital is the product.
+  const homeHref = onPartners || demoInstance ? "/" : "/demo";
+  // The pitch page's own wordmark, not the demo shop's name — "YOUR STORE" is
+  // the placeholder the demo and its mockups show, buds.digital is the product.
   const wordmark = onPartners ? "buds.digital" : siteConfig.name;
 
   // Same rule as the catalogue bar: a sticky bar earns its fill by having

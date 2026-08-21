@@ -16,7 +16,7 @@ const DESCRIPTION = "A ready-made storefront, live menu and PT.33 compliance pan
 // route's `openGraph`/`twitter` object wholesale rather than deep-merging
 // it, so a route that only overrides `title`/`description` silently loses
 // the layout's `images` (no og:image at all) while `twitter` keeps
-// pointing at the layout's "420 Store" copy untouched. This is the
+// pointing at the layout's "YOUR STORE" copy untouched. This is the
 // product's main shared link — chat previews are the primary distribution
 // channel — so it gets its own complete set of both.
 export const metadata: Metadata = {

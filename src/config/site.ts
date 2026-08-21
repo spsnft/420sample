@@ -27,9 +27,13 @@ function resolveAppOrigin(): string {
 const APP_ORIGIN = resolveAppOrigin();
 
 export const siteConfig = {
-  name: "420 Store",
+  // Placeholder shop name shown throughout the storefront demo (header,
+  // metadata, staff panel) — deliberately not a made-up brand: a prospect
+  // clicking in should read it as "this is where your own name goes", not
+  // as some other dispensary's storefront.
+  name: "YOUR STORE",
   tagline: "Presence, Compliance, Ordering — One Platform",
-  description: "Digital menu & on-site medical consultation — 420 Store",
+  description: "Digital menu & on-site medical consultation — YOUR STORE",
   // The consumer storefront demo's own address, one path off the apex.
   url: `${APP_ORIGIN}/demo`,
   apiUrl: process.env.NEXT_PUBLIC_API_URL || "",

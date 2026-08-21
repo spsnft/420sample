@@ -16,7 +16,6 @@ import { BotanicalDecor } from "@/components/decor/BotanicalDecor"
 import { Consultation } from "@/components/modals"
 import { InfoCard } from "@/components/cards/InfoCard"
 import { HeroCard } from "@/components/cards/HeroCard"
-import { SampleTag } from "@/components/cards/SampleTag"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
 
@@ -66,13 +65,12 @@ const STOREFRONT_PHOTOS = [
   "/images/about/storefront.jpg",
 ];
 
-const StorefrontPhoto: React.FC<{ label: string; alt: string; sample?: boolean }> = ({ label, alt, sample }) => {
+const StorefrontPhoto: React.FC<{ label: string; alt: string }> = ({ label, alt }) => {
   const [attempt, setAttempt] = React.useState(0);
   const src = STOREFRONT_PHOTOS[attempt];
 
   return (
     <div className="relative surface rounded-card overflow-hidden">
-      {sample && <SampleTag />}
       <div className="relative w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card overflow-hidden bg-black/20">
         {src ? (
           <Image
@@ -94,7 +92,7 @@ const StorefrontPhoto: React.FC<{ label: string; alt: string; sample?: boolean }
   );
 };
 
-export default function HomeClient() {
+export default function HomeClient({ demoInstance = false }: { demoInstance?: boolean }) {
   const { lang } = useCart();
   const safeLang = (lang || 'en') as Language;
   const t = translations[safeLang] || translations.en;
@@ -131,7 +129,7 @@ export default function HomeClient() {
         </div>
 
         <DemoBar label={t.demoBarLabel} cta={t.demoBarCta} />
-        <Header safeLang={safeLang} sticky stickyOffset={DEMO_BAR_HEIGHT} />
+        <Header safeLang={safeLang} sticky stickyOffset={DEMO_BAR_HEIGHT} demoInstance={demoInstance} />
 
         <main className="max-w-xl lg:max-w-4xl mx-auto space-y-6 relative z-10 pt-3">
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
@@ -175,7 +173,7 @@ export default function HomeClient() {
 
           <section className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              <StorefrontPhoto label={t.aboutPhotoLabel} alt={siteConfig.name} sample />
+              <StorefrontPhoto label={t.aboutPhotoLabel} alt={siteConfig.name} />
               <div className="surface rounded-card overflow-hidden">
                 <iframe
                   src={localizedMapSrc(siteConfig.mapEmbedSrc, safeLang)}
@@ -188,7 +186,7 @@ export default function HomeClient() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-stretch">
-              <InfoCard icon={MapPin} label={t.addressLabel} value={siteConfig.address} sample />
+              <InfoCard icon={MapPin} label={t.addressLabel} value={siteConfig.address} />
 
               <InfoCard
                 icon={Clock}
@@ -202,7 +200,6 @@ export default function HomeClient() {
                 icon={Star}
                 label={t.reviewsLabel}
                 value={`${siteConfig.trustBadge.rating} · ${siteConfig.trustBadge.reviews}`}
-                sample
               />
             </div>
           </section>

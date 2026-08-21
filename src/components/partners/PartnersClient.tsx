@@ -129,9 +129,6 @@ export default function PartnersClient() {
               errorNotConfigured={t.ctaLiveErrorNotConfigured}
               errorFailed={t.ctaLiveErrorFailed}
             />
-            <p className="mt-2 text-center text-[10px] font-bold text-brand-light/40">
-              {t.demoSampleNote}
-            </p>
           </div>
         </PitchBlock>
 
@@ -152,9 +149,6 @@ export default function PartnersClient() {
               {t.ctaLive}
               <ArrowRight size={16} className="text-brand-secondary" />
             </Link>
-            <p className="mt-2 text-center text-[10px] font-bold text-brand-light/40">
-              {t.demoSampleNote}
-            </p>
           </div>
         </PitchBlock>
 
@@ -242,7 +236,6 @@ export default function PartnersClient() {
             </Link>
           </div>
           <p className="mt-4 text-[12px] font-bold text-brand-light/50">{t.pricingLine}</p>
-          <p className="mt-0.5 text-[11px] text-brand-light/35">{t.pricingNote}</p>
         </section>
 
         <Footer privacyLabel={t.footerPrivacy} />

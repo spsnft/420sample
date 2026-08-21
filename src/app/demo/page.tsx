@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import HomeClient from "@/components/HomeClient"
 import { siteConfig } from "@/config/site"
+import { isDemoInstance } from "@/lib/demo"
 
 // The storefront demo, one path off buds.digital's apex (see middleware.ts —
 // the apex "/" itself now serves the B2B pitch page). Shown to prospective
@@ -9,8 +10,8 @@ import { siteConfig } from "@/config/site"
 // stop a crawler from ever seeing this tag in the first place).
 export const metadata: Metadata = {
   // `absolute`, not a plain string: a plain string gets the root layout's
-  // "%s - 420 Store" template appended even when it already equals the
-  // template's own default, producing "420 Store - 420 Store".
+  // "%s - YOUR STORE" template appended even when it already equals the
+  // template's own default, producing "YOUR STORE - YOUR STORE".
   title: { absolute: siteConfig.name },
   description: siteConfig.description,
   robots: { index: false, follow: false },
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 export default function DemoPage() {
   return (
     <main>
-      <HomeClient />
+      <HomeClient demoInstance={isDemoInstance()} />
     </main>
   );
 }
