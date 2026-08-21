@@ -97,11 +97,23 @@ five demo profiles `seed.sql` seeds — `public.staff` and
 (`DEMO_STAFF_EMAIL`/`DEMO_AUTO_LOGIN` above) keeps working across every
 reset.
 
-This migration is **buds.digital-only** — run `seed.sql` (step 4) first so
-the "Demo Owner" staff row it looks up already exists, then run this
-migration. Do not run it on a real client's project; there's nothing there
-for it to reset, and it would just leave an unused nightly cron job in
-their database.
+This migration is **buds.digital-only** — do not run it on a real client's
+project; there's nothing there for it to reset, and it would just leave an
+unused nightly cron job in their database.
+
+Required order, on the buds.digital project:
+
+1. Run `seed.sql` (step 4) first so the "Demo Owner" staff row `reset_demo()`
+   looks up already exists.
+2. Enable the `pg_cron` extension — **Database → Extensions** in the
+   Supabase dashboard. This is a separate, one-time step the migration
+   deliberately doesn't attempt itself: unlike a normal extension, pg_cron
+   needs `shared_preload_libraries` set at the Postgres instance level,
+   which a plain `CREATE EXTENSION` run from a migration can't do on
+   Supabase — it errors.
+3. Only then run `migrations/0005_reset_demo.sql`. Run out of order (pg_cron
+   not enabled yet), it fails with one clear error telling you to enable the
+   extension first, rather than a bare "schema cron does not exist".
 
 ## Notes
 

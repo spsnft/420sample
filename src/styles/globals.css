@@ -207,28 +207,16 @@
   }
 
   /*
-   * Tonal fill for the pitch page's two "See the live demo" buttons. They
-   * used to sit on a bare white/5 wash with a 1px gradient-ring border and
-   * no explicit text colour — next to btn-metal's solid gold ramp that read
-   * as disabled, not secondary. This keeps the same weight as btn-metal
-   * (a light-catch highlight, a soft top-down gradient) without competing
-   * with it for attention: a wash of the brand gold rather than a full fill,
-   * and no border — the highlight along the top edge stands in for one.
-   */
-  .btn-tonal-gold {
-    background-color: rgba(168, 132, 68, 0.17);
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0) 55%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  }
-
-  /*
-   * Dark counterpart to .btn-tonal-gold, for the block 01 ("Your paperwork,
-   * already done") demo CTA specifically. That button sits right under a
-   * warm-toned screenshot on a card lit by the same warm glow — the gold
-   * wash above all but disappears into it. Dense and close to the page's
-   * own brand-primary rather than transparent, so the cream text and gold
-   * arrow inside it stay the thing with the most contrast in the block
-   * (see ТЗ №2 M6).
+   * Tonal fill for the pitch page's two "See the live demo" CTAs. They used
+   * to sit on a bare white/5 wash with a 1px gradient-ring border and no
+   * explicit text colour — next to btn-metal's solid gold ramp that read as
+   * disabled, not secondary. A lighter gold wash was tried first, but both
+   * blocks' cards sit under the same warm ambient glow the page casts, and
+   * the gold wash all but disappeared into it (ТЗ №2 M6/M12) — dense and
+   * close to the page's own brand-primary instead is what actually keeps
+   * the cream text and gold arrow inside it the highest-contrast thing in
+   * the block. No border — the highlight along the top edge stands in for
+   * one.
    */
   .btn-tonal-dark {
     background-color: rgba(15, 17, 18, 0.92);

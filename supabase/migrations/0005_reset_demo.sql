@@ -3,6 +3,12 @@
 -- calls it without the pg_cron job this file also schedules, and that job
 -- is only ever created on the demo project.
 --
+-- Required order: pg_cron must already be enabled (Database → Extensions
+-- in the Supabase dashboard — a separate, one-time step this migration
+-- deliberately does not attempt itself) *before* this migration runs. See
+-- the guard right before the cron.schedule() call below for what happens
+-- if it's run out of order.
+--
 -- reset_demo() clears the demo clients/prescriptions/purchases (whatever a
 -- prospect clicking around the live demo has added, edited or revoked) and
 -- restores the same five profiles supabase/seed.sql seeds, so the demo
@@ -114,17 +120,29 @@ $$;
 -- be able to trigger. Reachable only via pg_cron below (which runs as the
 -- role that scheduled it) or a manual call from the Supabase SQL editor.
 
--- Supabase installs pg_cron per-project into the `extensions` schema; the
--- `cron` schema and its cron.schedule()/cron.job objects come from the
--- extension itself regardless of where it's installed.
-create extension if not exists pg_cron with schema extensions;
+-- pg_cron is NOT enabled by this migration. Unlike a normal extension it
+-- needs shared_preload_libraries at the Postgres instance level, which a
+-- plain CREATE EXTENSION run from a migration can't do on Supabase (it
+-- errors) — enabling it is a separate, one-time step: Database →
+-- Extensions in the Supabase dashboard. Required order: enable pg_cron
+-- there first, *then* run this migration. This guard turns "ran it out of
+-- order" into one clear error instead of a bare "schema cron does not
+-- exist" — reset_demo() above is unaffected either way; it doesn't touch
+-- pg_cron at all.
+do $$
+begin
+  if not exists (select 1 from pg_extension where extname = 'pg_cron') then
+    raise exception 'pg_cron is not enabled on this project. Enable it first — Database → Extensions in the Supabase dashboard — then re-run this migration.';
+  end if;
 
--- Named so re-running this migration updates the existing job instead of
--- creating a duplicate (cron.schedule upserts by job name). 22:00 UTC is
--- 05:00 ICT — the shop's own quiet hours, not something a live prospect
--- would ever be mid-demo through.
-select cron.schedule(
-  'reset-demo-daily',
-  '0 22 * * *',
-  $$select public.reset_demo();$$
-);
+  -- Named so re-running this migration updates the existing job instead of
+  -- creating a duplicate (cron.schedule upserts by job name). 22:00 UTC is
+  -- 05:00 ICT — the shop's own quiet hours, not something a live prospect
+  -- would ever be mid-demo through.
+  perform cron.schedule(
+    'reset-demo-daily',
+    '0 22 * * *',
+    $sql$select public.reset_demo();$sql$
+  );
+end;
+$$;

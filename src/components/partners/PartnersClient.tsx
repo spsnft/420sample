@@ -116,9 +116,10 @@ export default function PartnersClient() {
             actually buying, so it leads. The mobile crop this block is meant
             to carry (one client card, status + callouts) is blocked on the
             /staff audit (see ТЗ part 3) — DesktopMockup's full search-screen
-            capture stands in for it until that lands. The CTA is the dark
-            variant: a gold wash disappears against this block's own warm-lit
-            screenshot (see ТЗ №2 M6). */}
+            capture stands in for it until that lands. The CTA's dark fill
+            (see btn-tonal-dark) is what actually contrasts against this
+            block's own warm-lit screenshot — a gold wash disappeared into it
+            (ТЗ №2 M6). */}
         <PitchBlock step="01" title={t.blockPt33Title} subtitle={t.blockPt33Subtitle}>
           <DesktopMockup />
           <div className="mt-6">
@@ -127,7 +128,6 @@ export default function PartnersClient() {
               pendingLabel={t.ctaLivePending}
               errorNotConfigured={t.ctaLiveErrorNotConfigured}
               errorFailed={t.ctaLiveErrorFailed}
-              variant="dark"
             />
             <p className="mt-2 text-center text-[10px] font-bold text-brand-light/40">
               {t.demoSampleNote}
@@ -135,7 +135,10 @@ export default function PartnersClient() {
           </div>
         </PitchBlock>
 
-        {/* Block 02 — the client storefront the same system ships. */}
+        {/* Block 02 — the client storefront the same system ships. Same dark
+            fill as block 01's CTA (see ТЗ №2 M12): this card sits under the
+            same warm ambient glow, and the gold wash read just as flat here
+            as it did there. */}
         <PitchBlock step="02" title={t.blockStorefrontTitle} subtitle={t.blockStorefrontSubtitle}>
           <DeviceMockup />
           <div className="mt-6">
@@ -144,7 +147,7 @@ export default function PartnersClient() {
               target="_blank"
               rel="noopener"
               onClick={() => triggerHaptic('light')}
-              className="w-full h-12 btn-tonal-gold text-brand-light font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
+              className="w-full h-12 btn-tonal-dark text-brand-light font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               {t.ctaLive}
               <ArrowRight size={16} className="text-brand-secondary" />
@@ -185,7 +188,7 @@ export default function PartnersClient() {
             <ul className="space-y-1.5">
               {t.trustChecklistItems.map((item) => (
                 <li key={item} className="flex items-start gap-2 text-[12px] font-semibold text-brand-light/55">
-                  <Check size={13} className="shrink-0 mt-0.5 text-brand-light/35" />
+                  <Check size={13} className="shrink-0 mt-0.5 text-brand-secondary" />
                   {item}
                 </li>
               ))}
@@ -205,19 +208,23 @@ export default function PartnersClient() {
             {t.ctaSubtitle}
           </p>
           {/* Always a row, 50/50 — not stacked on mobile (see ТЗ №2 M9).
-              Both icons are aria-hidden: the adjacent label already names
-              the same brand ("WhatsApp" next to a WhatsApp icon, "LINE" next
-              to a LINE icon), so the icon's own accessible name would just
-              have a screen reader announce it twice (see M5). */}
+              Each link carries its own aria-label matching its visible text
+              exactly (WCAG 2.5.3) — the authoritative accessible name,
+              overriding anything computed from its children. Both icons are
+              aria-hidden by default (see BrandIcons) so neither's old
+              embedded <title> concatenates onto the visible label and shows
+              up doubled in the DOM's own textContent, e.g. in a naive
+              audit tool (ТЗ №2 M5: "WhatsAppWhatsApp"/"LINELINE"). */}
           <div className="mt-4 grid grid-cols-2 gap-2">
             <Link
               href={siteConfig.partners.whatsapp}
               target="_blank"
               rel="noopener"
+              aria-label={t.ctaButton}
               onClick={() => triggerHaptic('medium')}
               className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
             >
-              <WhatsAppIcon size={18} aria-hidden="true" />
+              <WhatsAppIcon size={18} />
               {t.ctaButton}
             </Link>
             {/* TODO(LINE OA): points at the same WhatsApp line until this
@@ -226,10 +233,11 @@ export default function PartnersClient() {
               href={siteConfig.partners.whatsapp}
               target="_blank"
               rel="noopener"
+              aria-label={t.ctaButtonLine}
               onClick={() => triggerHaptic('medium')}
               className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
             >
-              <LineIcon size={18} aria-hidden="true" />
+              <LineIcon size={18} />
               {t.ctaButtonLine}
             </Link>
           </div>

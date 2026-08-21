@@ -4,15 +4,24 @@
 //
 // No production domain is hardcoded here: NEXT_PUBLIC_APP_URL (this bare
 // origin, no path) must be set explicitly in the production environment.
-// Anywhere it isn't — a Vercel preview deployment, a local checkout — this
-// falls back to that deployment's own address instead, so a preview build's
-// metadata and QR/invite links point at itself rather than at production or
-// at some other preview.
+//
+// On a Vercel *preview* deployment this is deliberately not checked first,
+// even when it is set. NEXT_PUBLIC_APP_URL is normally added once in the
+// Vercel dashboard scoped to every environment (Production, Preview and
+// Development all get the same value) — that is exactly what you want in
+// production, and exactly wrong on a preview, where it pins every preview's
+// metadata/QR/invite links to one fixed address: production, or whichever
+// deployment happened to be selected when someone last set it. A preview
+// build's own NEXT_PUBLIC_VERCEL_URL is unique per-deployment and always
+// correct for it, so that wins on preview regardless of what
+// NEXT_PUBLIC_APP_URL says. Both VERCEL_* vars require "Automatically
+// expose System Environment Variables" to be on for the project.
 function resolveAppOrigin(): string {
+  const isPreview = process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
+  const vercelUrl = process.env.NEXT_PUBLIC_VERCEL_URL;
+  if (isPreview && vercelUrl) return `https://${vercelUrl}`;
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
-  // Vercel exposes the current deployment's own host this way when "Automatically
-  // expose System Environment Variables" is on for the project — no protocol.
-  if (process.env.NEXT_PUBLIC_VERCEL_URL) return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+  if (vercelUrl) return `https://${vercelUrl}`;
   return "http://localhost:3000";
 }
 const APP_ORIGIN = resolveAppOrigin();

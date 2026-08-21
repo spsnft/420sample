@@ -4,11 +4,14 @@ import { siteConfig } from "@/config/site"
 
 // The storefront demo, one path off buds.digital's apex (see middleware.ts —
 // the apex "/" itself now serves the B2B pitch page). Shown to prospective
-// dispensary owners, not a real shop's public page. Noindex: it's meant to
-// be opened from a link the pitch page hands out, not found on its own (see
-// robots.ts, which disallows this path outright).
+// dispensary owners, not a real shop's public page. Noindex meta tag is what
+// actually keeps it out of search (see robots.ts — a Disallow there would
+// stop a crawler from ever seeing this tag in the first place).
 export const metadata: Metadata = {
-  title: siteConfig.name,
+  // `absolute`, not a plain string: a plain string gets the root layout's
+  // "%s - 420 Store" template appended even when it already equals the
+  // template's own default, producing "420 Store - 420 Store".
+  title: { absolute: siteConfig.name },
   description: siteConfig.description,
   robots: { index: false, follow: false },
   openGraph: {
