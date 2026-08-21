@@ -1,8 +1,21 @@
 // The site's own domain, apex only — buds.digital now serves the B2B pitch
 // at "/" and the storefront demo at "/demo" from the same host (see
 // middleware.ts), so one origin backs both `url` and `partners.url` below.
-// NEXT_PUBLIC_APP_URL is set to this bare origin, no path.
-const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_URL || "https://buds.digital";
+//
+// No production domain is hardcoded here: NEXT_PUBLIC_APP_URL (this bare
+// origin, no path) must be set explicitly in the production environment.
+// Anywhere it isn't — a Vercel preview deployment, a local checkout — this
+// falls back to that deployment's own address instead, so a preview build's
+// metadata and QR/invite links point at itself rather than at production or
+// at some other preview.
+function resolveAppOrigin(): string {
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  // Vercel exposes the current deployment's own host this way when "Automatically
+  // expose System Environment Variables" is on for the project — no protocol.
+  if (process.env.NEXT_PUBLIC_VERCEL_URL) return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+  return "http://localhost:3000";
+}
+const APP_ORIGIN = resolveAppOrigin();
 
 export const siteConfig = {
   name: "420 Store",

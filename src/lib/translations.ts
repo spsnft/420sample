@@ -164,7 +164,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "Information on this site is for reference only and does not constitute cannabis advertising.",
     ],
 
-    demoBarLabel: "DEMO STORE — sample data. Your shop will look like this with your products.",
+    demoBarLabel: "DEMO STORE — sample data",
     demoBarCta: "Back to buds.digital",
 
     consultCta: "Free Consultation",
@@ -241,7 +241,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "Информация на сайте носит справочный характер и не является рекламой каннабиса.",
     ],
 
-    demoBarLabel: "ДЕМО-МАГАЗИН — тестовые данные. Ваш магазин будет выглядеть так же, с вашими товарами.",
+    demoBarLabel: "ДЕМО-МАГАЗИН — тестовые данные",
     demoBarCta: "Вернуться на buds.digital",
 
     consultCta: "Бесплатная консультация",
@@ -321,7 +321,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       "ข้อมูลบนเว็บไซต์นี้มีไว้เพื่อการอ้างอิงเท่านั้น ไม่ถือเป็นการโฆษณากัญชา",
     ],
 
-    demoBarLabel: "ร้านสาธิต — ข้อมูลตัวอย่าง ร้านของคุณจะมีลักษณะแบบนี้พร้อมสินค้าของคุณเอง",
+    demoBarLabel: "ร้านสาธิต — ข้อมูลตัวอย่าง",
     demoBarCta: "กลับไปที่ buds.digital",
 
     consultCta: "คำปรึกษาฟรี",

@@ -222,6 +222,21 @@
   }
 
   /*
+   * Dark counterpart to .btn-tonal-gold, for the block 01 ("Your paperwork,
+   * already done") demo CTA specifically. That button sits right under a
+   * warm-toned screenshot on a card lit by the same warm glow — the gold
+   * wash above all but disappears into it. Dense and close to the page's
+   * own brand-primary rather than transparent, so the cream text and gold
+   * arrow inside it stay the thing with the most contrast in the block
+   * (see ТЗ №2 M6).
+   */
+  .btn-tonal-dark {
+    background-color: rgba(15, 17, 18, 0.92);
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 55%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  /*
    * Gradient-ring border, safe with border-radius.
    * `border-image` (the old .rim-border approach) is drawn as a rectangle and
    * does not clip to border-radius in every browser, which shows up as square

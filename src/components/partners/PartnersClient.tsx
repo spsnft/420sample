@@ -116,7 +116,9 @@ export default function PartnersClient() {
             actually buying, so it leads. The mobile crop this block is meant
             to carry (one client card, status + callouts) is blocked on the
             /staff audit (see ТЗ part 3) — DesktopMockup's full search-screen
-            capture stands in for it until that lands. */}
+            capture stands in for it until that lands. The CTA is the dark
+            variant: a gold wash disappears against this block's own warm-lit
+            screenshot (see ТЗ №2 M6). */}
         <PitchBlock step="01" title={t.blockPt33Title} subtitle={t.blockPt33Subtitle}>
           <DesktopMockup />
           <div className="mt-6">
@@ -125,6 +127,7 @@ export default function PartnersClient() {
               pendingLabel={t.ctaLivePending}
               errorNotConfigured={t.ctaLiveErrorNotConfigured}
               errorFailed={t.ctaLiveErrorFailed}
+              variant="dark"
             />
             <p className="mt-2 text-center text-[10px] font-bold text-brand-light/40">
               {t.demoSampleNote}
@@ -133,7 +136,7 @@ export default function PartnersClient() {
         </PitchBlock>
 
         {/* Block 02 — the client storefront the same system ships. */}
-        <PitchBlock step="02" title={t.blockStorefrontTitle}>
+        <PitchBlock step="02" title={t.blockStorefrontTitle} subtitle={t.blockStorefrontSubtitle}>
           <DeviceMockup />
           <div className="mt-6">
             <Link
@@ -152,42 +155,41 @@ export default function PartnersClient() {
           </div>
         </PitchBlock>
 
-        {/* Trust block: who built this, proof of it, the guarantee, and what
-            "one system" above actually includes. No photos, no names, no
-            invented experience or project-count figures — see ТЗ A9. */}
-        <section className="px-2 pt-2 text-center space-y-4">
-          <div className="space-y-1.5">
-            <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40">
-              {t.trustLocation}
-            </p>
+        {/* Trust block: one attribution line (not two lines both naming the
+            agency — see ТЗ №2 M7), then the guarantee as the block's
+            dominant element with the checklist visually subordinate to it
+            (M8), not competing with it for the eye. No photos, no names, no
+            invented experience or project-count figures — see ТЗ №1 A9. */}
+        <section className="px-2 pt-2 text-center">
+          <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40">
+            {t.trustBuiltByBefore}
             <Link
               href={AGENCY_PORTFOLIO_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block text-[12px] font-black uppercase tracking-wide text-brand-secondary hover:text-brand-light transition-colors"
+              className="text-brand-secondary hover:text-brand-light transition-colors"
             >
               {t.trustPortfolioLabel}
             </Link>
-          </div>
+            {t.trustBuiltByAfter}
+          </p>
 
-          <p className="text-[13px] font-bold text-brand-light/80 text-balance">
+          <p className="mt-4 text-[19px] sm:text-[21px] font-black text-brand-light leading-snug text-balance">
             {t.trustGuarantee}
           </p>
 
-          <div className="gradient-ring rounded-card text-left">
-            <div className="p-4 rounded-card bg-white/5">
-              <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-3">
-                {t.trustChecklistTitle}
-              </p>
-              <ul className="space-y-2">
-                {t.trustChecklistItems.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-[13px] font-bold text-brand-light/80">
-                    <Check size={15} className="shrink-0 mt-0.5 text-brand-secondary" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div className="mt-4 text-left">
+            <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-2">
+              {t.trustChecklistTitle}
+            </p>
+            <ul className="space-y-1.5">
+              {t.trustChecklistItems.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-[12px] font-semibold text-brand-light/55">
+                  <Check size={13} className="shrink-0 mt-0.5 text-brand-light/35" />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -202,7 +204,12 @@ export default function PartnersClient() {
           <p className="mt-2 text-[13px] font-bold text-brand-light/60 leading-relaxed text-balance">
             {t.ctaSubtitle}
           </p>
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {/* Always a row, 50/50 — not stacked on mobile (see ТЗ №2 M9).
+              Both icons are aria-hidden: the adjacent label already names
+              the same brand ("WhatsApp" next to a WhatsApp icon, "LINE" next
+              to a LINE icon), so the icon's own accessible name would just
+              have a screen reader announce it twice (see M5). */}
+          <div className="mt-4 grid grid-cols-2 gap-2">
             <Link
               href={siteConfig.partners.whatsapp}
               target="_blank"
@@ -210,7 +217,7 @@ export default function PartnersClient() {
               onClick={() => triggerHaptic('medium')}
               className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
             >
-              <WhatsAppIcon size={18} />
+              <WhatsAppIcon size={18} aria-hidden="true" />
               {t.ctaButton}
             </Link>
             {/* TODO(LINE OA): points at the same WhatsApp line until this
@@ -222,7 +229,7 @@ export default function PartnersClient() {
               onClick={() => triggerHaptic('medium')}
               className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
             >
-              <LineIcon size={18} />
+              <LineIcon size={18} aria-hidden="true" />
               {t.ctaButtonLine}
             </Link>
           </div>

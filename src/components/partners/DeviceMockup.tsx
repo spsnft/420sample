@@ -42,8 +42,15 @@ export function DeviceMockup() {
         }}
       >
         <motion.div
-          initial={{ opacity: 0, y: 12, filter: "drop-shadow(0 0px 0px rgba(0,0,0,0))" }}
-          whileInView={{ opacity: 1, y: 0, filter: "drop-shadow(0 22px 38px rgba(0,0,0,0.55))" }}
+          // boxShadow, not a `filter: drop-shadow` — the frame sits inside a
+          // masked, overflow-hidden ancestor (the reveal window above), and a
+          // filter's own compositing pass clips against that mask harder than
+          // its blur fades, leaving a visible straight seam right at the mask's
+          // cutoff instead of a soft edge (see ТЗ №2 M11). box-shadow clips
+          // cleanly against overflow-hidden with no such artifact, and reads
+          // the same here since the frame is a plain rounded rectangle.
+          initial={{ opacity: 0, y: 12, boxShadow: "0 0px 0px rgba(0,0,0,0)" }}
+          whileInView={{ opacity: 1, y: 0, boxShadow: "0 22px 38px rgba(0,0,0,0.55)" }}
           viewport={{ once: true, amount: 0.4 }}
           onViewportEnter={() => setEntered(true)}
           transition={{ duration: 0.4, ease: "easeOut" }}

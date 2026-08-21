@@ -27,16 +27,16 @@ export interface PartnersDictionary {
   heroPillAccent: string;
 
   // Block 01 — the PT.33 panel, the compliance record the shop is actually
-  // buying. blockPt33Title is built around record-keeping, not "here's what
-  // your staff sees" (that framing undersold it — see the ТЗ's audit note
-  // for /staff, part 3: the exact wording here is a placeholder until that
-  // audit settles what the client card itself says). blockPt33Subtitle is
-  // fixed copy, not blocked on that audit.
+  // buying, so it leads. Headings are the client's approved "set A" — see
+  // ТЗ №2 M1. The mobile card-crop mockup this block is meant to eventually
+  // carry (one client card, status + callouts) is still blocked on the
+  // /staff audit (ТЗ №1 part 3); the headings above are not.
   blockPt33Title: string;
   blockPt33Subtitle: string;
 
   // Block 02 — the client-facing storefront the same system also ships.
   blockStorefrontTitle: string;
+  blockStorefrontSubtitle: string;
 
   // Both blocks share one CTA label: each opens a real, live surface.
   ctaLive: string;
@@ -46,19 +46,27 @@ export interface PartnersDictionary {
   // Small print under each demo CTA — sets expectations before the click.
   demoSampleNote: string;
 
-  // Trust block, just above the final CTA: who built this, a portfolio link
-  // signed with the agency name (never the bare domain), the 72-hour
-  // guarantee, and a plain checklist of what's included. Deliberately no
-  // photos, names, or invented experience/project-count figures.
-  trustLocation: string;
+  // Trust block, just above the final CTA: one attribution line (who built
+  // this, linking "FT.Agency" — never the bare domain — to the portfolio),
+  // a guarantee that's the dominant element of the block, and a checklist
+  // visually subordinate to it (see ТЗ №2 M7/M8). Deliberately no photos,
+  // names, or invented experience/project-count figures.
+  //
+  // trustBuiltByBefore/After sandwich trustPortfolioLabel (the link text)
+  // into one line — "Built by FT.Agency — Phuket" — rather than two
+  // separate lines that both named the agency.
+  trustBuiltByBefore: string;
   trustPortfolioLabel: string;
+  trustBuiltByAfter: string;
   trustGuarantee: string;
   trustChecklistTitle: string;
   trustChecklistItems: string[];
 
   // Final CTA. ctaHeadline + ctaSubtitle are the ask; ctaButton (WhatsApp)
-  // and ctaButtonLine (LINE) are how to answer it. pricingLine/pricingNote
-  // are placeholder figures — swap for real numbers before release.
+  // and ctaButtonLine (LINE) are how to answer it — deliberately just the
+  // brand name on both, equal weight (see ТЗ №2 M5/M9). pricingLine/
+  // pricingNote are placeholder figures — swap for real numbers before
+  // release.
   ctaHeadline: string;
   ctaSubtitle: string;
   ctaButton: string;
@@ -80,10 +88,11 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ],
     heroPillAccent: "⚡ Запуск за 72 часа",
 
-    blockPt33Title: "Каждая продажа —\nпод учётом.",
-    blockPt33Subtitle: "Каждый клиент, каждый рецепт, каждая продажа — в системе. На всякий случай.",
+    blockPt33Title: "Документы —\nуже готовы.",
+    blockPt33Subtitle: "Каждый клиент, каждый рецепт, каждая продажа — в системе. Готовы ответить в любой момент.",
 
-    blockStorefrontTitle: "Вот что видит\nваш клиент",
+    blockStorefrontTitle: "Магазин —\nуже открыт.",
+    blockStorefrontSubtitle: "Витрина и живое меню, которые находят ваших клиентов раньше, чем они дойдут до двери.",
 
     ctaLive: "Смотреть живое демо",
     ctaLivePending: "Входим в демо…",
@@ -91,8 +100,9 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaLiveErrorFailed: "Не получилось открыть демо. Попробуйте ещё раз или напишите нам.",
     demoSampleNote: "Живое демо с тестовыми данными.",
 
-    trustLocation: "FT.Agency — Пхукет",
+    trustBuiltByBefore: "Разработано ",
     trustPortfolioLabel: "FT.Agency",
+    trustBuiltByAfter: " — Пхукет",
     trustGuarantee: "Не запустились за 72 часа? Настройка — бесплатно.",
     trustChecklistTitle: "Что входит",
     trustChecklistItems: [
@@ -105,7 +115,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
 
     ctaHeadline: "Пришлите меню. Через 72 часа вы в сети.",
     ctaSubtitle: "Мы соберём витрину, загрузим товары и настроим панель PT.33. Вы продолжаете работать — ничего не отключается.",
-    ctaButton: "Написать в WhatsApp",
+    ctaButton: "WhatsApp",
     ctaButtonLine: "LINE",
     pricingLine: "От ฿12,000 за настройку + ฿2,900/мес.",
     pricingNote: "В настройку входят меню, брендинг и обучение персонала.",
@@ -122,10 +132,11 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ],
     heroPillAccent: "⚡ Live in 72 hours",
 
-    blockPt33Title: "Every sale,\naccounted for.",
-    blockPt33Subtitle: "Every client, every prescription, every sale — on record. Just in case.",
+    blockPt33Title: "Your paperwork,\nalready done.",
+    blockPt33Subtitle: "Every client, every prescription, every sale — on record, ready the moment anyone asks.",
 
-    blockStorefrontTitle: "This is what\nyour customer sees",
+    blockStorefrontTitle: "Your shop,\nalready open.",
+    blockStorefrontSubtitle: "A storefront and live menu your customers reach before they reach your door.",
 
     ctaLive: "See the live demo",
     ctaLivePending: "Signing in to demo…",
@@ -133,8 +144,9 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaLiveErrorFailed: "Couldn't open the demo. Try again or message us.",
     demoSampleNote: "Live demo with sample data.",
 
-    trustLocation: "FT.Agency — Phuket",
+    trustBuiltByBefore: "Built by ",
     trustPortfolioLabel: "FT.Agency",
+    trustBuiltByAfter: " — Phuket",
     trustGuarantee: "Not live in 72 hours? The setup is free.",
     trustChecklistTitle: "What you get",
     trustChecklistItems: [
@@ -147,7 +159,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
 
     ctaHeadline: "Send us your menu. In 72 hours you're live.",
     ctaSubtitle: "We build your storefront, load your products and set up the PT.33 panel. You keep working — nothing goes down.",
-    ctaButton: "Message on WhatsApp",
+    ctaButton: "WhatsApp",
     ctaButtonLine: "LINE",
     pricingLine: "From ฿12,000 setup + ฿2,900/month",
     pricingNote: "Setup includes menu, branding and staff training.",
@@ -164,10 +176,11 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ],
     heroPillAccent: "⚡ พร้อมใช้งานภายใน 72 ชั่วโมง",
 
-    blockPt33Title: "ทุกการขาย\nถูกบันทึกไว้ครบ",
-    blockPt33Subtitle: "ลูกค้าทุกคน ใบสั่งยาทุกใบ การขายทุกครั้ง — บันทึกไว้ครบ เผื่อไว้ก่อน",
+    blockPt33Title: "เอกสารของคุณ\nพร้อมอยู่แล้ว",
+    blockPt33Subtitle: "ลูกค้าทุกคน ใบสั่งยาทุกใบ การขายทุกครั้ง — บันทึกไว้ครบ พร้อมตอบทุกเมื่อที่มีคนถาม",
 
-    blockStorefrontTitle: "นี่คือสิ่งที่\nลูกค้าของคุณเห็น",
+    blockStorefrontTitle: "ร้านของคุณ\nเปิดอยู่แล้ว",
+    blockStorefrontSubtitle: "หน้าร้านและเมนูสดที่ลูกค้าของคุณเจอ ก่อนจะมาถึงหน้าร้านจริง",
 
     ctaLive: "ดูเดโมจริง",
     ctaLivePending: "กำลังเข้าสู่เดโม…",
@@ -175,8 +188,9 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
     ctaLiveErrorFailed: "เปิดเดโมไม่สำเร็จ ลองใหม่อีกครั้งหรือทักหาเรา",
     demoSampleNote: "เดโมจริงพร้อมข้อมูลตัวอย่าง",
 
-    trustLocation: "FT.Agency — ภูเก็ต",
+    trustBuiltByBefore: "พัฒนาโดย ",
     trustPortfolioLabel: "FT.Agency",
+    trustBuiltByAfter: " — ภูเก็ต",
     trustGuarantee: "ไม่พร้อมใช้งานภายใน 72 ชั่วโมง? เราติดตั้งให้ฟรี",
     trustChecklistTitle: "สิ่งที่คุณจะได้รับ",
     trustChecklistItems: [
@@ -189,7 +203,7 @@ export const partnersTranslations: Record<Language, PartnersDictionary> = {
 
     ctaHeadline: "ส่งเมนูมาให้เรา ภายใน 72 ชั่วโมงคุณพร้อมใช้งาน",
     ctaSubtitle: "เราจะสร้างหน้าร้าน โหลดสินค้า และตั้งค่าแผง PT.33 ให้คุณ ร้านของคุณทำงานต่อได้ตามปกติ ไม่มีการหยุดชะงัก",
-    ctaButton: "ทักผ่าน WhatsApp",
+    ctaButton: "WhatsApp",
     ctaButtonLine: "LINE",
     pricingLine: "เริ่มต้น ฿12,000 ค่าติดตั้ง + ฿2,900/เดือน",
     pricingNote: "ค่าติดตั้งรวมเมนู แบรนด์ และการอบรมพนักงาน",

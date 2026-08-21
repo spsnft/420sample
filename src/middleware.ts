@@ -46,6 +46,26 @@ export async function middleware(request: NextRequest) {
   // same as the login page.
   const isPublicAuthRoute = pathname === "/staff/login" || pathname === "/staff/signup";
 
+  // Demo instance only (DEMO_AUTO_LOGIN, see .env.example — never set on a
+  // real client instance, so auth there is untouched by any of this): a
+  // visitor with no session lands straight in the panel as the pre-seeded
+  // demo staff account instead of hitting the login form. There is no
+  // "your account" to sign into here, and the pitch page's own "Live Demo"
+  // button (see app/actions.ts, unaffected by this and still working the
+  // same way) already exists to avoid making a prospect find credentials —
+  // this just closes the other way in: a bare /staff link with a stale or
+  // no cookie.
+  if (!user && !isPublicAuthRoute && process.env.DEMO_AUTO_LOGIN === "1") {
+    const demoEmail = process.env.DEMO_STAFF_EMAIL;
+    const demoPassword = process.env.DEMO_STAFF_PASSWORD;
+    if (demoEmail && demoPassword) {
+      const { error } = await supabase.auth.signInWithPassword({ email: demoEmail, password: demoPassword });
+      // Falls through to the normal login redirect below on failure (bad
+      // creds, Supabase unreachable) rather than looping or 500ing.
+      if (!error) return response;
+    }
+  }
+
   if (!user && !isPublicAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/staff/login";
