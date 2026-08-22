@@ -10,7 +10,7 @@ interface FooterProps {
 // and the one link every page collecting a phone number needs.
 export const Footer: React.FC<FooterProps> = ({ privacyLabel }) => (
   <footer className="mt-10 pt-6 border-t border-white/10 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] font-bold text-brand-light/40">
-    <span>&copy; {new Date().getFullYear()} FT Agency</span>
+    <span>&copy; {new Date().getFullYear()} FT.Agency — Wichit, Phuket</span>
     <Link href="/privacy" className="hover:text-brand-light/70 transition-colors">
       {privacyLabel}
     </Link>

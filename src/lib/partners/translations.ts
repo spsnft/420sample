@@ -14,10 +14,11 @@ export interface PartnersDictionary {
   // says the system is ready; this line names the three parts of it and
   // sends the reader into the demo.
   heroSubtitle: string;
-  // The pills under the subtitle carry deal terms, not features — price,
-  // payment order, geography. The first renders as an accent, the other
-  // two as neutral chips.
-  heroPills: [string, string, string];
+  // The pills under the subtitle carry deal terms, not features — price and
+  // payment order. The first renders as an accent, the second as a neutral
+  // chip. Exactly two: a third used to break to its own centred line on
+  // mobile (ТЗ pitch-layout №6).
+  heroPills: [string, string];
 
   // Block 01 — the PT.33 panel, the compliance record the shop is actually
   // buying, so it leads. Headings are the client's approved "set A" — see
@@ -52,6 +53,15 @@ export interface PartnersDictionary {
   trustBuiltByAfter: string;
 
   offerTitle: string;
+  // Standalone price block between offerTitle and offerBody — the page's
+  // one moment of decision gets its own typographic weight instead of
+  // living as a clause inside the paragraph. offerPriceNow is the number
+  // the whole block exists to show; offerPriceWas is struck through beside
+  // it, offerPriceMonthly sits under both, offerPriceNote is the fine print.
+  offerPriceNow: string;
+  offerPriceWas: string;
+  offerPriceMonthly: string;
+  offerPriceNote: string;
   offerBody: string;
 
   includedTitle: string;
@@ -94,7 +104,6 @@ const en: PartnersDictionary = {
   heroPills: [
     "From ฿9,000",
     "Half when it's live",
-    "Built on Phuket",
   ],
 
   blockPt33Title: "Your paperwork,\nalready done.",
@@ -112,8 +121,12 @@ const en: PartnersDictionary = {
   trustPortfolioLabel: "FT.Agency",
   trustBuiltByAfter: " — Phuket",
 
-  offerTitle: "Same system. Launch price until 30 September.",
-  offerBody: "What you just clicked through is finished. It's not a prototype and you wouldn't be testing anything — the only new thing here is that it's for sale. Until 30 September the setup is ฿9,000 instead of ฿12,000. Nobody on your street is running this yet. That won't stay true for long.",
+  offerTitle: "What it costs.",
+  offerPriceNow: "฿9,000",
+  offerPriceWas: "฿12,000",
+  offerPriceMonthly: "฿1,900/month",
+  offerPriceNote: "until 30 September · then ฿12,000",
+  offerBody: "What you just clicked through is finished. It's not a prototype and you wouldn't be testing anything — the only new thing here is that it's for sale. Nobody on your street is running this yet. That won't stay true for long.",
 
   includedTitle: "Included at ฿9,000",
   includedItems: [
