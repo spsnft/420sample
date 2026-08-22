@@ -29,7 +29,7 @@ export function FaqSection({
                 className="shrink-0 text-brand-light/40 transition-transform group-open:rotate-180"
               />
             </summary>
-            <p className="mt-2 text-[13px] font-medium text-brand-light/55 leading-relaxed">
+            <p className="mt-2 text-[13px] font-medium text-brand-light/70 leading-relaxed">
               {a}
             </p>
           </details>

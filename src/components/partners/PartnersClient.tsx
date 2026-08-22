@@ -26,29 +26,47 @@ const AGENCY_PORTFOLIO_URL = "https://tsvetkov.site";
 // customers. They are built from one shell so the pair reads as a matched
 // set; only the mockup inside, the heading and the CTA's destination differ.
 // No step numbers: these are two parts of one product, not sequential steps.
+//
+// Below `lg` this is plain block flow, unchanged from before the two-column
+// rework: head, then mockup, then cta, each in its own div in that order —
+// `lg:grid` doesn't apply yet, so the two wrapper divs just stack. From `lg`
+// those same two divs become the grid's two columns (45/55, vertically
+// centred against each other via items-center), with the head+cta div now
+// reading as one column stacked above itself. `cta` has to be mounted twice
+// — once per column — since one React element can't sit in two places in the
+// tree at once; only one copy is ever visible at a time (`hidden`/
+// `lg:hidden`), so nothing is duplicated for assistive tech.
 function PitchBlock({
   title,
   subtitle,
-  children,
+  mockup,
+  cta,
 }: {
   title: string;
   subtitle?: string;
-  children: React.ReactNode;
+  mockup: React.ReactNode;
+  cta: React.ReactNode;
 }) {
   return (
     <div className="gradient-ring rounded-card">
-      <section className="relative overflow-hidden p-5 rounded-card bg-white/5">
-        <div className="relative mb-5">
-          <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light whitespace-pre-line">
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="mt-1.5 text-[13px] font-bold text-brand-light/50 leading-snug max-w-sm">
-              {subtitle}
-            </p>
-          )}
+      <section className="relative overflow-hidden p-5 lg:p-8 rounded-card bg-white/5 lg:grid lg:grid-cols-[45fr_55fr] lg:gap-x-10 lg:items-center">
+        <div>
+          <div className="relative mb-5 lg:mb-6">
+            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light whitespace-pre-line">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="mt-1.5 text-[13px] font-bold text-brand-light/90 leading-snug">
+                {subtitle}
+              </p>
+            )}
+          </div>
+          <div className="hidden lg:block">{cta}</div>
         </div>
-        {children}
+        <div>
+          {mockup}
+          <div className="mt-6 lg:hidden">{cta}</div>
+        </div>
       </section>
     </div>
   );
@@ -81,12 +99,20 @@ export default function PartnersClient() {
         }
       />
 
-      <main className="max-w-xl mx-auto space-y-6 pb-10">
-        <section className="text-center py-4">
+      {/* max-w-xl was the whole page's width at every breakpoint — fine for
+          one column of prose, but it's also what kept blocks 01/02 pinned to
+          a ~576px column with nearly half the screen empty on either side
+          from 1024px+ (see the ТЗ this shipped with, pitch-layout №1). `main`
+          now widens from `lg`; the single-column sections (hero, offer, FAQ,
+          final CTA) each pin themselves back to max-w-prose (≈65ch, per that
+          ТЗ's №2) so their body copy doesn't just stretch to fill the extra
+          room — only blocks 01/02 use it, for the two-column layout below. */}
+      <main className="max-w-xl lg:max-w-5xl mx-auto space-y-6 pb-10">
+        <section className="max-w-prose mx-auto text-center py-4">
           <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-balance text-brand-light">
             {t.heroTitle}
           </h1>
-          <p className="mt-3 text-[14px] sm:text-[15px] font-normal text-brand-light/60 text-balance">
+          <p className="mt-3 text-[14px] sm:text-[15px] font-normal text-brand-light/75 text-balance text-left">
             {t.heroSubtitle}
           </p>
           <ul className="mt-4 flex flex-wrap justify-center gap-1.5">
@@ -113,25 +139,29 @@ export default function PartnersClient() {
             (see btn-tonal-dark) is what actually contrasts against this
             block's own warm-lit screenshot — a gold wash disappeared into it
             (ТЗ №2 M6). */}
-        <PitchBlock title={t.blockPt33Title} subtitle={t.blockPt33Subtitle}>
-          <DesktopMockup />
-          <div className="mt-6">
+        <PitchBlock
+          title={t.blockPt33Title}
+          subtitle={t.blockPt33Subtitle}
+          mockup={<DesktopMockup />}
+          cta={
             <DemoLoginButton
               label={t.ctaLive}
               pendingLabel={t.ctaLivePending}
               errorNotConfigured={t.ctaLiveErrorNotConfigured}
               errorFailed={t.ctaLiveErrorFailed}
             />
-          </div>
-        </PitchBlock>
+          }
+        />
 
         {/* Block 02 — the client storefront the same system ships. Same dark
             fill as block 01's CTA (see ТЗ №2 M12): this card sits under the
             same warm ambient glow, and the gold wash read just as flat here
             as it did there. */}
-        <PitchBlock title={t.blockStorefrontTitle} subtitle={t.blockStorefrontSubtitle}>
-          <DeviceMockup />
-          <div className="mt-6">
+        <PitchBlock
+          title={t.blockStorefrontTitle}
+          subtitle={t.blockStorefrontSubtitle}
+          mockup={<DeviceMockup />}
+          cta={
             <Link
               href="/demo"
               target="_blank"
@@ -142,8 +172,8 @@ export default function PartnersClient() {
               {t.ctaLive}
               <ArrowRight size={16} className="text-brand-secondary" />
             </Link>
-          </div>
-        </PitchBlock>
+          }
+        />
 
         {/* Offer block: one attribution line (not two lines both naming the
             agency — see ТЗ №2 M7), then the launch-price headline as the
@@ -151,7 +181,7 @@ export default function PartnersClient() {
             add-on price list, payment terms and the subscription rate. No
             photos, no names, no invented experience or project-count
             figures — see ТЗ №1 A9. */}
-        <section className="px-2 pt-2 text-center">
+        <section className="max-w-prose mx-auto px-2 pt-2 text-center">
           <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40">
             {t.trustBuiltByBefore}
             <Link
@@ -165,11 +195,35 @@ export default function PartnersClient() {
             {t.trustBuiltByAfter}
           </p>
 
-          <p className="mt-4 text-[19px] sm:text-[21px] font-black text-brand-light leading-snug text-balance">
+          {/* Same treatment as blocks 01/02's h2 — this heading used to run
+              smaller and without the uppercase/tracking-tight pair, which
+              read as a lighter weight next to them even at the same
+              font-black (see the ТЗ this shipped with, pitch-layout №4). */}
+          <p className="mt-4 text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light text-balance">
             {t.offerTitle}
           </p>
 
-          <p className="mt-3 text-[13px] font-medium text-brand-light/60 leading-relaxed max-w-md mx-auto">
+          {/* The one moment on the page where a decision actually gets made,
+              so the number gets its own block instead of living as a clause
+              inside offerBody's paragraph (ТЗ pitch-layout №4). */}
+          <div className="mt-5 text-left">
+            <div className="flex items-baseline flex-wrap gap-x-3 gap-y-1">
+              <span className="text-4xl sm:text-5xl font-black text-brand-light tabular-nums">
+                {t.offerPriceNow}
+              </span>
+              <span className="text-lg sm:text-xl font-bold text-brand-light/45 line-through tabular-nums">
+                {t.offerPriceWas}
+              </span>
+            </div>
+            <p className="mt-1 text-2xl sm:text-[28px] font-black text-brand-light tabular-nums">
+              {t.offerPriceMonthly}
+            </p>
+            <p className="mt-1.5 text-[11px] font-bold text-brand-light/50">
+              {t.offerPriceNote}
+            </p>
+          </div>
+
+          <p className="mt-4 text-[13px] font-medium text-brand-light/70 leading-relaxed text-left">
             {t.offerBody}
           </p>
 
@@ -209,19 +263,25 @@ export default function PartnersClient() {
           </p>
         </section>
 
-        <FaqSection title={t.faqTitle} items={t.faqItems} />
+        <div className="max-w-prose mx-auto">
+          <FaqSection title={t.faqTitle} items={t.faqItems} />
+        </div>
 
         {/* No card around this one. The blocks above are cards because each
             holds an argument; the closing line and its buttons are the page
             speaking in its own voice, and a bordered box around them too
             turned the ask into just another exhibit. */}
-        <section className="px-2 pt-4 pb-2 text-center">
+        <section className="max-w-prose mx-auto px-2 pt-4 pb-2 text-center">
           <p className="text-[16px] font-black text-brand-light leading-snug text-balance">
             {t.ctaHeadline}
           </p>
-          <p className="mt-2 text-[13px] font-bold text-brand-light/60 leading-relaxed text-balance">
+          <p className="mt-2 text-[13px] font-bold text-brand-light/70 leading-relaxed text-balance text-left">
             {t.ctaSubtitle}
           </p>
+          {/* Moved above the button row (ТЗ pitch-layout №5) — it used to sit
+              under both buttons, reading as an afterthought instead of the
+              price the buttons are actually asking about. */}
+          <p className="mt-4 text-[12px] font-bold text-brand-light/60">{t.pricingLine}</p>
           {/* Always a row, 50/50 — not stacked on mobile (see ТЗ №2 M9).
               Each link carries its own aria-label matching its visible text
               exactly (WCAG 2.5.3) — the authoritative accessible name,
@@ -256,7 +316,6 @@ export default function PartnersClient() {
               {t.ctaButtonLine}
             </Link>
           </div>
-          <p className="mt-4 text-[12px] font-bold text-brand-light/50">{t.pricingLine}</p>
         </section>
 
         <Footer privacyLabel={t.footerPrivacy} />
