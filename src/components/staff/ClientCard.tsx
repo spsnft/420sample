@@ -81,11 +81,16 @@ export function ClientCard({ data }: { data: ClientCardData }) {
 
         <QuotaBar usedGrams={rx.quota_used_g} limitGrams={MONTHLY_QUOTA_GRAMS} />
 
+        {/* Neutral at rest either way — red is reserved for the moment of
+            consequence, in ConfirmDialog's own confirm button, not for a
+            link that hasn't done anything yet (see /staff ТЗ №2 part 2).
+            Its own top border + padding pulls it out of the quota block
+            above rather than reading as one more quota line. */}
         <button
           type="button"
           onClick={handleRevokeClick}
           disabled={isTogglingRevoke}
-          className="text-[11px] font-black uppercase tracking-wide text-red-400/70 hover:text-red-400 transition-colors disabled:opacity-50"
+          className="block w-full mt-1 pt-3 border-t border-white/10 text-left text-[11px] font-black uppercase tracking-wide text-brand-light/40 hover:text-brand-light/60 transition-colors disabled:opacity-50"
         >
           {rx.revoked ? "Restore prescription" : "Revoke prescription"}
         </button>
@@ -113,7 +118,7 @@ export function ClientCard({ data }: { data: ClientCardData }) {
           <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-2">Previous prescriptions</p>
           <div className="p-2 rounded-card surface space-y-2">
             {olderPrescriptions.map((p) => (
-              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-button surface-row">
+              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-nested surface-row">
                 <span className="text-[12px] font-bold text-brand-light/70 truncate">{p.pt33_number}</span>
                 <StatusPill status={p.status} />
               </div>
@@ -129,7 +134,7 @@ export function ClientCard({ data }: { data: ClientCardData }) {
         ) : (
           <div className="p-2 rounded-card surface space-y-2">
             {data.purchases.map((p) => (
-              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-button surface-row">
+              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-nested surface-row">
                 <div className="min-w-0">
                   <p className="text-[13px] font-bold text-brand-light truncate">{p.product}</p>
                   <p className="text-[11px] text-brand-light/40">

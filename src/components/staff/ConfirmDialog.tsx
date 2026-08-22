@@ -49,11 +49,14 @@ export function ConfirmDialog({
             >
               Cancel
             </button>
+            {/* Red only lives here — the one moment this dialog exists to
+                name a real consequence, not on the card's own Revoke link
+                before anything has happened (see /staff ТЗ №2 part 2). */}
             <button
               type="button"
               disabled={isConfirming}
               onClick={() => { triggerHaptic("medium"); onConfirm(); }}
-              className="flex-1 h-11 rounded-button btn-metal font-black uppercase tracking-wide text-[12px] active:translate-y-px transition-all disabled:opacity-60"
+              className="flex-1 h-11 rounded-button bg-red-500 hover:bg-red-500/90 text-white font-black uppercase tracking-wide text-[12px] active:translate-y-px transition-all disabled:opacity-60"
             >
               {confirmLabel}
             </button>
