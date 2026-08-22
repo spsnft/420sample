@@ -23,7 +23,7 @@ function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: st
       type="submit"
       disabled={pending}
       onClick={() => triggerHaptic('medium')}
-      className="w-full h-12 btn-tonal-dark text-brand-light font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+      className="w-full h-12 btn-tonal-dark border border-white/15 text-brand-light font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
     >
       {pending ? pendingLabel : label}
       {!pending && <ArrowRight size={16} className="text-brand-secondary" />}
