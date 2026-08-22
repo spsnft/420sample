@@ -5,26 +5,19 @@ import type { Language } from "@/lib/translations"
 // dictionary in @/lib/translations since none of these keys are shared with
 // the storefront demo it links out to (at /demo).
 export interface PartnersDictionary {
-  // Says what the system is, not what it does for the shop — "one system"
-  // is the argument, not a promise of speed. The 72-hour turnaround is
-  // deliberately not here: it's stated exactly once on this page, in
-  // heroPillAccent below, so a shop owner skimming the page never has to
-  // reconcile two different numbers.
+  // Says what the system is, not what it does for the shop — "already
+  // built" is the argument, not a promise of speed. No turnaround time
+  // appears on the page at all: it's mentioned exactly once, in the FAQ,
+  // as an observation rather than a commitment.
   heroTitle: string;
-  // White-Glove line: sits between the H1 and the pills, quieter than both —
-  // it answers "what do I have to do", not "what is this".
-  whiteGloveLine: string;
-  // The USP line reads as a row of pills under the H1. heroPillAccent is the
-  // single highlighted one and is the one place on the page that states the
-  // turnaround time — see heroTitle above.
-  //
-  // The first pill names the form, not the card: the panel does not check
-  // anyone's medical card, it keeps each client's PT.33 prescriptions — issued,
-  // valid, expired, revoked — and logs what was dispensed against them. A shop
-  // owner reading this page knows what PT.33 is; "med card check" described
-  // something the product does not do.
+  // Subtitle: sits between the H1 and the pills, quieter than both. The H1
+  // says the system is ready; this line names the three parts of it and
+  // sends the reader into the demo.
+  heroSubtitle: string;
+  // The pills under the subtitle carry deal terms, not features — price,
+  // payment order, geography. The first renders as an accent, the other
+  // two as neutral chips.
   heroPills: [string, string, string];
-  heroPillAccent: string;
 
   // Block 01 — the PT.33 panel, the compliance record the shop is actually
   // buying, so it leads. Headings are the client's approved "set A" — see
@@ -44,11 +37,12 @@ export interface PartnersDictionary {
   ctaLiveErrorNotConfigured: string;
   ctaLiveErrorFailed: string;
 
-  // Trust block, just above the final CTA: one attribution line (who built
-  // this, linking "FT.Agency" — never the bare domain — to the portfolio),
-  // a guarantee that's the dominant element of the block, and a checklist
-  // visually subordinate to it (see ТЗ №2 M7/M8). Deliberately no photos,
-  // names, or invented experience/project-count figures.
+  // Offer block, just above the FAQ: one attribution line (who built this,
+  // linking "FT.Agency" — never the bare domain — to the portfolio), a
+  // headline naming the launch-price deadline, a paragraph, the included
+  // scope, an add-on price list, the payment terms and the subscription
+  // rate. Deliberately no photos, names, or invented experience/project-
+  // count figures.
   //
   // trustBuiltByBefore/After sandwich trustPortfolioLabel (the link text)
   // into one line — "Built by FT.Agency — Phuket" — rather than two
@@ -56,14 +50,35 @@ export interface PartnersDictionary {
   trustBuiltByBefore: string;
   trustPortfolioLabel: string;
   trustBuiltByAfter: string;
-  trustGuarantee: string;
-  trustChecklistTitle: string;
-  trustChecklistItems: string[];
+
+  offerTitle: string;
+  offerBody: string;
+
+  includedTitle: string;
+  includedItems: string[];
+
+  // Add-on price list. A separate shape from includedItems because the
+  // price is right-aligned and is not part of the label string.
+  addonsTitle: string;
+  addonsItems: { label: string; price: string }[];
+
+  // Payment terms — 50/50, replacing the old turnaround guarantee.
+  termsLine: string;
+
+  // Subscription price, with the first-year rate lock. Kept apart from
+  // offerBody: "will you raise it later" is the question that occurs right
+  // when someone reads a recurring price, so the answer sits right there.
+  subscriptionLine: string;
+
+  // FAQ. Order goes from deal mechanics to risk: the first question
+  // answers "what happens if I message you", the last is "who are you".
+  faqTitle: string;
+  faqItems: { q: string; a: string }[];
 
   // Final CTA. ctaHeadline + ctaSubtitle are the ask; ctaButton (WhatsApp)
   // and ctaButtonLine (LINE) are how to answer it — deliberately just the
-  // brand name on both, equal weight (see ТЗ №2 M5/M9). pricingLine is a
-  // placeholder figure — swap for real numbers before release.
+  // brand name on both, equal weight (see ТЗ №2 M5/M9). pricingLine is the
+  // page's own closing price recap.
   ctaHeadline: string;
   ctaSubtitle: string;
   ctaButton: string;
@@ -73,131 +88,93 @@ export interface PartnersDictionary {
   footerPrivacy: string;
 }
 
+const en: PartnersDictionary = {
+  heroTitle: "Already built. Just needs your name on it.",
+  heroSubtitle: "A customer storefront, a live menu and a PT.33 client panel, running as one system. Have a click through it yourself.",
+  heroPills: [
+    "From ฿9,000",
+    "Half when it's live",
+    "Built on Phuket",
+  ],
+
+  blockPt33Title: "Your paperwork,\nalready done.",
+  blockPt33Subtitle: "Type a name, get their PT.33, their history and everything they've bought. About five seconds, from any device behind the counter.",
+
+  blockStorefrontTitle: "Change the price once.\nIt's changed everywhere.",
+  blockStorefrontSubtitle: "Add a strain, set a sale, mark something sold out — a few taps. Your customers see it wherever they're looking: the screen in the shop, the site, the link your staff send on WhatsApp.",
+
+  ctaLive: "Open the live system",
+  ctaLivePending: "Signing in to demo…",
+  ctaLiveErrorNotConfigured: "The demo isn't set up yet. Message us and we'll show you the panel directly.",
+  ctaLiveErrorFailed: "Couldn't open the demo. Try again or message us.",
+
+  trustBuiltByBefore: "Built by ",
+  trustPortfolioLabel: "FT.Agency",
+  trustBuiltByAfter: " — Phuket",
+
+  offerTitle: "Same system. Launch price until 30 September.",
+  offerBody: "What you just clicked through is finished. It's not a prototype and you wouldn't be testing anything — the only new thing here is that it's for sale. Until 30 September the setup is ฿9,000 instead of ฿12,000. Nobody on your street is running this yet. That won't stay true for long.",
+
+  includedTitle: "Included at ฿9,000",
+  includedItems: [
+    "A storefront under your name and branding",
+    "A live menu",
+    "The PT.33 client and sales panel",
+    "Your product list loaded — prices, categories and images",
+  ],
+
+  addonsTitle: "Add if you need it",
+  addonsItems: [
+    { label: "Branding and design in your own style", price: "฿6,000" },
+    { label: "We type up your menu", price: "฿3,500" },
+    { label: "Your existing PT.33 cards entered", price: "฿2,500 per 300" },
+    { label: "A second shop", price: "฿4,000" },
+    { label: "We keep the menu updated for you", price: "฿1,200/month" },
+  ],
+
+  termsLine: "Half up front, half when it's running and you've seen it working. Nothing switches off on your side while we build.",
+
+  subscriptionLine: "฿1,900/month — hosting, domain, backups, updates and support. That rate is locked for your first year.",
+
+  faqTitle: "Questions",
+  faqItems: [
+    {
+      q: "What happens after I message you?",
+      a: "You tell us what you already have and we quote it. You pay half, send the logo and the product list, and we build. Most shops are running within a few days — it depends on how much of it we're typing up for you.",
+    },
+    {
+      q: "My staff don't read English.",
+      a: "The panel and the menu both run in Thai, English and Russian. Your staff use Thai, your customers pick their own.",
+    },
+    {
+      q: "Who updates the menu?",
+      a: "You do — a minute on your phone. If you'd rather not, ฿1,200/month and you send the change on WhatsApp instead; it's live the same day.",
+    },
+    {
+      q: "What if I stop paying?",
+      a: "The storefront and menu go offline. Your client records don't go anywhere — ask and we send you the lot as a file, any day.",
+    },
+    {
+      q: "Who actually builds this?",
+      a: "FT.Agency, on Phuket. Small team, and you'll be dealing with the person doing the work rather than a manager.",
+    },
+  ],
+
+  ctaHeadline: "Tell us what you have. We'll tell you the final price.",
+  ctaSubtitle: "Most shops have a logo and a menu somewhere — a photo, a spreadsheet, a board on the wall. Send whatever you've got and we'll say what it costs and how long it takes. If you'd rather we did the lot, we can do that too, and we'll price it.",
+  ctaButton: "WhatsApp",
+  ctaButtonLine: "LINE",
+  pricingLine: "From ฿9,000 setup + ฿1,900/month",
+
+  footerPrivacy: "Privacy",
+};
+
 export const partnersTranslations: Record<Language, PartnersDictionary> = {
-  ru: {
-    heroTitle: "Витрина, живое меню и учёт PT.33 — одна система.",
-    whiteGloveLine: "Пришлите нам меню и фото — остальное сделаем мы.",
-    heroPills: [
-      "Витрина для клиентов",
-      "Живое цифровое меню",
-      "CRM-система для PT.33",
-    ],
-    heroPillAccent: "⚡ Запуск за 72 часа",
-
-    blockPt33Title: "Документы —\nуже готовы.",
-    blockPt33Subtitle: "Каждый клиент, каждый рецепт, каждая продажа — в системе. Готовы ответить в любой момент.",
-
-    blockStorefrontTitle: "Магазин —\nуже открыт.",
-    blockStorefrontSubtitle: "Витрина и живое меню, которые находят ваших клиентов раньше, чем они дойдут до двери.",
-
-    ctaLive: "Смотреть живое демо",
-    ctaLivePending: "Входим в демо…",
-    ctaLiveErrorNotConfigured: "Демо-доступ ещё не настроен. Напишите нам, и мы покажем панель лично.",
-    ctaLiveErrorFailed: "Не получилось открыть демо. Попробуйте ещё раз или напишите нам.",
-
-    trustBuiltByBefore: "Разработано ",
-    trustPortfolioLabel: "FT.Agency",
-    trustBuiltByAfter: " — Пхукет",
-    trustGuarantee: "Не запустились за 72 часа? Настройка — бесплатно.",
-    trustChecklistTitle: "Что входит",
-    trustChecklistItems: [
-      "Публичная витрина с вашим брендингом",
-      "Живое цифровое меню — обновляете сами",
-      "Панель PT.33 для клиентов и продаж",
-      "Каталог товаров, загруженный и готовый к работе",
-      "Обучение персонала",
-    ],
-
-    ctaHeadline: "Пришлите меню. Через 72 часа вы в сети.",
-    ctaSubtitle: "Мы соберём витрину, загрузим товары и настроим панель PT.33. Вы продолжаете работать — ничего не отключается.",
-    ctaButton: "WhatsApp",
-    ctaButtonLine: "LINE",
-    pricingLine: "От ฿12,000 за настройку + ฿2,900/мес.",
-
-    footerPrivacy: "Конфиденциальность",
-  },
-  en: {
-    heroTitle: "Storefront, live menu and PT.33 records — one system.",
-    whiteGloveLine: "Send us your menu and photos — we do the rest.",
-    heroPills: [
-      "Client storefront",
-      "Live digital menu",
-      "Automated PT.33 CRM",
-    ],
-    heroPillAccent: "⚡ Live in 72 hours",
-
-    blockPt33Title: "Your paperwork,\nalready done.",
-    blockPt33Subtitle: "Every client, every prescription, every sale — on record, ready the moment anyone asks.",
-
-    blockStorefrontTitle: "Your shop,\nalready open.",
-    blockStorefrontSubtitle: "A storefront and live menu your customers reach before they reach your door.",
-
-    ctaLive: "See the live demo",
-    ctaLivePending: "Signing in to demo…",
-    ctaLiveErrorNotConfigured: "The demo isn't set up yet. Message us and we'll show you the panel directly.",
-    ctaLiveErrorFailed: "Couldn't open the demo. Try again or message us.",
-
-    trustBuiltByBefore: "Built by ",
-    trustPortfolioLabel: "FT.Agency",
-    trustBuiltByAfter: " — Phuket",
-    trustGuarantee: "Not live in 72 hours? The setup is free.",
-    trustChecklistTitle: "What you get",
-    trustChecklistItems: [
-      "A public storefront with your branding",
-      "A live digital menu you update yourself",
-      "The PT.33 client & sales panel",
-      "Your product catalog loaded and ready",
-      "A staff training walkthrough",
-    ],
-
-    ctaHeadline: "Send us your menu. In 72 hours you're live.",
-    ctaSubtitle: "We build your storefront, load your products and set up the PT.33 panel. You keep working — nothing goes down.",
-    ctaButton: "WhatsApp",
-    ctaButtonLine: "LINE",
-    pricingLine: "From ฿12,000 setup + ฿2,900/month",
-
-    footerPrivacy: "Privacy",
-  },
-  th: {
-    heroTitle: "หน้าร้าน เมนูสด และระบบบันทึก PT.33 — ในระบบเดียว",
-    whiteGloveLine: "ส่งเมนูและรูปภาพมาให้เรา ที่เหลือเราจัดการให้",
-    heroPills: [
-      "หน้าร้านสำหรับลูกค้า",
-      "เมนูดิจิทัลแบบเรียลไทม์",
-      "ระบบ CRM PT.33 อัตโนมัติ",
-    ],
-    heroPillAccent: "⚡ พร้อมใช้งานภายใน 72 ชั่วโมง",
-
-    blockPt33Title: "เอกสารของคุณ\nพร้อมอยู่แล้ว",
-    blockPt33Subtitle: "ลูกค้าทุกคน ใบสั่งยาทุกใบ การขายทุกครั้ง — บันทึกไว้ครบ พร้อมตอบทุกเมื่อที่มีคนถาม",
-
-    blockStorefrontTitle: "ร้านของคุณ\nเปิดอยู่แล้ว",
-    blockStorefrontSubtitle: "หน้าร้านและเมนูสดที่ลูกค้าของคุณเจอ ก่อนจะมาถึงหน้าร้านจริง",
-
-    ctaLive: "ดูเดโมจริง",
-    ctaLivePending: "กำลังเข้าสู่เดโม…",
-    ctaLiveErrorNotConfigured: "ยังไม่ได้ตั้งค่าเดโม ทักหาเราแล้วเราจะโชว์แผงควบคุมให้โดยตรง",
-    ctaLiveErrorFailed: "เปิดเดโมไม่สำเร็จ ลองใหม่อีกครั้งหรือทักหาเรา",
-
-    trustBuiltByBefore: "พัฒนาโดย ",
-    trustPortfolioLabel: "FT.Agency",
-    trustBuiltByAfter: " — ภูเก็ต",
-    trustGuarantee: "ไม่พร้อมใช้งานภายใน 72 ชั่วโมง? เราติดตั้งให้ฟรี",
-    trustChecklistTitle: "สิ่งที่คุณจะได้รับ",
-    trustChecklistItems: [
-      "หน้าร้านสาธารณะพร้อมแบรนด์ของคุณ",
-      "เมนูดิจิทัลแบบเรียลไทม์ที่คุณอัปเดตเองได้",
-      "แผง PT.33 สำหรับลูกค้าและการขาย",
-      "แคตตาล็อกสินค้าที่โหลดพร้อมใช้งาน",
-      "อบรมการใช้งานให้พนักงาน",
-    ],
-
-    ctaHeadline: "ส่งเมนูมาให้เรา ภายใน 72 ชั่วโมงคุณพร้อมใช้งาน",
-    ctaSubtitle: "เราจะสร้างหน้าร้าน โหลดสินค้า และตั้งค่าแผง PT.33 ให้คุณ ร้านของคุณทำงานต่อได้ตามปกติ ไม่มีการหยุดชะงัก",
-    ctaButton: "WhatsApp",
-    ctaButtonLine: "LINE",
-    pricingLine: "เริ่มต้น ฿12,000 ค่าติดตั้ง + ฿2,900/เดือน",
-
-    footerPrivacy: "ความเป็นส่วนตัว",
-  },
+  en,
+  // TODO(i18n): RU and TH get their own pass separately. Until then both
+  // serve the English dictionary in full — that's more honest than leaving
+  // the old RU/TH copy up, which described a guarantee and a price that no
+  // longer exist.
+  ru: en,
+  th: en,
 };

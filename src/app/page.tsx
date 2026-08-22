@@ -3,7 +3,7 @@ import PartnersClient from "@/components/partners/PartnersClient"
 import { siteConfig } from "@/config/site"
 
 const TITLE = "buds.digital — Storefront, live menu & PT.33 records"
-const DESCRIPTION = "A ready-made storefront, live menu and PT.33 compliance panel for your dispensary — one system, built by FT.Agency."
+const DESCRIPTION = "A ready-made storefront, live menu and PT.33 client panel for your dispensary on Phuket. From ฿9,000."
 
 // B2B pitch page for dispensary/vape shop owners, served at buds.digital's
 // own apex — the product's main marketing surface, meant to be found by

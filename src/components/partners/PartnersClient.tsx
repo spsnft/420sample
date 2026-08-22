@@ -12,6 +12,7 @@ import { WhatsAppIcon, LineIcon } from "@/components/icons/BrandIcons"
 import { DemoLoginButton } from "@/components/partners/DemoLoginButton"
 import { DeviceMockup } from "@/components/partners/DeviceMockup"
 import { DesktopMockup } from "@/components/partners/DesktopMockup"
+import { FaqSection } from "@/components/partners/FaqSection"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
 
@@ -24,15 +25,12 @@ const AGENCY_PORTFOLIO_URL = "https://tsvetkov.site";
 // audiences a shop owner cares about — their own record-keeping, then their
 // customers. They are built from one shell so the pair reads as a matched
 // set; only the mockup inside, the heading and the CTA's destination differ.
-// The step number sits behind the heading as a watermark rather than as a
-// label, since the headings already say who each block is for.
+// No step numbers: these are two parts of one product, not sequential steps.
 function PitchBlock({
-  step,
   title,
   subtitle,
   children,
 }: {
-  step: string;
   title: string;
   subtitle?: string;
   children: React.ReactNode;
@@ -40,12 +38,6 @@ function PitchBlock({
   return (
     <div className="gradient-ring rounded-card">
       <section className="relative overflow-hidden p-5 rounded-card bg-white/5">
-        <span
-          aria-hidden
-          className="pointer-events-none select-none absolute -top-5 right-1 text-[76px] leading-none font-black text-brand-secondary/[0.09]"
-        >
-          {step}
-        </span>
         <div className="relative mb-5">
           <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light whitespace-pre-line">
             {title}
@@ -94,21 +86,22 @@ export default function PartnersClient() {
           <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-balance text-brand-light">
             {t.heroTitle}
           </h1>
-          <p className="mt-3 text-[13px] font-normal text-brand-light/60 text-balance">
-            {t.whiteGloveLine}
+          <p className="mt-3 text-[14px] sm:text-[15px] font-normal text-brand-light/60 text-balance">
+            {t.heroSubtitle}
           </p>
           <ul className="mt-4 flex flex-wrap justify-center gap-1.5">
-            {t.heroPills.map((pill) => (
+            {t.heroPills.map((pill, i) => (
               <li
                 key={pill}
-                className="inline-flex items-center h-7 px-3 rounded-full bg-white/5 border border-white/10 text-[11px] font-black uppercase tracking-wide text-brand-light/70"
+                className={
+                  i === 0
+                    ? "inline-flex items-center h-7 px-3 rounded-full btn-metal text-[11px] font-black uppercase tracking-wide"
+                    : "inline-flex items-center h-7 px-3 rounded-full bg-white/5 border border-white/10 text-[11px] font-black uppercase tracking-wide text-brand-light/70"
+                }
               >
                 {pill}
               </li>
             ))}
-            <li className="inline-flex items-center h-7 px-3 rounded-full btn-metal text-[11px] font-black uppercase tracking-wide">
-              {t.heroPillAccent}
-            </li>
           </ul>
         </section>
 
@@ -120,7 +113,7 @@ export default function PartnersClient() {
             (see btn-tonal-dark) is what actually contrasts against this
             block's own warm-lit screenshot — a gold wash disappeared into it
             (ТЗ №2 M6). */}
-        <PitchBlock step="01" title={t.blockPt33Title} subtitle={t.blockPt33Subtitle}>
+        <PitchBlock title={t.blockPt33Title} subtitle={t.blockPt33Subtitle}>
           <DesktopMockup />
           <div className="mt-6">
             <DemoLoginButton
@@ -136,7 +129,7 @@ export default function PartnersClient() {
             fill as block 01's CTA (see ТЗ №2 M12): this card sits under the
             same warm ambient glow, and the gold wash read just as flat here
             as it did there. */}
-        <PitchBlock step="02" title={t.blockStorefrontTitle} subtitle={t.blockStorefrontSubtitle}>
+        <PitchBlock title={t.blockStorefrontTitle} subtitle={t.blockStorefrontSubtitle}>
           <DeviceMockup />
           <div className="mt-6">
             <Link
@@ -144,7 +137,7 @@ export default function PartnersClient() {
               target="_blank"
               rel="noopener"
               onClick={() => triggerHaptic('light')}
-              className="w-full h-12 btn-tonal-dark text-brand-light font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
+              className="w-full h-12 btn-tonal-dark border border-white/15 text-brand-light font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               {t.ctaLive}
               <ArrowRight size={16} className="text-brand-secondary" />
@@ -152,11 +145,12 @@ export default function PartnersClient() {
           </div>
         </PitchBlock>
 
-        {/* Trust block: one attribution line (not two lines both naming the
-            agency — see ТЗ №2 M7), then the guarantee as the block's
-            dominant element with the checklist visually subordinate to it
-            (M8), not competing with it for the eye. No photos, no names, no
-            invented experience or project-count figures — see ТЗ №1 A9. */}
+        {/* Offer block: one attribution line (not two lines both naming the
+            agency — see ТЗ №2 M7), then the launch-price headline as the
+            block's dominant element, an abstract, the included scope, an
+            add-on price list, payment terms and the subscription rate. No
+            photos, no names, no invented experience or project-count
+            figures — see ТЗ №1 A9. */}
         <section className="px-2 pt-2 text-center">
           <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40">
             {t.trustBuiltByBefore}
@@ -172,15 +166,19 @@ export default function PartnersClient() {
           </p>
 
           <p className="mt-4 text-[19px] sm:text-[21px] font-black text-brand-light leading-snug text-balance">
-            {t.trustGuarantee}
+            {t.offerTitle}
           </p>
 
-          <div className="mt-4 text-left">
+          <p className="mt-3 text-[13px] font-medium text-brand-light/60 leading-relaxed max-w-md mx-auto">
+            {t.offerBody}
+          </p>
+
+          <div className="mt-5 text-left">
             <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-2">
-              {t.trustChecklistTitle}
+              {t.includedTitle}
             </p>
             <ul className="space-y-1.5">
-              {t.trustChecklistItems.map((item) => (
+              {t.includedItems.map((item) => (
                 <li key={item} className="flex items-start gap-2 text-[12px] font-semibold text-brand-light/55">
                   <Check size={13} className="shrink-0 mt-0.5 text-brand-secondary" />
                   {item}
@@ -188,7 +186,30 @@ export default function PartnersClient() {
               ))}
             </ul>
           </div>
+
+          <div className="mt-5 text-left">
+            <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-2">
+              {t.addonsTitle}
+            </p>
+            <ul className="space-y-1.5">
+              {t.addonsItems.map(({ label, price }) => (
+                <li key={label} className="flex items-baseline justify-between gap-3 text-[12px] font-semibold">
+                  <span className="text-brand-light/45">{label}</span>
+                  <span className="shrink-0 text-brand-light/70 tabular-nums whitespace-nowrap">{price}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <p className="mt-4 pt-4 border-t border-white/10 text-[13px] font-bold text-brand-light/60 text-left">
+            {t.termsLine}
+          </p>
+          <p className="mt-2 text-[12px] font-bold text-brand-light/50 text-left">
+            {t.subscriptionLine}
+          </p>
         </section>
+
+        <FaqSection title={t.faqTitle} items={t.faqItems} />
 
         {/* No card around this one. The blocks above are cards because each
             holds an argument; the closing line and its buttons are the page
@@ -216,7 +237,7 @@ export default function PartnersClient() {
               rel="noopener"
               aria-label={t.ctaButton}
               onClick={() => triggerHaptic('medium')}
-              className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
+              className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               <WhatsAppIcon size={18} />
               {t.ctaButton}
@@ -229,7 +250,7 @@ export default function PartnersClient() {
               rel="noopener"
               aria-label={t.ctaButtonLine}
               onClick={() => triggerHaptic('medium')}
-              className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl"
+              className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               <LineIcon size={18} />
               {t.ctaButtonLine}
