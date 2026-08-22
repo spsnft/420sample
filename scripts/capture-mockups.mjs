@@ -5,7 +5,13 @@
 // Run with:
 //   npm run capture:mockups                        # boots its own dev server
 //   npm run capture:mockups -- --url=https://preview.vercel.app   # against a deployed preview instead
+//   npm run capture:mockups -- --only=staff         # capture just one target
+//   npm run capture:mockups -- --only=customer
 //
+// Against a Vercel preview protected by Deployment Protection, set
+// VERCEL_AUTOMATION_BYPASS_SECRET (Project Settings → Deployment Protection →
+// Protection Bypass for Automation) — every request then carries the
+// x-vercel-protection-bypass header instead of hitting Vercel's own login wall.
 // Read src/components/partners/DesktopMockup.tsx and DeviceMockup.tsx before
 // touching this file — they explain why the staff shot is 860x560 rather
 // than a full desktop width (client rows turn to mush once scaled down from
@@ -33,6 +39,23 @@ const urlArg = process.argv.find((a) => a.startsWith("--url="));
 const EXTERNAL_URL = urlArg ? urlArg.slice("--url=".length).replace(/\/$/, "") : null;
 const ORIGIN = EXTERNAL_URL || "http://localhost:3000";
 const DEV_SERVER_TIMEOUT_MS = 60_000;
+
+const onlyArg = process.argv.find((a) => a.startsWith("--only="));
+const ONLY = onlyArg ? onlyArg.slice("--only=".length) : null;
+if (ONLY && ONLY !== "staff" && ONLY !== "customer") {
+  throw new Error(`--only must be "staff" or "customer", got "${ONLY}"`);
+}
+
+// Vercel Deployment Protection sits in front of preview URLs by default and
+// answers every unauthenticated request — including Playwright's — with
+// Vercel's own login page instead of the app. Protection Bypass for
+// Automation issues a secret that, sent as this header, skips that wall.
+// Irrelevant (and unset) against a local dev server or an unprotected
+// deployment, so it's applied unconditionally rather than gated on EXTERNAL_URL.
+const VERCEL_BYPASS_SECRET = process.env.VERCEL_AUTOMATION_BYPASS_SECRET || null;
+const EXTRA_HEADERS = VERCEL_BYPASS_SECRET
+  ? { "x-vercel-protection-bypass": VERCEL_BYPASS_SECRET }
+  : null;
 
 const OUT_DIR = path.join(process.cwd(), "public", "images", "partners");
 const STAFF_OUT = path.join(OUT_DIR, "staff-view.png");
@@ -147,6 +170,46 @@ async function withServer(fn) {
   }
 }
 
+// A protected Vercel preview answers every request with Vercel's own login
+// wall (HTTP 401, title "Authentication Required", body naming "Vercel
+// Authentication") instead of the app. Playwright can't tell that apart from
+// a normal page load on its own — page.goto() and waitForURL() both consider
+// it a success — so anything shot against a protected deployment would be a
+// screenshot of that wall silently written out as if it were /staff. These
+// two checks are the only thing standing between that and a loud failure.
+async function looksLikeVercelProtectionPage(page) {
+  const title = await page.title().catch(() => "");
+  if (/authentication required/i.test(title)) return true;
+  const body = await page.evaluate(() => document.body?.innerText || "").catch(() => "");
+  return /vercel authentication/i.test(body) || /not publicly accessible/i.test(body);
+}
+
+async function assertNotVercelProtection(page) {
+  if (await looksLikeVercelProtectionPage(page)) {
+    throw new Error(
+      `${page.url()} закрыт Vercel Deployment Protection — снимок получился бы страницей входа Vercel, а не приложением. ` +
+        "Либо задай VERCEL_AUTOMATION_BYPASS_SECRET (Protection Bypass for Automation), либо сними защиту с этого превью в настройках проекта."
+    );
+  }
+}
+
+// Wraps page.goto() so a bad/unreachable --url produces one clear error
+// instead of Playwright's own timeout/DNS stack trace, and so a Vercel
+// protection wall is caught right at the first navigation rather than only
+// surfacing later as a failed login.
+async function gotoOrThrow(page, url) {
+  let response;
+  try {
+    response = await page.goto(url, { waitUntil: "networkidle" });
+  } catch (err) {
+    throw new Error(`Не удалось открыть ${url} — адрес недоступен (${err.message})`);
+  }
+  if (response && response.status() >= 400 && !(await looksLikeVercelProtectionPage(page))) {
+    throw new Error(`Не удалось открыть ${url} — сервер ответил ${response.status()}, проверь адрес`);
+  }
+  return response;
+}
+
 async function freezeMotion(context) {
   await context.addInitScript((css) => {
     const style = document.createElement("style");
@@ -200,9 +263,11 @@ async function captureStaffView(browser) {
     reducedMotion: "reduce",
   });
   await freezeMotion(context);
+  if (EXTRA_HEADERS) await context.setExtraHTTPHeaders(EXTRA_HEADERS);
 
   const page = await context.newPage();
-  await page.goto(`${ORIGIN}/staff/login`, { waitUntil: "networkidle" });
+  await gotoOrThrow(page, `${ORIGIN}/staff/login`);
+  await assertNotVercelProtection(page);
 
   await page.fill('input[name="email"]', email);
   await page.fill('input[name="password"]', password);
@@ -210,6 +275,7 @@ async function captureStaffView(browser) {
   await page.click('button[type="submit"]');
   await waitForLoginOutcome(page);
   await page.waitForLoadState("networkidle");
+  await assertNotVercelProtection(page);
   await page.evaluate(() => document.fonts.ready);
 
   // The search screen itself carries no Framer Motion of its own, but give
@@ -231,6 +297,7 @@ async function captureCustomerView(browser) {
     reducedMotion: "reduce",
   });
   await freezeMotion(context);
+  if (EXTRA_HEADERS) await context.setExtraHTTPHeaders(EXTRA_HEADERS);
 
   // Past the age gate, and in English: the mockup sits on a page read by shop
   // owners in three languages, and the screen inside it stays one of them.
@@ -244,7 +311,8 @@ async function captureCustomerView(browser) {
   });
 
   const page = await context.newPage();
-  await page.goto(`${ORIGIN}/demo`, { waitUntil: "networkidle" });
+  await gotoOrThrow(page, `${ORIGIN}/demo`);
+  await assertNotVercelProtection(page);
   await page.evaluate(() => document.fonts.ready);
 
   await page.evaluate((pad) => {
@@ -288,8 +356,9 @@ async function captureCustomerView(browser) {
 }
 
 // Fails on missing creds before booting anything, per the ТЗ: no silent
-// fallback to a screenshot of the login screen.
-requireDemoStaffCreds();
+// fallback to a screenshot of the login screen. Only required when staff is
+// actually being captured — --only=customer never touches /staff.
+if (ONLY !== "customer") requireDemoStaffCreds();
 
 await withServer(async () => {
   const browser = await chromium.launch(
@@ -297,8 +366,8 @@ await withServer(async () => {
   );
   activeBrowser = browser;
   try {
-    await captureStaffView(browser);
-    await captureCustomerView(browser);
+    if (ONLY !== "customer") await captureStaffView(browser);
+    if (ONLY !== "staff") await captureCustomerView(browser);
   } finally {
     await browser.close();
     activeBrowser = null;
