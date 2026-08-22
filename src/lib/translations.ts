@@ -75,11 +75,20 @@ export interface TranslationDictionary {
   addressLabel: string;
   hoursLabel: string;
   reviewsLabel: string;
+  // Same value in every locale, deliberately (audit ТЗ pitch-layout-2
+  // №5.3) — it sits directly under the always-English tagline above it and
+  // the two read as one bilingual-brand line together, not a translated
+  // subtitle.
   aboutLead: string;
   aboutPhotoLabel: string;
   certSteps: [CertStep, CertStep, CertStep];
   contactsTitle: string;
-  footerDisclaimer: [string, string];
+  // One line, not two — the old two-paragraph version didn't fit on two
+  // lines even on an iPhone 14 Plus (428pt). Still carries both legal
+  // points (age/PT.33 requirement, and "reference only" as the storefront's
+  // cover for showing product and prices without being an ad) — neither is
+  // droppable, just shorter.
+  footerDisclaimer: string;
 
   // Sticky strip above the header on the storefront demo (see DemoBar) —
   // marks the page as sample data to a prospect who clicked in from the
@@ -101,12 +110,10 @@ export interface TranslationDictionary {
   consultPhoneCodeOther: string;
   consultConsentLabel: string;
   consultSubmitCta: string;
-  consultSuccessMessage: string;
-  consultErrorMessage: string;
-  // Demo-only success state (HomeClient's demoInstance): submitting the
-  // form never calls the real backend, so nothing typed into it is sent,
-  // logged, or stored — it just swaps the modal's header and body for this
-  // in the same shape a real submission's confirmation would take.
+  // Submitting the form never calls a real backend — nothing typed into it
+  // is sent, logged, or stored, unconditionally (see the audit ТЗ this
+  // shipped with, item 6: there is exactly one instance of this project) —
+  // it just swaps the modal's header and body for this success state.
   // consultSuccessHeadline is two lines ("\n"-joined, see renderLines) set
   // in the same weight as the modal's own heading; consultSuccessNote is
   // the one line on the whole storefront addressed to the shop owner
@@ -191,10 +198,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       { title: "Receive", description: "your certificate the next day" },
     ],
     contactsTitle: "Contact & Follow",
-    footerDisclaimer: [
-      "18+. Medical cannabis is dispensed only with a valid PT.33 medical card.",
-      "Information on this site is for reference only and does not constitute cannabis advertising.",
-    ],
+    footerDisclaimer: "18+. Sold only with a valid PT.33 card. Reference only — not advertising.",
 
     demoBarLabel: "DEMO STORE — sample data",
     demoBarCta: "Back to buds.digital",
@@ -205,8 +209,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     consultPhoneCodeOther: "Other…",
     consultConsentLabel: "I agree to the processing of my personal data in accordance with PDPA.",
     consultSubmitCta: "Send Request",
-    consultSuccessMessage: "Thanks — we'll reach out on LINE to confirm your visit.",
-    consultErrorMessage: "Something went wrong. Please try again or contact us on LINE.",
     consultSuccessTitle: "Request Sent",
     consultSuccessHeadline: "Request received.\nWe'll confirm by WhatsApp within the hour.",
     consultSuccessNote: "In your version, this request lands in your /staff panel.",
@@ -262,13 +264,16 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Home page
     heroDoorCertTitle: "ОФОРМИТЬ\nСПРАВКУ",
-    heroDoorMenuTitle: "МЕНЮ\nНА СЕГОДНЯ",
-    heroDoorCertLine: "Бесплатно, справка на следующий день — под защитой закона",
+    heroDoorMenuTitle: "МЕНЮ\nСЕГОДНЯ",
+    heroDoorCertLine: "Бесплатно, уже на следующий день — под защитой закона",
     heroDoorMenuLine: "Полный ассортимент, всегда в наличии",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
-    aboutLead: "Лицензированный диспенсери. Полное меню, актуальные цены.",
+    // Deliberately English, not translated — see the "en" entry above's
+    // comment: it sits under the always-English "Flowers. Done properly."
+    // tagline and reads as one bilingual-brand unit with it.
+    aboutLead: "Licensed dispensary. Full menu, live prices.",
     aboutPhotoLabel: "Фото заведения — скоро",
     certSteps: [
       { title: "Отправьте", description: "заявку в течение минуты" },
@@ -276,10 +281,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       { title: "Получите", description: "справку на следующий день" },
     ],
     contactsTitle: "Контакты и соцсети",
-    footerDisclaimer: [
-      "18+. Медицинский каннабис отпускается только при наличии действующей карты PT.33/гос.образца.",
-      "Информация на сайте носит справочный характер и не является рекламой каннабиса.",
-    ],
+    footerDisclaimer: "18+. Отпускается только по действующей карте PT.33. Справочная информация, не реклама.",
 
     demoBarLabel: "ДЕМО-МАГАЗИН — тестовые данные",
     demoBarCta: "Вернуться на buds.digital",
@@ -290,8 +292,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     consultPhoneCodeOther: "Другой…",
     consultConsentLabel: "Я согласен(на) на обработку персональных данных в соответствии с PDPA.",
     consultSubmitCta: "Отправить заявку",
-    consultSuccessMessage: "Спасибо — мы свяжемся с вами в LINE, чтобы подтвердить визит.",
-    consultErrorMessage: "Что-то пошло не так. Попробуйте ещё раз или напишите нам в LINE.",
     consultSuccessTitle: "Заявка отправлена",
     consultSuccessHeadline: "Заявка получена.\nМы подтвердим в WhatsApp в течение часа.",
     consultSuccessNote: "В вашей версии эта заявка попадёт в вашу панель /staff.",
@@ -356,7 +356,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     reviewsLabel: "รีวิว",
-    aboutLead: "ร้านกัญชาที่ได้รับใบอนุญาต เมนูครบ ราคาอัปเดตตามจริง",
+    // Deliberately English, not translated — see the "en" entry's comment.
+    aboutLead: "Licensed dispensary. Full menu, live prices.",
     aboutPhotoLabel: "ภาพร้าน — เร็วๆ นี้",
     certSteps: [
       { title: "ส่ง", description: "คำขอของคุณภายในหนึ่งนาที" },
@@ -364,10 +365,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       { title: "รับ", description: "ใบรับรองของคุณในวันถัดไป" },
     ],
     contactsTitle: "ติดต่อและติดตามเรา",
-    footerDisclaimer: [
-      "อายุ 18 ปีขึ้นไป กัญชาทางการแพทย์จำหน่ายเฉพาะผู้ที่มีบัตรรับรองทางการแพทย์ (PT.33) ที่ยังไม่หมดอายุเท่านั้น",
-      "ข้อมูลบนเว็บไซต์นี้มีไว้เพื่อการอ้างอิงเท่านั้น ไม่ถือเป็นการโฆษณากัญชา",
-    ],
+    footerDisclaimer: "อายุ 18 ปีขึ้นไป จำหน่ายเฉพาะผู้มีบัตร PT.33 ที่ยังไม่หมดอายุ ข้อมูลอ้างอิงเท่านั้น ไม่ใช่การโฆษณา",
 
     demoBarLabel: "ร้านสาธิต — ข้อมูลตัวอย่าง",
     demoBarCta: "กลับไปที่ buds.digital",
@@ -378,8 +376,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     consultPhoneCodeOther: "อื่นๆ…",
     consultConsentLabel: "ฉันยินยอมให้ประมวลผลข้อมูลส่วนบุคคลของฉันตาม PDPA",
     consultSubmitCta: "ส่งคำขอ",
-    consultSuccessMessage: "ขอบคุณ — เราจะติดต่อคุณทาง LINE เพื่อยืนยันการเข้าร้าน",
-    consultErrorMessage: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งหรือติดต่อเราทาง LINE",
     consultSuccessTitle: "ส่งคำขอแล้ว",
     consultSuccessHeadline: "ได้รับคำขอแล้ว\nเราจะยืนยันทาง WhatsApp ภายในหนึ่งชั่วโมง",
     consultSuccessNote: "ในเวอร์ชันของคุณ คำขอนี้จะเข้าแผงพนักงาน /staff",

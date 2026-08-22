@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import Link from "next/link"
-import { Loader2, CheckCircle2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { TranslationDictionary } from "@/lib/translations"
 import { triggerHaptic } from "@/lib/utils"
 
@@ -41,69 +41,37 @@ const OTHER_CODE = "other";
 
 interface ConsultationRequestFormProps {
   t: TranslationDictionary;
-  /** buds.digital's own demo instance only (see lib/demo.ts). When set,
-   *  submitting never calls the real backend — nothing typed in is sent,
-   *  logged, or stored — it just calls onDemoSuccess so the parent can
-   *  swap the whole modal to its success state. */
-  demoInstance?: boolean;
-  onDemoSuccess?: () => void;
+  // Called once the (fake) submission completes, so the parent can swap the
+  // whole modal to its success state — see Consultation.tsx. There is
+  // exactly one instance of this project (no separate "demo" vs. "real
+  // client" build — see the audit ТЗ this shipped with, item 6), so this
+  // form never calls a real backend at all: nothing typed in is sent,
+  // logged, or stored, unconditionally.
+  onSuccess: () => void;
 }
 
-type Status = "idle" | "submitting" | "success" | "error";
-
-export const ConsultationRequestForm: React.FC<ConsultationRequestFormProps> = ({ t, demoInstance, onDemoSuccess }) => {
+export const ConsultationRequestForm: React.FC<ConsultationRequestFormProps> = ({ t, onSuccess }) => {
   const [name, setName] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [countryCode, setCountryCode] = React.useState("+66");
   const [customCode, setCustomCode] = React.useState("");
   const [consent, setConsent] = React.useState(false);
-  const [status, setStatus] = React.useState<Status>("idle");
+  const [submitting, setSubmitting] = React.useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim() || !consent || status === "submitting") return;
+    if (!name.trim() || !phone.trim() || !consent || submitting) return;
 
     triggerHaptic('medium');
-
-    if (demoInstance) {
-      // No fetch at all on the demo — see the prop doc above. The brief
-      // "submitting" flash is only there so the tap reads as having done
-      // something before the modal swaps to the success state.
-      setStatus("submitting");
-      setTimeout(() => {
-        triggerHaptic('success');
-        onDemoSuccess?.();
-      }, 400);
-      return;
-    }
-
-    const dialCode = countryCode === OTHER_CODE ? customCode.trim() : countryCode;
-    const fullPhone = `${dialCode} ${phone.trim()}`.trim();
-
-    setStatus("submitting");
-    try {
-      const res = await fetch("/api/consultation-request", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), phone: fullPhone }),
-      });
-      if (!res.ok) throw new Error("request failed");
+    // The brief "submitting" flash is only there so the tap reads as having
+    // done something before the modal swaps to the success state — there is
+    // no request in flight behind it.
+    setSubmitting(true);
+    setTimeout(() => {
       triggerHaptic('success');
-      setStatus("success");
-    } catch {
-      triggerHaptic('warning');
-      setStatus("error");
-    }
+      onSuccess();
+    }, 400);
   };
-
-  if (status === "success") {
-    return (
-      <div className="flex items-start gap-3 p-4 rounded-button bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
-        <CheckCircle2 size={18} className="shrink-0 mt-0.5" />
-        <p className="text-[12px] font-bold leading-snug">{t.consultSuccessMessage}</p>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
@@ -167,16 +135,12 @@ export const ConsultationRequestForm: React.FC<ConsultationRequestFormProps> = (
         <span className="text-[11px] text-brand-light/60 leading-snug">{renderConsentLabel(t.consultConsentLabel)}</span>
       </label>
 
-      {status === "error" && (
-        <p className="text-[12px] font-bold text-red-400">{t.consultErrorMessage}</p>
-      )}
-
       <button
         type="submit"
-        disabled={status === "submitting"}
+        disabled={submitting}
         className="w-full h-12 btn-metal font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
       >
-        {status === "submitting" && <Loader2 size={16} className="animate-spin" />}
+        {submitting && <Loader2 size={16} className="animate-spin" />}
         {t.consultSubmitCta}
       </button>
     </form>

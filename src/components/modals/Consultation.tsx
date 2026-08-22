@@ -11,10 +11,6 @@ import { ConsultationRequestForm } from "@/components/forms/ConsultationRequestF
 interface ConsultationProps {
   t: TranslationDictionary;
   onClose: () => void;
-  /** buds.digital's own demo instance only (see lib/demo.ts) — swaps the
-   *  form's real submit for a fake, always-succeeds one so nothing typed
-   *  into it is sent anywhere. See ConsultationRequestForm. */
-  demoInstance?: boolean;
 }
 
 // "\n" marks a manual line break within the two-line success headline,
@@ -28,13 +24,16 @@ function renderLines(text: string): React.ReactNode {
   ));
 }
 
-export const Consultation = ({ t, onClose, demoInstance }: ConsultationProps) => {
+export const Consultation = ({ t, onClose }: ConsultationProps) => {
   const [isClosing, setIsClosing] = React.useState(false);
-  // Demo-only: the form calls this instead of actually submitting, and the
-  // header/content below swap to the success state. Reset on every open —
-  // Consultation is only ever mounted while the modal is showing (see
-  // HomeClient), so a fresh mount already starts here, but the reset makes
-  // that explicit rather than relying on it.
+  // The form calls this instead of actually submitting — there is exactly
+  // one instance of this project (see the audit ТЗ this shipped with, item
+  // 6: no demoInstance branching), so nothing typed into it is ever sent,
+  // logged, or stored, unconditionally. The header/content below swap to
+  // the success state. Reset on every open — Consultation is only ever
+  // mounted while the modal is showing (see HomeClient), so a fresh mount
+  // already starts here, but the reset makes that explicit rather than
+  // relying on it.
   const [success, setSuccess] = React.useState(false);
   // Resolved on the first client render, not one render later. Starting at
   // `false` on a desktop viewport mounted the motion element with the mobile
@@ -167,8 +166,7 @@ export const Consultation = ({ t, onClose, demoInstance }: ConsultationProps) =>
 
                 <ConsultationRequestForm
                   t={t}
-                  demoInstance={demoInstance}
-                  onDemoSuccess={() => setSuccess(true)}
+                  onSuccess={() => setSuccess(true)}
                 />
               </>
             )}
