@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "generate:qr": "node scripts/generate-qr.mjs",
+    "capture:mockups": "node scripts/capture-mockups.mjs",
     "test": "vitest run"
   },
   "dependencies": {

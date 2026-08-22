@@ -93,7 +93,10 @@ export function InviteManager({ initial }: { initial: StaffInvite[] }) {
               key={r}
               type="button"
               onClick={() => setRole(r)}
-              className={`px-3 py-1.5 rounded-button text-[11px] font-black uppercase tracking-wide transition-colors capitalize ${
+              // rounded-[14px]: same nested-radius fix as the client list's
+              // sort toggle — this chip sits inside a rounded-button (16px)
+              // group with only p-0.5 (2px) between them (/staff ТЗ №2 part 1).
+              className={`px-3 py-1.5 rounded-[14px] text-[11px] font-black uppercase tracking-wide transition-colors capitalize ${
                 role === r ? "bg-brand-secondary/20 text-brand-secondary" : "text-brand-light/40 hover:text-brand-light/70"
               }`}
             >

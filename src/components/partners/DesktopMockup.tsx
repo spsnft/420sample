@@ -30,14 +30,16 @@ import { motion } from "framer-motion"
 // button on top of the last visible row of the screenshot instead of below
 // it (see ТЗ №2 M6).
 //
-// The screenshot is a real render of the live /staff search screen carrying the
-// demo data supabase/seed.sql seeds. Recapture and swap
-// public/images/partners/staff-view.png whenever that screen's design changes.
-// Capture it at 860x560, not at a full desktop width: /staff is a max-w-2xl
-// (672px) column centred in the viewport, so a narrow window still reads as a
-// real desktop browser while keeping the column — and its status pills —
-// legible once the shot is scaled down into this block. A 1280px-wide capture
-// scales to roughly a quarter here and turns the rows to mush.
+// The screenshot is a real render of the live /staff search screen carrying
+// the demo data supabase/seed.sql seeds. Recapture and swap
+// public/images/partners/staff-view.png whenever that screen's design
+// changes — scripts/capture-mockups.mjs does it (npm run capture:mockups),
+// logged in as the demo staff account. Capture it at 860x560, not at a full
+// desktop width: /staff is a max-w-2xl (672px) column centred in the
+// viewport, so a narrow window still reads as a real desktop browser while
+// keeping the column — and its status pills — legible once the shot is
+// scaled down into this block. A 1280px-wide capture scales to roughly a
+// quarter here and turns the rows to mush.
 export function DesktopMockup() {
   // Same pattern as DeviceMockup: the sweep is driven off the frame's viewport
   // entry rather than its own whileInView, which never fires reliably on an

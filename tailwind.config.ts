@@ -13,6 +13,14 @@ module.exports = {
         'card': '2rem',
         'modal': '2.5rem',
         'badge': '0.75rem',
+        // For a row/chip sitting inside a `rounded-card` container with `p-2`
+        // padding: concentric corners want inner ≈ outer − padding
+        // (2rem − 0.5rem), not the same radius as the outer shape (see
+        // /staff ТЗ №2 part 1). A tighter container (e.g. `rounded-button`
+        // with `p-0.5`) wants its own smaller value by the same formula —
+        // reach for an arbitrary `rounded-[…]` there rather than this token,
+        // since the right number depends on that container's own padding.
+        'nested': '1.5rem',
       },
       colors: {
         brand: {

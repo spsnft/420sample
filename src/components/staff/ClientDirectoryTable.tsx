@@ -91,7 +91,11 @@ export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
                 key={opt.value}
                 type="button"
                 onClick={() => handleSortChange(opt.value)}
-                className={`px-2.5 py-1 rounded-button text-[10px] font-black uppercase tracking-wide transition-colors ${
+                // rounded-[14px]: this chip sits inside a rounded-button
+                // (16px) group with only p-0.5 (2px) between them — the
+                // same 16px would ring right against the outer edge (/staff
+                // ТЗ №2 part 1), so it goes one size down from the token.
+                className={`px-2.5 py-1 rounded-[14px] text-[10px] font-black uppercase tracking-wide transition-colors ${
                   sort === opt.value
                     ? "bg-brand-secondary/20 text-brand-secondary"
                     : "text-brand-light/40 hover:text-brand-light/70"
