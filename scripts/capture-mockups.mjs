@@ -261,6 +261,18 @@ async function captureCustomerView(browser) {
     );
     if (navChip) navChip.style.display = "none";
 
+    // DemoBar (the "DEMO STORE — sample data" strip) sits two siblings above
+    // header — real, useful context on the live demo site, but debris inside
+    // a mockup meant to read as a generic storefront. The sibling directly
+    // above header is Header's own scroll sentinel (a 1px div it renders
+    // for its sticky logic, see layout/Header.tsx), not DemoBar itself.
+    // Hiding it also frees the header's own stickyOffset gap above it (see
+    // HomeClient.tsx, DEMO_BAR_HEIGHT), so header's inline `top` needs
+    // resetting too or it leaves that gap empty at the frame's very top.
+    const demoBar = header.previousElementSibling?.previousElementSibling;
+    if (demoBar) demoBar.style.display = "none";
+    header.style.top = "0px";
+
     sections.slice(2).forEach((el) => { el.style.display = "none"; });
     sections[1].style.paddingTop = `${pad}px`;
     sections[1].style.paddingBottom = "0px";
