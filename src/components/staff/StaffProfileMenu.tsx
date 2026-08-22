@@ -32,7 +32,7 @@ export function StaffProfileMenu({ staff }: { staff: StaffProfile }) {
       <button
         type="button"
         onClick={() => setIsOpen((v) => !v)}
-        className="flex items-center gap-1.5 h-8 pl-3 pr-2 rounded-button bg-white/5 border border-white/10 hover:border-brand-secondary/30 transition-all text-[11px] font-bold text-brand-light/70 hover:text-brand-light"
+        className="flex items-center gap-1.5 h-8 pl-3 pr-2 rounded-button surface-row hover:brightness-110 active:translate-y-px transition-all text-[11px] font-bold text-brand-light/70 hover:text-brand-light"
       >
         <span className="truncate max-w-[120px]">{staff.name}</span>
         <ChevronDown size={13} className={`shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />

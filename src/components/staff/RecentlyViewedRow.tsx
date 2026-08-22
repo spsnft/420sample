@@ -13,7 +13,7 @@ const STATUS_TINT: Record<PrescriptionStatus, string> = {
   expired: "bg-red-500/10 border-red-500/25 hover:border-red-500/40",
   revoked: "bg-red-500/10 border-red-500/25 hover:border-red-500/40",
 };
-const NEUTRAL_TINT = "bg-white/5 border-transparent hover:border-brand-secondary/30";
+const NEUTRAL_TINT = "surface-row hover:brightness-110 border-transparent";
 
 export function RecentlyViewedRow({ clients }: { clients: ClientDirectoryEntry[] }) {
   const { navigate, isRowPending } = useClientRowNav();
@@ -45,7 +45,7 @@ export function RecentlyViewedRow({ clients }: { clients: ClientDirectoryEntry[]
               key={c.client_id}
               type="button"
               onClick={() => navigate(c.client_id)}
-              className={`shrink-0 w-36 h-12 px-3 rounded-card border active:scale-[0.98] active:bg-white/10 transition-all text-left flex items-center justify-between gap-2 ${tint} ${
+              className={`shrink-0 w-36 h-12 px-3 rounded-card border active:translate-y-px transition-all text-left flex items-center justify-between gap-2 ${tint} ${
                 pending ? "opacity-60" : ""
               }`}
             >

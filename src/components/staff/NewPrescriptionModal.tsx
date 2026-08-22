@@ -5,11 +5,12 @@ import { motion } from "framer-motion"
 import { X, FilePlus } from "lucide-react"
 import { createPrescription } from "@/app/staff/actions"
 import { triggerHaptic } from "@/lib/utils"
+import { DateField } from "./DateField"
 
 const today = () => new Date().toISOString().slice(0, 10);
 
 const inputClass =
-  "w-full h-11 mt-1 px-3 rounded-button bg-white/5 border border-white/10 text-[14px] font-bold text-brand-light focus:outline-none focus:border-brand-secondary/50";
+  "w-full h-11 mt-1 px-3 rounded-button field-recessed border border-white/5 text-[14px] font-bold text-brand-light focus:outline-none focus:border-brand-secondary/50";
 const labelClass = "text-[11px] font-black uppercase tracking-wide text-brand-light/40";
 
 interface NewPrescriptionModalProps {
@@ -60,14 +61,14 @@ export function NewPrescriptionModal({ clientId, clientName, onClose }: NewPresc
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="relative w-full bg-brand-primary sm:rounded-modal rounded-t-modal p-6 pt-8 max-h-[90vh] overflow-y-auto"
+        className="relative w-full bg-brand-primary surface sm:rounded-modal rounded-t-modal p-6 pt-8 max-h-[90vh] overflow-y-auto"
       >
         <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/20 rounded-full sm:hidden" />
 
         <button
           type="button"
           onClick={handleClose}
-          className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/10 active:scale-90 rounded-full border border-white/10 transition-all text-brand-light z-20"
+          className="absolute top-6 right-6 p-2 surface-row hover:brightness-110 active:translate-y-px rounded-full transition-all text-brand-light z-20"
         >
           <X size={18} />
         </button>
@@ -83,13 +84,7 @@ export function NewPrescriptionModal({ clientId, clientName, onClose }: NewPresc
             </div>
             <div>
               <label className={labelClass}>Issue date</label>
-              <input
-                required
-                type="date"
-                value={issueDate}
-                onChange={(e) => setIssueDate(e.target.value)}
-                className={inputClass}
-              />
+              <DateField required value={issueDate} onChange={setIssueDate} />
             </div>
           </div>
 
