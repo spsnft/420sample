@@ -10,23 +10,41 @@ import { QuotaBar } from "./QuotaBar"
 import { ClientStats } from "./ClientStats"
 import { NewSaleModal } from "./NewSaleModal"
 import { NewPrescriptionModal } from "./NewPrescriptionModal"
+import { ConfirmDialog } from "./ConfirmDialog"
 import type { ClientCardData } from "@/lib/staff/types"
 
 export function ClientCard({ data }: { data: ClientCardData }) {
   const router = useRouter();
   const [isSaleOpen, setIsSaleOpen] = React.useState(false);
   const [isNewRxOpen, setIsNewRxOpen] = React.useState(false);
+  const [isConfirmRevokeOpen, setIsConfirmRevokeOpen] = React.useState(false);
   const [isTogglingRevoke, setIsTogglingRevoke] = React.useState(false);
 
   const rx = data.prescriptions.find((p) => p.status === "active") ?? data.prescriptions[0];
   const olderPrescriptions = data.prescriptions.filter((p) => p.id !== rx.id);
 
-  const handleToggleRevoke = async () => {
+  const applyRevokeToggle = async (revoked: boolean) => {
     triggerHaptic("medium");
     setIsTogglingRevoke(true);
-    await setPrescriptionRevoked(rx.id, !rx.revoked);
+    await setPrescriptionRevoked(rx.id, revoked);
     setIsTogglingRevoke(false);
     router.refresh();
+  };
+
+  // Revoking blocks a sale until a new PT.33 is added, so it gets a
+  // confirmation naming that consequence. Restoring is fully reversible on
+  // its own — revoking again undoes it — so it fires immediately.
+  const handleRevokeClick = () => {
+    if (rx.revoked) {
+      applyRevokeToggle(false);
+    } else {
+      setIsConfirmRevokeOpen(true);
+    }
+  };
+
+  const handleConfirmRevoke = () => {
+    setIsConfirmRevokeOpen(false);
+    applyRevokeToggle(true);
   };
 
   return (
@@ -37,7 +55,6 @@ export function ClientCard({ data }: { data: ClientCardData }) {
           {data.client.phone && <span>{data.client.phone}</span>}
           {data.client.line_id && <span>LINE: {data.client.line_id}</span>}
           {data.client.id_number && <span>ID: {data.client.id_number}</span>}
-          <span>Client since {formatDate(data.client.first_visit_date)}</span>
         </div>
       </div>
 
@@ -47,7 +64,7 @@ export function ClientCard({ data }: { data: ClientCardData }) {
         firstVisitDate={data.client.first_visit_date}
       />
 
-      <div className="p-4 rounded-card bg-white/5 border border-white/10 space-y-3">
+      <div className="p-4 rounded-card surface space-y-3">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40">PT.33</p>
@@ -59,14 +76,14 @@ export function ClientCard({ data }: { data: ClientCardData }) {
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-brand-light/50">
           <span>Issued {formatDate(rx.issue_date)}</span>
           <span>Expires {formatDate(rx.expiry_date)}</span>
-          {rx.doctor && <span>Dr. {rx.doctor}</span>}
+          {rx.doctor && <span>{rx.doctor}</span>}
         </div>
 
         <QuotaBar usedGrams={rx.quota_used_g} limitGrams={MONTHLY_QUOTA_GRAMS} />
 
         <button
           type="button"
-          onClick={handleToggleRevoke}
+          onClick={handleRevokeClick}
           disabled={isTogglingRevoke}
           className="text-[11px] font-black uppercase tracking-wide text-red-400/70 hover:text-red-400 transition-colors disabled:opacity-50"
         >
@@ -85,7 +102,7 @@ export function ClientCard({ data }: { data: ClientCardData }) {
         <button
           type="button"
           onClick={() => { triggerHaptic("medium"); setIsNewRxOpen(true); }}
-          className="h-14 px-4 rounded-button bg-white/5 border border-white/10 hover:border-brand-secondary/30 font-black uppercase tracking-widest text-[12px] text-brand-light/70 hover:text-brand-light active:scale-95 transition-all whitespace-nowrap"
+          className="h-14 px-4 rounded-button surface-row hover:brightness-110 font-black uppercase tracking-widest text-[12px] text-brand-light/70 hover:text-brand-light active:translate-y-px transition-all whitespace-nowrap"
         >
           New Rx
         </button>
@@ -94,9 +111,9 @@ export function ClientCard({ data }: { data: ClientCardData }) {
       {olderPrescriptions.length > 0 && (
         <div>
           <p className="text-[11px] font-black uppercase tracking-wide text-brand-light/40 mb-2">Previous prescriptions</p>
-          <div className="space-y-2">
+          <div className="p-2 rounded-card surface space-y-2">
             {olderPrescriptions.map((p) => (
-              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-button bg-white/5 border border-white/10">
+              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-button surface-row">
                 <span className="text-[12px] font-bold text-brand-light/70 truncate">{p.pt33_number}</span>
                 <StatusPill status={p.status} />
               </div>
@@ -110,9 +127,9 @@ export function ClientCard({ data }: { data: ClientCardData }) {
         {data.purchases.length === 0 ? (
           <p className="text-[12px] text-brand-light/40">No purchases yet.</p>
         ) : (
-          <div className="space-y-2">
+          <div className="p-2 rounded-card surface space-y-2">
             {data.purchases.map((p) => (
-              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-button bg-white/5 border border-white/10">
+              <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-button surface-row">
                 <div className="min-w-0">
                   <p className="text-[13px] font-bold text-brand-light truncate">{p.product}</p>
                   <p className="text-[11px] text-brand-light/40">
@@ -140,6 +157,16 @@ export function ClientCard({ data }: { data: ClientCardData }) {
           clientId={data.client.id}
           clientName={data.client.name}
           onClose={() => setIsNewRxOpen(false)}
+        />
+      )}
+
+      {isConfirmRevokeOpen && (
+        <ConfirmDialog
+          message={`Revoke ${rx.pt33_number}? ${data.client.name} won't be able to buy until a new PT.33 is added.`}
+          confirmLabel="Revoke"
+          isConfirming={isTogglingRevoke}
+          onConfirm={handleConfirmRevoke}
+          onCancel={() => setIsConfirmRevokeOpen(false)}
         />
       )}
     </div>

@@ -38,13 +38,17 @@ function formatBaht(amount: number): string {
   return `${Number(scaled.toFixed(scaled < 100 ? 1 : 0))}${suffix}`;
 }
 
+// Four tiles are a reference, not the headline of the screen — the four
+// circles used to be the same weight as everything else, so they collected
+// attention first simply by being first. Dimming the value down towards the
+// label's own weight puts them back below the PT.33 card and its quota.
 function StatTile({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="p-3 rounded-card bg-white/5 border border-white/10 text-center flex flex-col">
+    <div className="p-3 rounded-card surface text-center flex flex-col">
       <p className="text-[9px] font-black uppercase tracking-wide text-brand-light/40 leading-tight min-h-[2.5em]">
         {label}
       </p>
-      <p className="text-[15px] font-black text-brand-light mt-auto pt-1 truncate">{value}</p>
+      <p className="text-[12px] font-bold text-brand-light/60 mt-auto pt-1 truncate">{value}</p>
     </div>
   );
 }

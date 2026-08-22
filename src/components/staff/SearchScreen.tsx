@@ -54,7 +54,7 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
         <button
           type="button"
           onClick={() => { triggerHaptic("medium"); setIsNewClientOpen(true); }}
-          className="shrink-0 h-9 px-3 rounded-button bg-white/5 border border-white/10 hover:border-brand-secondary/30 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-brand-light/70 hover:text-brand-light transition-all"
+          className="shrink-0 h-9 px-3 rounded-button surface-row hover:brightness-110 active:translate-y-px flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-brand-light/70 hover:text-brand-light transition-all"
         >
           <UserPlus size={14} />
           New Client
@@ -68,7 +68,7 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Client name or PT.33 number"
-          className="w-full h-12 pl-11 pr-4 rounded-button bg-white/5 border border-white/10 text-[14px] font-bold text-brand-light placeholder:text-brand-light/30 focus:outline-none focus:border-brand-secondary/50"
+          className="w-full h-12 pl-11 pr-4 rounded-button field-recessed border border-white/5 text-[14px] font-bold text-brand-light placeholder:text-brand-light/30 focus:outline-none focus:border-brand-secondary/50"
         />
       </div>
 
@@ -90,7 +90,7 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
                   key={`${r.client_id}:${r.pt33_number}`}
                   type="button"
                   onClick={() => navigate(r.client_id)}
-                  className={`w-full flex items-center justify-between gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all text-left ${
+                  className={`w-full flex items-center justify-between gap-3 p-4 rounded-card surface-row hover:brightness-110 active:translate-y-px transition-all text-left ${
                     pending ? "opacity-60" : ""
                   }`}
                 >

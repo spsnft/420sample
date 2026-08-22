@@ -116,7 +116,7 @@ export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
               key={r.client_id}
               type="button"
               onClick={() => navigate(r.client_id)}
-              className={`w-full grid grid-cols-[minmax(0,1fr)_92px_100px] items-center gap-3 p-4 rounded-card bg-white/5 border border-transparent hover:border-brand-secondary/30 active:scale-[0.98] active:bg-white/10 transition-all text-left ${
+              className={`w-full grid grid-cols-[minmax(0,1fr)_92px_100px] items-center gap-3 p-4 rounded-card surface-row hover:brightness-110 active:translate-y-px transition-all text-left ${
                 pending ? "opacity-60" : ""
               }`}
             >
@@ -139,7 +139,7 @@ export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {
           type="button"
           onClick={handleLoadMore}
           disabled={isLoading}
-          className="w-full h-11 rounded-button bg-white/5 border border-white/10 text-[12px] font-black uppercase tracking-wide text-brand-light/60 hover:text-brand-light transition-colors disabled:opacity-50"
+          className="w-full h-11 rounded-button surface-row hover:brightness-110 active:translate-y-px text-[12px] font-black uppercase tracking-wide text-brand-light/60 hover:text-brand-light transition-all disabled:opacity-50"
         >
           {isLoading ? "Loading…" : "Load more"}
         </button>

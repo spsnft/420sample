@@ -323,4 +323,43 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.03),
       0 6px 14px -12px rgba(0, 0, 0, 0.80);
   }
+
+  /*
+   * The staff panel's layer system (/staff ТЗ Part B). Everything on that
+   * screen used to sit at the same bg-white/5 height, so the eye had no way
+   * to tell a container from a row from a field short of reading the text.
+   * Four levels, assigned by what an element *is*:
+   *   canvas     — bg-brand-primary, untouched.
+   *   container  — .surface above (the PT.33 card, stat tiles, a modal's
+   *                own body, the wrapper around a list of rows): the same
+   *                "lit from above" treatment already used for the site's
+   *                product cards, reused rather than re-invented.
+   *   row/button — .surface-row below: one step lighter again, since each
+   *                sits on top of a container (a client row, an action
+   *                button, a purchase line).
+   *   field      — .field-recessed below: every <input>. Darker than the
+   *                container around it with an inward top shadow instead of
+   *                a light edge, so it reads as sunk in rather than raised
+   *                — "type here" by the same logic that makes .surface read
+   *                as "sits on top".
+   *   header     — .surface-header below: darker than canvas, so the page's
+   *                content reads as resting on top of it.
+   */
+  .surface-row {
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.11),
+      0 8px 16px -12px rgba(0, 0, 0, 0.75);
+  }
+
+  .field-recessed {
+    background-color: rgba(0, 0, 0, 0.28);
+    box-shadow:
+      inset 0 2px 6px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .surface-header {
+    background-color: rgba(0, 0, 0, 0.18);
+  }
 }
