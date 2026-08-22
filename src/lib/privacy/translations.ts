@@ -12,6 +12,11 @@ export interface PrivacyDictionary {
   sections: PrivacySection[];
   contactTitle: string;
   contactBody: string;
+  // The LINE/WhatsApp icons below contactBody are demo placeholders too
+  // (see config/site.ts, contacts) — tapping either shows this instead of
+  // opening a real chat. Same copy and mechanism as HomeClient's own
+  // contacts row (components/ui/Tooltip).
+  contactsTooltip: string;
 }
 
 // Shown at /privacy, linked from the consultation form's PDPA consent line
@@ -26,7 +31,7 @@ export const privacyTranslations: Record<Language, PrivacyDictionary> = {
     sections: [
       {
         title: "What we collect",
-        body: "On the public site: the name and phone number you submit through the \"Free Consultation\" request form. In the PT.33 staff panel: client names, PT.33 prescription details and sale records entered by staff for compliance record-keeping.",
+        body: "On the public site: the name and phone number you submit through the \"Medical Certificate\" request form. In the PT.33 staff panel: client names, PT.33 prescription details and sale records entered by staff for compliance record-keeping.",
       },
       {
         title: "Why we collect it",
@@ -42,7 +47,8 @@ export const privacyTranslations: Record<Language, PrivacyDictionary> = {
       },
     ],
     contactTitle: "Questions",
-    contactBody: "For questions about this policy or a request to delete your data, message us on WhatsApp or LINE using the links on this page.",
+    contactBody: "This is a demo instance, so the icons below don't open a real chat. On a live deployment, this is where you'd message the shop on WhatsApp or LINE about this policy or to request your data be deleted.",
+    contactsTooltip: "Your LINE · WhatsApp go here",
   },
   ru: {
     title: "Политика конфиденциальности",
@@ -51,7 +57,7 @@ export const privacyTranslations: Record<Language, PrivacyDictionary> = {
     sections: [
       {
         title: "Что мы собираем",
-        body: "На публичном сайте — имя и номер телефона, которые вы указываете в форме «Бесплатная консультация». В панели персонала PT.33 — имена клиентов, данные рецептов PT.33 и записи о продажах, которые вносит персонал для учёта.",
+        body: "На публичном сайте — имя и номер телефона, которые вы указываете в форме «Медицинская справка». В панели персонала PT.33 — имена клиентов, данные рецептов PT.33 и записи о продажах, которые вносит персонал для учёта.",
       },
       {
         title: "Зачем мы это собираем",
@@ -67,7 +73,8 @@ export const privacyTranslations: Record<Language, PrivacyDictionary> = {
       },
     ],
     contactTitle: "Вопросы",
-    contactBody: "По вопросам об этой политике или с запросом на удаление данных напишите нам в WhatsApp или LINE по ссылкам на этой странице.",
+    contactBody: "Это демо-версия, поэтому иконки ниже не открывают настоящий чат. В реальном инстансе здесь можно было бы написать магазину в WhatsApp или LINE — по вопросам этой политики или с запросом на удаление данных.",
+    contactsTooltip: "Здесь будут ваши LINE · WhatsApp",
   },
   th: {
     title: "นโยบายความเป็นส่วนตัว",
@@ -76,7 +83,7 @@ export const privacyTranslations: Record<Language, PrivacyDictionary> = {
     sections: [
       {
         title: "ข้อมูลที่เราเก็บ",
-        body: "บนหน้าเว็บสาธารณะ: ชื่อและเบอร์โทรศัพท์ที่คุณกรอกในแบบฟอร์ม \"คำปรึกษาฟรี\" ในแผงพนักงาน PT.33: ชื่อลูกค้า รายละเอียดใบสั่งยา PT.33 และบันทึกการขายที่พนักงานกรอกเพื่อการปฏิบัติตามกฎหมาย",
+        body: "บนหน้าเว็บสาธารณะ: ชื่อและเบอร์โทรศัพท์ที่คุณกรอกในแบบฟอร์ม \"ใบรับรองทางการแพทย์\" ในแผงพนักงาน PT.33: ชื่อลูกค้า รายละเอียดใบสั่งยา PT.33 และบันทึกการขายที่พนักงานกรอกเพื่อการปฏิบัติตามกฎหมาย",
       },
       {
         title: "เหตุผลที่เราเก็บ",
@@ -92,6 +99,7 @@ export const privacyTranslations: Record<Language, PrivacyDictionary> = {
       },
     ],
     contactTitle: "หากมีคำถาม",
-    contactBody: "หากมีคำถามเกี่ยวกับนโยบายนี้หรือต้องการขอลบข้อมูลของคุณ ทักหาเราทาง WhatsApp หรือ LINE ผ่านลิงก์บนหน้านี้",
+    contactBody: "นี่คือเวอร์ชันสาธิต ไอคอนด้านล่างจึงไม่เปิดแชทจริง ในเวอร์ชันใช้งานจริง ตรงนี้คือจุดที่คุณจะทักหาร้านทาง WhatsApp หรือ LINE เกี่ยวกับนโยบายนี้หรือขอให้ลบข้อมูลของคุณ",
+    contactsTooltip: "ตรงนี้จะเป็น LINE · WhatsApp ของคุณ",
   },
 };

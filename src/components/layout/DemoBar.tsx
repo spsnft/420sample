@@ -17,16 +17,22 @@ interface DemoBarProps {
 // standing in for the real in-store tablet, not for a prospect's preview.
 //
 // The sole demo marker left on the storefront now that the per-card SAMPLE
-// tags are gone (ТЗ №4 item 4) — the label reads heavier and the return
-// link is a filled pill rather than plain coloured text, so both carry more
-// weight than before.
+// tags are gone (ТЗ №4 item 4) — the label reads heavier, and the return
+// link stays a pill rather than plain coloured text.
+//
+// Ghost, not filled: a solid gold pill here was the same fill as the
+// storefront's own hero card, and at the very top of the page it read as
+// the most prominent call to action on the screen — for leaving the
+// storefront (pitch-layout audit №9). Transparent fill, a thin gold
+// border and muted gold text keep it easy to find without competing with
+// what's actually being demoed.
 export const DemoBar: React.FC<DemoBarProps> = ({ label, cta }) => (
   <div className="sticky top-0 z-[110] -mx-4 px-4 h-9 flex items-center justify-between gap-3 bg-brand-dark text-brand-light text-[11px] font-black">
     <p className="truncate">{label}</p>
     <Link
       href="/"
       onClick={() => triggerHaptic('light')}
-      className="shrink-0 inline-flex items-center gap-1 h-6 pl-2.5 pr-2 rounded-full bg-brand-secondary text-brand-primary uppercase tracking-wide active:scale-95 transition-transform"
+      className="shrink-0 inline-flex items-center gap-1 h-6 pl-2.5 pr-2 rounded-full bg-transparent border border-brand-secondary/50 text-brand-secondary/90 uppercase tracking-wide active:scale-95 transition-transform"
     >
       {cta}
       <ArrowUpRight size={12} />

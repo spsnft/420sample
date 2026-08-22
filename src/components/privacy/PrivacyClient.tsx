@@ -1,6 +1,5 @@
 "use client"
 import * as React from "react"
-import Link from "next/link"
 
 import { useCart } from "@/lib/cart-store"
 import type { Language } from "@/lib/translations"
@@ -8,8 +7,7 @@ import { privacyTranslations } from "@/lib/privacy/translations"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { WhatsAppIcon, LineIcon } from "@/components/icons/BrandIcons"
-import { siteConfig } from "@/config/site"
-import { triggerHaptic } from "@/lib/utils"
+import { Tooltip } from "@/components/ui/Tooltip"
 
 export default function PrivacyClient() {
   const { lang } = useCart();
@@ -56,34 +54,28 @@ export default function PrivacyClient() {
             {t.contactBody}
           </p>
           {/* Icon-only, unlike the pitch page's WhatsApp/LINE buttons — a
-              visually-hidden span backs up aria-label as this link's only
-              accessible name (see HomeClient's contacts row). */}
-          <div className="flex items-center justify-center gap-3">
-            <div className="surface rounded-button">
-              <Link
-                href={siteConfig.contacts.line}
-                target="_blank"
-                aria-label="LINE"
-                onClick={() => triggerHaptic('light')}
-                className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all"
-              >
-                <LineIcon size={20} className="opacity-80" />
-                <span className="sr-only">LINE</span>
-              </Link>
+              visually-hidden span backs up aria-label as this control's only
+              accessible name (see HomeClient's contacts row).
+              Plain buttons, not links — same demo-placeholder situation as
+              HomeClient's contacts row (config/site.ts, contacts is blank
+              on this instance), same shared Tooltip standing in for a real
+              chat. */}
+          <Tooltip text={t.contactsTooltip} className="w-full">
+            <div className="flex items-center justify-center gap-3">
+              <div className="surface rounded-button">
+                <button type="button" aria-label="LINE" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
+                  <LineIcon size={20} className="opacity-80" />
+                  <span className="sr-only">LINE</span>
+                </button>
+              </div>
+              <div className="surface rounded-button">
+                <button type="button" aria-label="WhatsApp" className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all">
+                  <WhatsAppIcon size={20} className="opacity-80" />
+                  <span className="sr-only">WhatsApp</span>
+                </button>
+              </div>
             </div>
-            <div className="surface rounded-button">
-              <Link
-                href={siteConfig.contacts.whatsapp}
-                target="_blank"
-                aria-label="WhatsApp"
-                onClick={() => triggerHaptic('light')}
-                className="w-[46px] h-[46px] flex items-center justify-center rounded-button active:scale-90 transition-all"
-              >
-                <WhatsAppIcon size={20} className="opacity-80" />
-                <span className="sr-only">WhatsApp</span>
-              </Link>
-            </div>
-          </div>
+          </Tooltip>
         </section>
 
         <Footer privacyLabel={t.title} />

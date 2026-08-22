@@ -87,14 +87,46 @@ export interface TranslationDictionary {
   demoBarLabel: string;
   demoBarCta: string;
 
-  // Free consultation request form
+  // Consultation modal — opened from the "Get Medical Certificate" hero
+  // card, so consultCta names that promise rather than the mechanism
+  // ("Free Consultation") behind it.
   consultCta: string;
   consultNameLabel: string;
   consultPhoneLabel: string;
+  // Dial-code select beside the phone input, defaulting to +66 — Phuket's
+  // customers carry phones from everywhere, and a number with no country
+  // code is a lead nobody can call back. consultPhoneCodeOther labels the
+  // select's last option, which reveals a free-text code field for any
+  // country not in the short list.
+  consultPhoneCodeOther: string;
   consultConsentLabel: string;
   consultSubmitCta: string;
   consultSuccessMessage: string;
   consultErrorMessage: string;
+  // Demo-only success state (HomeClient's demoInstance): submitting the
+  // form never calls the real backend, so nothing typed into it is sent,
+  // logged, or stored — it just swaps the modal's header and body for this
+  // in the same shape a real submission's confirmation would take.
+  // consultSuccessHeadline is two lines ("\n"-joined, see renderLines) set
+  // in the same weight as the modal's own heading; consultSuccessNote is
+  // the one line on the whole storefront addressed to the shop owner
+  // touring it rather than to a customer, so it renders smaller and
+  // visually apart from the two lines above it.
+  consultSuccessTitle: string;
+  consultSuccessHeadline: string;
+  consultSuccessNote: string;
+
+  // Tap-to-reveal tooltips for controls that are live and clickable but,
+  // on this demo instance, have nothing real behind them yet — see
+  // components/ui/Tooltip. contactsTooltip covers the whole LINE/WhatsApp/
+  // Instagram row at once; reviewsTooltip is the Reviews row in the info
+  // strip.
+  contactsTooltip: string;
+  reviewsTooltip: string;
+
+  // Label on the storefront's static map graphic — opens the real Google
+  // Maps listing in a new tab (see config/site.ts, mapOpenUrl).
+  mapOpenCta: string;
 }
 
 export const translations: Record<Language, TranslationDictionary> = {
@@ -151,7 +183,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "Address",
     hoursLabel: "Working hours",
     reviewsLabel: "Reviews",
-    aboutLead: "What a modern dispensary should feel like",
+    aboutLead: "Licensed dispensary. Full menu, live prices.",
     aboutPhotoLabel: "Photo coming soon",
     certSteps: [
       { title: "Send", description: "your request within a minute" },
@@ -167,13 +199,21 @@ export const translations: Record<Language, TranslationDictionary> = {
     demoBarLabel: "DEMO STORE — sample data",
     demoBarCta: "Back to buds.digital",
 
-    consultCta: "Free Consultation",
+    consultCta: "Medical Certificate",
     consultNameLabel: "Name",
     consultPhoneLabel: "Phone",
+    consultPhoneCodeOther: "Other…",
     consultConsentLabel: "I agree to the processing of my personal data in accordance with PDPA.",
     consultSubmitCta: "Send Request",
     consultSuccessMessage: "Thanks — we'll reach out on LINE to confirm your visit.",
     consultErrorMessage: "Something went wrong. Please try again or contact us on LINE.",
+    consultSuccessTitle: "Request Sent",
+    consultSuccessHeadline: "Request received.\nWe'll confirm by WhatsApp within the hour.",
+    consultSuccessNote: "In your version, this request lands in your /staff panel.",
+
+    contactsTooltip: "Your LINE · WhatsApp · Instagram go here",
+    reviewsTooltip: "Your Google rating and review count show here",
+    mapOpenCta: "Open in Maps",
   },
   ru: {
     // Header & Navigation
@@ -228,7 +268,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
-    aboutLead: "Каким должен быть современный диспенсери",
+    aboutLead: "Лицензированный диспенсери. Полное меню, актуальные цены.",
     aboutPhotoLabel: "Фото заведения — скоро",
     certSteps: [
       { title: "Отправьте", description: "заявку в течение минуты" },
@@ -244,13 +284,21 @@ export const translations: Record<Language, TranslationDictionary> = {
     demoBarLabel: "ДЕМО-МАГАЗИН — тестовые данные",
     demoBarCta: "Вернуться на buds.digital",
 
-    consultCta: "Бесплатная консультация",
+    consultCta: "Медицинская справка",
     consultNameLabel: "Имя",
     consultPhoneLabel: "Телефон",
+    consultPhoneCodeOther: "Другой…",
     consultConsentLabel: "Я согласен(на) на обработку персональных данных в соответствии с PDPA.",
     consultSubmitCta: "Отправить заявку",
     consultSuccessMessage: "Спасибо — мы свяжемся с вами в LINE, чтобы подтвердить визит.",
     consultErrorMessage: "Что-то пошло не так. Попробуйте ещё раз или напишите нам в LINE.",
+    consultSuccessTitle: "Заявка отправлена",
+    consultSuccessHeadline: "Заявка получена.\nМы подтвердим в WhatsApp в течение часа.",
+    consultSuccessNote: "В вашей версии эта заявка попадёт в вашу панель /staff.",
+
+    contactsTooltip: "Здесь будут ваши LINE · WhatsApp · Instagram",
+    reviewsTooltip: "Здесь будет ваш рейтинг Google и число отзывов",
+    mapOpenCta: "Открыть в Google Картах",
   },
   th: {
     // Header & Navigation
@@ -308,7 +356,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     reviewsLabel: "รีวิว",
-    aboutLead: "นี่คือสิ่งที่ร้านกัญชาสมัยใหม่ควรจะเป็น",
+    aboutLead: "ร้านกัญชาที่ได้รับใบอนุญาต เมนูครบ ราคาอัปเดตตามจริง",
     aboutPhotoLabel: "ภาพร้าน — เร็วๆ นี้",
     certSteps: [
       { title: "ส่ง", description: "คำขอของคุณภายในหนึ่งนาที" },
@@ -324,12 +372,20 @@ export const translations: Record<Language, TranslationDictionary> = {
     demoBarLabel: "ร้านสาธิต — ข้อมูลตัวอย่าง",
     demoBarCta: "กลับไปที่ buds.digital",
 
-    consultCta: "คำปรึกษาฟรี",
+    consultCta: "ใบรับรองทางการแพทย์",
     consultNameLabel: "ชื่อ",
     consultPhoneLabel: "เบอร์โทรศัพท์",
+    consultPhoneCodeOther: "อื่นๆ…",
     consultConsentLabel: "ฉันยินยอมให้ประมวลผลข้อมูลส่วนบุคคลของฉันตาม PDPA",
     consultSubmitCta: "ส่งคำขอ",
     consultSuccessMessage: "ขอบคุณ — เราจะติดต่อคุณทาง LINE เพื่อยืนยันการเข้าร้าน",
     consultErrorMessage: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งหรือติดต่อเราทาง LINE",
+    consultSuccessTitle: "ส่งคำขอแล้ว",
+    consultSuccessHeadline: "ได้รับคำขอแล้ว\nเราจะยืนยันทาง WhatsApp ภายในหนึ่งชั่วโมง",
+    consultSuccessNote: "ในเวอร์ชันของคุณ คำขอนี้จะเข้าแผงพนักงาน /staff",
+
+    contactsTooltip: "ตรงนี้จะเป็น LINE · WhatsApp · Instagram ของคุณ",
+    reviewsTooltip: "ตรงนี้จะแสดงคะแนนและรีวิว Google ของคุณ",
+    mapOpenCta: "เปิดใน Google แผนที่",
   }
 };

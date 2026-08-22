@@ -84,7 +84,7 @@ export const SiteNav: React.FC<SiteNavProps> = ({ safeLang, surface = 'site' }) 
   ];
 
   return (
-    <div ref={containerRef} className="relative shrink-0">
+    <div ref={containerRef} className="relative shrink">
       <button
         type="button"
         onClick={() => { triggerHaptic('light'); setIsOpen(v => !v); }}
