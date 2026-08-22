@@ -42,12 +42,22 @@ export const siteConfig = {
   locale: "en_US",
 
   address: "Bang Tao Beach, Thalang, Phuket 83110, Thailand",
+  // Same address, short enough not to wrap onto a second line in the
+  // storefront's collapsed info strip on a narrow phone.
+  addressShort: "Bang Tao Beach, Thalang, Phuket",
   workingHours: "12:00 — 00:00",
 
+  // Deliberately blank on the demo instance: these used to be a real, live
+  // dispensary's handles ("mpsphuket") — anyone tapping LINE/WhatsApp/
+  // Instagram on the storefront demo landed in that shop's real inbox
+  // instead of anywhere related to this product. The icons that read these
+  // values (on both the storefront and /privacy) no longer treat them as
+  // hrefs at all — they show an explanatory tooltip instead — so an empty
+  // string here is simply unused rather than a broken link.
   contacts: {
-    line: "https://line.me/R/ti/p/@mpsphuket",
-    whatsapp: "https://wa.me/66650255229",
-    instagram: "https://www.instagram.com/mpsphuket",
+    line: "",
+    whatsapp: "",
+    instagram: "",
   },
 
   // buds.digital (B2B pitch page, apex domain) — deliberately separate from
@@ -69,7 +79,12 @@ export const siteConfig = {
     reviews: "130+ Google reviews",
   },
 
-  // Neutral public landmark used for the homepage map embed — not the exact
-  // coordinates of any specific dispensary.
-  mapEmbedSrc: "https://maps.google.com/maps?q=Boat+Avenue,+Bang+Tao,+Phuket&z=15&output=embed",
+  // Neutral public landmark for the homepage map — not the exact coordinates
+  // of any specific dispensary. Used only as the target of "Open in Maps"
+  // now: the homepage itself shows a static, palette-matched map graphic
+  // rather than a live Google embed (see HomeClient's StorefrontMap — the
+  // classic no-API-key iframe embed this used to be doesn't accept a styles
+  // param, and this project has no Google Maps API key to switch to the
+  // JS/Static Maps APIs that do).
+  mapOpenUrl: "https://www.google.com/maps/search/?api=1&query=Boat+Avenue,+Bang+Tao,+Phuket",
 };

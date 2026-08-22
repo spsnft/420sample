@@ -11,10 +11,31 @@ import { ConsultationRequestForm } from "@/components/forms/ConsultationRequestF
 interface ConsultationProps {
   t: TranslationDictionary;
   onClose: () => void;
+  /** buds.digital's own demo instance only (see lib/demo.ts) — swaps the
+   *  form's real submit for a fake, always-succeeds one so nothing typed
+   *  into it is sent anywhere. See ConsultationRequestForm. */
+  demoInstance?: boolean;
 }
 
-export const Consultation = ({ t, onClose }: ConsultationProps) => {
+// "\n" marks a manual line break within the two-line success headline,
+// rendered the same way HomeClient renders its own "\n"-joined strings.
+function renderLines(text: string): React.ReactNode {
+  return text.split("\n").map((line, i) => (
+    <React.Fragment key={i}>
+      {i > 0 && <br />}
+      {line}
+    </React.Fragment>
+  ));
+}
+
+export const Consultation = ({ t, onClose, demoInstance }: ConsultationProps) => {
   const [isClosing, setIsClosing] = React.useState(false);
+  // Demo-only: the form calls this instead of actually submitting, and the
+  // header/content below swap to the success state. Reset on every open —
+  // Consultation is only ever mounted while the modal is showing (see
+  // HomeClient), so a fresh mount already starts here, but the reset makes
+  // that explicit rather than relying on it.
+  const [success, setSuccess] = React.useState(false);
   // Resolved on the first client render, not one render later. Starting at
   // `false` on a desktop viewport mounted the motion element with the mobile
   // sheet's `initial` (y: 100%) and then switched `animate` to the desktop
@@ -100,35 +121,57 @@ export const Consultation = ({ t, onClose }: ConsultationProps) => {
                 <ShieldCheck size={20} />
               </div>
               <h2 className="text-lg font-black uppercase tracking-tight text-brand-light leading-tight pr-10">
-                {t.consultCta}
+                {success ? t.consultSuccessTitle : t.consultCta}
               </h2>
             </div>
 
-            <div className="mb-6">
-              {t.certSteps.map((step, i) => {
-                const isLast = i === t.certSteps.length - 1;
-                return (
-                  <div key={i} className="flex gap-3">
-                    <div className="flex flex-col items-center">
-                      <div className="w-7 h-7 rounded-full bg-brand-secondary/15 border border-brand-secondary/50 text-brand-secondary flex items-center justify-center text-[11px] font-black shrink-0">
-                        {i + 1}
+            {success ? (
+              <div>
+                <p className="text-lg font-black text-brand-light leading-snug">
+                  {renderLines(t.consultSuccessHeadline)}
+                </p>
+                {/* The one line on the whole storefront addressed to the shop
+                    owner touring the demo rather than to a customer — kept
+                    visually apart (its own border-top, smaller, muted) so it
+                    doesn't read as part of the confirmation a real customer
+                    would see. */}
+                <p className="mt-4 pt-4 border-t border-white/10 text-[11px] font-bold text-brand-light/40 leading-snug">
+                  {t.consultSuccessNote}
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-6">
+                  {t.certSteps.map((step, i) => {
+                    const isLast = i === t.certSteps.length - 1;
+                    return (
+                      <div key={i} className="flex gap-3">
+                        <div className="flex flex-col items-center">
+                          <div className="w-7 h-7 rounded-full bg-brand-secondary/15 border border-brand-secondary/50 text-brand-secondary flex items-center justify-center text-[11px] font-black shrink-0">
+                            {i + 1}
+                          </div>
+                          {!isLast && <div className="w-px flex-1 bg-brand-secondary/25 my-1" />}
+                        </div>
+                        <div className={isLast ? "" : "pb-4"}>
+                          <p className="text-[12px] font-black uppercase tracking-wide text-brand-secondary">
+                            {step.title}
+                          </p>
+                          <p className="text-[12px] text-brand-light/50 leading-snug mt-0.5">
+                            {step.description}
+                          </p>
+                        </div>
                       </div>
-                      {!isLast && <div className="w-px flex-1 bg-brand-secondary/25 my-1" />}
-                    </div>
-                    <div className={isLast ? "" : "pb-4"}>
-                      <p className="text-[12px] font-black uppercase tracking-wide text-brand-secondary">
-                        {step.title}
-                      </p>
-                      <p className="text-[12px] text-brand-light/50 leading-snug mt-0.5">
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                    );
+                  })}
+                </div>
 
-            <ConsultationRequestForm t={t} />
+                <ConsultationRequestForm
+                  t={t}
+                  demoInstance={demoInstance}
+                  onDemoSuccess={() => setSuccess(true)}
+                />
+              </>
+            )}
           </div>
         </motion.div>
       </div>

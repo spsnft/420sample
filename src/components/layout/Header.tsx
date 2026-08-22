@@ -2,15 +2,16 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronDown } from "lucide-react"
 import { useCart } from "@/lib/cart-store"
-import { Language } from "@/lib/translations"
+import { Language, translations } from "@/lib/translations"
 import { SiteNav, SiteNavProps } from "@/components/layout/SiteNav"
 import { triggerHaptic } from "@/lib/utils"
 import { useStuck } from "@/lib/use-stuck"
 import { siteConfig } from "@/config/site"
 
-const LANGUAGES: Language[] = ['en', 'th', 'ru'];
+// Every language the dictionary actually has, not a hand-maintained list
+// that can quietly drift out of sync with it — see LanguageSwitch below.
+const LANGUAGES = Object.keys(translations) as Language[];
 
 interface HeaderProps {
   safeLang: Language;
@@ -37,65 +38,31 @@ interface HeaderProps {
   byline?: React.ReactNode;
 }
 
-const LanguageDropdown: React.FC<{ safeLang: Language; onSelect: (l: Language) => void }> = ({ safeLang, onSelect }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const containerRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (!isOpen) return;
-
-    const handlePointerDown = (e: PointerEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
-    };
-
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen]);
-
-  return (
-    <div ref={containerRef} className="relative shrink-0">
+// All supported languages sit in the control at once (EN / RU / TH) instead
+// of hiding behind a dropdown that only ever shows the current one — a
+// visitor who doesn't already know the site has three languages had no way
+// to discover that without opening it first. Switching is one tap: no
+// open/close state, no listbox, no outside-click or Escape handling to wire
+// up, since there's nothing left to open.
+const LanguageSwitch: React.FC<{ safeLang: Language; onSelect: (l: Language) => void }> = ({ safeLang, onSelect }) => (
+  <div role="group" aria-label="Language" className="h-[26px] flex items-center rounded-full bg-white/5 border border-white/10 overflow-hidden shrink-0">
+    {LANGUAGES.map(l => (
       <button
+        key={l}
         type="button"
-        onClick={() => { triggerHaptic('light'); setIsOpen(v => !v); }}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
-        className="h-[26px] pl-3 pr-2 flex items-center gap-1 rounded-full bg-white/5 border border-white/10 font-black text-[10px] uppercase tracking-wide text-brand-light/70 active:scale-90 transition-all"
+        aria-pressed={safeLang === l}
+        onClick={() => { triggerHaptic('light'); onSelect(l); }}
+        className={`h-full px-2.5 flex items-center justify-center font-black text-[10px] uppercase tracking-wide transition-colors ${
+          safeLang === l
+            ? 'bg-brand-secondary text-brand-primary'
+            : 'text-brand-light/50 hover:text-brand-light/80'
+        }`}
       >
-        {safeLang}
-        <ChevronDown size={12} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        {l}
       </button>
-
-      {isOpen && (
-        <div role="listbox" className="absolute top-full left-0 mt-2 min-w-[64px] rounded-button bg-brand-primary border border-white/10 shadow-2xl overflow-hidden z-20">
-          {LANGUAGES.map(l => (
-            <button
-              key={l}
-              role="option"
-              aria-selected={safeLang === l}
-              onClick={() => { triggerHaptic('light'); onSelect(l); setIsOpen(false); }}
-              className={`w-full h-9 px-3 flex items-center justify-center font-black text-[11px] uppercase tracking-wide transition-colors ${
-                safeLang === l
-                  ? 'bg-brand-secondary text-brand-primary'
-                  : 'text-brand-light/70 hover:bg-white/5'
-              }`}
-            >
-              {l}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+    ))}
+  </div>
+);
 
 export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNav, surface, stickyOffset, demoInstance }) => {
   const { setLang } = useCart();
@@ -164,8 +131,8 @@ export const Header: React.FC<HeaderProps> = ({ safeLang, sticky, byline, hideNa
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <LanguageDropdown safeLang={safeLang} onSelect={setLang} />
+        <div className="flex items-center gap-2 min-w-0">
+          <LanguageSwitch safeLang={safeLang} onSelect={setLang} />
           {!hideNav && <SiteNav safeLang={safeLang} surface={surface} />}
         </div>
       </div>

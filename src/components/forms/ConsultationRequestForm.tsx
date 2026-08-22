@@ -22,15 +22,40 @@ function renderConsentLabel(text: string): React.ReactNode {
   );
 }
 
+// Minimal set for a Phuket shop's actual customer mix (Thai locals, Russian
+// and Western tourists/expats) rather than a full country list — "Other…"
+// covers everyone else without pulling in a country-picker dependency for a
+// single form field. Defaults to +66: most submissions are still local, and
+// a phone number with no code at all is a lead nobody can call back on.
+const PHONE_COUNTRY_CODES = [
+  { code: "+66", country: "TH" },
+  { code: "+7", country: "RU" },
+  { code: "+44", country: "GB" },
+  { code: "+1", country: "US" },
+  { code: "+61", country: "AU" },
+  { code: "+49", country: "DE" },
+  { code: "+33", country: "FR" },
+  { code: "+972", country: "IL" },
+];
+const OTHER_CODE = "other";
+
 interface ConsultationRequestFormProps {
   t: TranslationDictionary;
+  /** buds.digital's own demo instance only (see lib/demo.ts). When set,
+   *  submitting never calls the real backend — nothing typed in is sent,
+   *  logged, or stored — it just calls onDemoSuccess so the parent can
+   *  swap the whole modal to its success state. */
+  demoInstance?: boolean;
+  onDemoSuccess?: () => void;
 }
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-export const ConsultationRequestForm: React.FC<ConsultationRequestFormProps> = ({ t }) => {
+export const ConsultationRequestForm: React.FC<ConsultationRequestFormProps> = ({ t, demoInstance, onDemoSuccess }) => {
   const [name, setName] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const [countryCode, setCountryCode] = React.useState("+66");
+  const [customCode, setCustomCode] = React.useState("");
   const [consent, setConsent] = React.useState(false);
   const [status, setStatus] = React.useState<Status>("idle");
 
@@ -39,12 +64,28 @@ export const ConsultationRequestForm: React.FC<ConsultationRequestFormProps> = (
     if (!name.trim() || !phone.trim() || !consent || status === "submitting") return;
 
     triggerHaptic('medium');
+
+    if (demoInstance) {
+      // No fetch at all on the demo — see the prop doc above. The brief
+      // "submitting" flash is only there so the tap reads as having done
+      // something before the modal swaps to the success state.
+      setStatus("submitting");
+      setTimeout(() => {
+        triggerHaptic('success');
+        onDemoSuccess?.();
+      }, 400);
+      return;
+    }
+
+    const dialCode = countryCode === OTHER_CODE ? customCode.trim() : countryCode;
+    const fullPhone = `${dialCode} ${phone.trim()}`.trim();
+
     setStatus("submitting");
     try {
       const res = await fetch("/api/consultation-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), phone: phone.trim() }),
+        body: JSON.stringify({ name: name.trim(), phone: fullPhone }),
       });
       if (!res.ok) throw new Error("request failed");
       triggerHaptic('success');
@@ -82,14 +123,37 @@ export const ConsultationRequestForm: React.FC<ConsultationRequestFormProps> = (
         <label className="text-[11px] font-black uppercase tracking-wide text-brand-light/40">
           {t.consultPhoneLabel}
         </label>
-        <input
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-          autoComplete="tel"
-          className="w-full h-11 mt-1 px-3 rounded-button bg-white/5 border border-white/10 text-[14px] font-bold text-brand-light focus:outline-none focus:border-brand-secondary/50"
-        />
+        <div className="flex gap-2 mt-1">
+          <select
+            value={countryCode}
+            onChange={(e) => setCountryCode(e.target.value)}
+            aria-label={t.consultPhoneLabel}
+            className="h-11 pl-2.5 pr-1 rounded-button bg-white/5 border border-white/10 text-[13px] font-bold text-brand-light shrink-0 w-[92px] focus:outline-none focus:border-brand-secondary/50"
+          >
+            {PHONE_COUNTRY_CODES.map(({ code, country }) => (
+              <option key={code} value={code}>{code} {country}</option>
+            ))}
+            <option value={OTHER_CODE}>{t.consultPhoneCodeOther}</option>
+          </select>
+          {countryCode === OTHER_CODE && (
+            <input
+              value={customCode}
+              onChange={(e) => setCustomCode(e.target.value)}
+              placeholder="+"
+              inputMode="tel"
+              aria-label={t.consultPhoneCodeOther}
+              className="h-11 w-16 px-2 rounded-button bg-white/5 border border-white/10 text-[13px] font-bold text-brand-light shrink-0 focus:outline-none focus:border-brand-secondary/50"
+            />
+          )}
+          <input
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+            autoComplete="tel"
+            className="flex-1 min-w-0 h-11 px-3 rounded-button bg-white/5 border border-white/10 text-[14px] font-bold text-brand-light focus:outline-none focus:border-brand-secondary/50"
+          />
+        </div>
       </div>
 
       <label className="flex items-start gap-2 cursor-pointer">
