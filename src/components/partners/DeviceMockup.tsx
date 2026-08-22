@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 // Composited screenshot of buds.digital (header + hero cards + the homepage
 // tagline), captured at a true iPhone 13/14 screen ratio of 390x844 at 2x.
 // Recapture and swap the PNG in public/images/partners/customer-view.png
-// whenever the homepage's top changes — scripts/capture-customer-view.mjs
+// whenever the homepage's top changes — scripts/capture-mockups.mjs
 // does it, and says there what it stages before it shoots. The composite is
 // a poster of the page rather than a plain capture of it: the sections below
 // the tagline are dropped, the tagline is pulled up under the cards, and the
