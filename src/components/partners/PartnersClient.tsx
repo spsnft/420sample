@@ -192,12 +192,21 @@ export default function PartnersClient() {
             the portfolio right at the page's hottest point; the agency
             stays credited in the header and footer, both untouched (ТЗ
             rewrite §5.1). No photos, no names, no invented experience or
-            project-count figures — see ТЗ №1 A9. Left-aligned by default
-            (mobile); only the heading recentres from `sm` — everything
-            below it was already left at every width (ТЗ rewrite §12). */}
-        <section className="max-w-prose mx-auto px-2 pt-2 text-left">
-          {/* Same treatment as blocks 01/02's h2. */}
-          <p className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light text-balance sm:text-center">
+            project-count figures — see ТЗ №1 A9. Left-aligned at every
+            width now (ТЗ rewrite §12, axis rewrite §2.1) — this is a
+            content section making an argument, same as blocks 01/02, not
+            a direct-address moment like the hero or the final CTA.
+            `lg:mx-0 lg:pl-8` walks the section's left edge off its own
+            auto-centring and onto blocks 01/02's own content inset
+            (gradient-ring's 1px ring + their `lg:p-8`) instead, so the
+            page reads one continuous left margin from block 01 straight
+            through the price list (ТЗ axis rewrite §2.2). Below `lg` nothing
+            here changes — mobile keeps the previous ТЗ's rule untouched. */}
+        <section className="max-w-prose mx-auto px-2 pt-2 text-left lg:mx-0 lg:pl-8 lg:pr-2">
+          {/* Same treatment as blocks 01/02's h2 — left, not centred; this
+              is the section's own content heading, not an address to the
+              reader (ТЗ axis rewrite §2.1). */}
+          <p className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light text-balance">
             {t.offerTitle}
           </p>
 
@@ -284,12 +293,18 @@ export default function PartnersClient() {
         {/* No card around this one. The blocks above are cards because each
             holds an argument; the closing line and its buttons are the page
             speaking in its own voice, and a bordered box around them too
-            turned the ask into just another exhibit. */}
+            turned the ask into just another exhibit. This is the page's
+            other direct-address moment (with the hero) — centred as one
+            block on desktop, headline through price recap, rather than
+            the three-axis mix it used to be (headline centred, body left,
+            price line centred again — ТЗ axis rewrite §2.3). Mobile is
+            unchanged: the section's own default is left, and centring
+            only switches on from `sm`. */}
         <section className="max-w-prose mx-auto px-2 pt-4 pb-2 text-left">
           <p className="text-[16px] font-black text-brand-light leading-snug text-balance sm:text-center">
             {t.ctaHeadline}
           </p>
-          <p className="mt-2 text-[13px] font-bold text-brand-light/70 leading-relaxed text-balance">
+          <p className="mt-2 text-[13px] font-bold text-brand-light/70 leading-relaxed text-balance sm:text-center">
             {t.ctaSubtitle}
           </p>
           {/* Moved above the button row (ТЗ pitch-layout №5) — it used to sit
