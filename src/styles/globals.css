@@ -214,23 +214,22 @@
   }
 
   /*
-   * Tonal fill for the pitch page's two "See the live demo" CTAs. They used
-   * to sit on a bare white/5 wash with a 1px gradient-ring border and no
-   * explicit text colour — next to btn-metal's solid gold ramp that read as
-   * disabled, not secondary. A lighter gold wash was tried first, but both
-   * blocks' cards sit under the same warm ambient glow the page casts, and
-   * the gold wash all but disappeared into it (ТЗ №2 M6/M12) — dense and
-   * close to the page's own brand-primary instead is what actually keeps
-   * the cream text and gold arrow inside it the highest-contrast thing in
-   * the block. Still the lowest-contrast element on the page for a primary
-   * demo CTA, so the fill is lifted one step and paired with a visible
-   * border (added at each call site) rather than relying on the highlight
-   * alone (ТЗ №1 §3.2).
+   * Tonal fill for the pitch page's two "Open the staff panel"/"Open the
+   * customer menu" CTAs. Both blocks' cards sit under the page's warm
+   * ambient glow on a bg-white/5 wash — a dense, near-black fill (the old
+   * .btn-tonal-dark) rendered darker than that card, reading weaker than
+   * the neutral elements around it rather than as a primary action (ТЗ
+   * rewrite §11). Gold was ruled out too: that's reserved for the page's
+   * closing WhatsApp/LINE actions, and three gold fills in a row would
+   * flatten the hierarchy between "look at this" and "message us". A light
+   * neutral fill — brand-light itself, paired with dark text — sits
+   * unambiguously lighter than the card and reads as its own, third tier
+   * distinct from both.
    */
-  .btn-tonal-dark {
-    background-color: rgba(24, 27, 29, 0.94);
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0) 55%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  .btn-tonal-light {
+    background-color: rgba(227, 221, 209, 0.92);
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 55%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 8px 20px rgba(0, 0, 0, 0.3);
   }
 
   /*

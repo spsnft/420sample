@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react"
 import Image from "next/image"
-import { motion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 
 // Desktop counterpart to DeviceMockup: the /staff panel is the surface the shop
 // owner and their staff work on at the counter, so it gets browser chrome
@@ -40,20 +40,28 @@ import { motion } from "framer-motion"
 // keeping the column — and its status pills — legible once the shot is
 // scaled down into this block. A 1280px-wide capture scales to roughly a
 // quarter here and turns the rows to mush.
+//
+// Below 640px this same full staff-view.png collapses into an unreadable
+// grey texture — statuses and dates disappear — so a second, dedicated crop
+// (staff-view-mobile.png, same capture script) stands in there instead: just
+// the search bar and two or three client rows, no browser chrome around it,
+// large enough to actually read on a 390pt phone (ТЗ rewrite §9.2). Two
+// <Image>s swapped by breakpoint rather than a native <picture> — next/image
+// needs explicit intrinsic dimensions per source, and the two crops have
+// different aspect ratios, so one <Image priority> per breakpoint hidden
+// with Tailwind is the straightforward way to get that here.
+//
+// The frame's own entrance fade/shift is gone — PitchBlock now animates
+// heading, body, mockup and CTA in together as one element (ТЗ rewrite §10);
+// only the light-sweep overlay still animates, off its own viewport entry.
 export function DesktopMockup() {
-  // Same pattern as DeviceMockup: the sweep is driven off the frame's viewport
-  // entry rather than its own whileInView, which never fires reliably on an
-  // absolutely positioned, pre-transformed child.
-  const [entered, setEntered] = React.useState(false);
+  const frameRef = React.useRef<HTMLDivElement>(null);
+  const entered = useInView(frameRef, { once: true, amount: 0.4 });
 
   return (
     <div className="w-full">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
-        onViewportEnter={() => setEntered(true)}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+      <div
+        ref={frameRef}
         className="rounded-[0.9rem] overflow-hidden bg-black border-x border-t border-white/10"
         style={{
           WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 88%, transparent 100%)",
@@ -69,7 +77,10 @@ export function DesktopMockup() {
           maskRepeat: "no-repeat",
         }}
       >
-        <div className="flex items-center gap-1.5 px-2.5 py-2 bg-white/[0.04] border-b border-white/10">
+        {/* Chrome only on the desktop capture — the mobile crop below carries
+            no browser frame of its own (ТЗ rewrite §9.2), and a URL bar
+            sitting on top of it would be chrome around nothing. */}
+        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-2 bg-white/[0.04] border-b border-white/10">
           <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
           <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
           <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
@@ -79,13 +90,24 @@ export function DesktopMockup() {
         </div>
 
         <div className="relative">
+          {/* Source raster is 780x306, i.e. 390x153 CSS px at 2x. */}
+          <Image
+            src="/images/partners/staff-view-mobile.png"
+            alt="buds.digital staff panel — client search with pass status and date"
+            width={390}
+            height={153}
+            className="w-full h-auto block sm:hidden"
+            sizes="420px"
+            priority
+          />
           <Image
             src="/images/partners/staff-view.png"
             alt="buds.digital staff panel — client directory with pass status and quota"
             width={860}
             height={560}
-            className="w-full h-auto block"
+            className="hidden sm:block w-full h-auto"
             sizes="420px"
+            priority
           />
           <motion.div
             aria-hidden
@@ -100,7 +122,7 @@ export function DesktopMockup() {
             }}
           />
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

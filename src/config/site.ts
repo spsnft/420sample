@@ -69,6 +69,11 @@ export const siteConfig = {
     // apart. Used for canonical metadata, the sitemap and robots.txt; in-app
     // links between the two are relative paths, not built from this.
     url: APP_ORIGIN,
+    // The agency's own portfolio, credited in exactly two places on the
+    // pitch page: the header byline and the footer's copyright line (ТЗ
+    // rewrite checklist). Never printed as bare text — always the
+    // "FT.Agency" name, which is what both links are signed with.
+    agencyUrl: "https://tsvetkov.site",
   },
 
   // Static, non-clickable trust badge shown on the homepage. Demo instance —
