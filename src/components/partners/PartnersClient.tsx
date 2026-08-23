@@ -190,14 +190,17 @@ export default function PartnersClient() {
             don't share a coordinate space (the corpus's own 8px padding
             scales content down slightly), so numbers eyeballed off the raw
             PNG land a bit off in the browser. NEW SALE/NEW RX end at ~478px
-            in the rendered corpus; fade starts right there (478) and
-            reaches zero at 498 — PREVIOUS PRESCRIPTIONS starts at ~500,
-            so the label never surfaces through the fade, just barely. The
-            498→538 gap is pure buffer: the window's own bottom edge (538)
-            sits well past where the gradient already hit zero, so there's
-            no coincidence between "fully faded" and "hard clip" left to
-            show a seam (ТЗ-3 §3). desktopWidthPx=391 maps 538→~540px
-            on-screen at `lg`, inside the 520–560 target (§2.4). */}
+            in the rendered corpus; fade starts right there (478). transparentPx
+            was 498 through ТЗ-3/4, but pixel-sampled against the live mobile
+            render (ТЗ-5 §1.2) PREVIOUS PRESCRIPTIONS' own glyphs peak around
+            492px, well inside that old fade band — legible ghosting, not a
+            hard bug, so it survived until someone looked at 4x zoom. 486
+            clears it with margin. The 486→538 gap is pure buffer: the
+            window's own bottom edge (538) sits well past where the gradient
+            already hit zero, so there's no coincidence between "fully
+            faded" and "hard clip" left to show a seam (ТЗ-3 §3).
+            desktopWidthPx=391 maps 538→~540px on-screen at `lg`, inside the
+            520–560 target (§2.4). */}
         <PitchBlock
           title={t.blockPt33Title}
           subtitle={t.blockPt33Subtitle}
@@ -211,7 +214,7 @@ export default function PartnersClient() {
               imgHeight={733}
               rotateDeg={0}
               fadeStartPx={478}
-              transparentPx={498}
+              transparentPx={486}
               containerHPx={538}
               desktopWidthPx={391}
             />
@@ -237,8 +240,23 @@ export default function PartnersClient() {
             before the content's own end) and hits zero at 390, comfortably
             inside the already-dark trailing margin. Buffer to 430 keeps the
             window's hard edge well clear of that zero point, same reasoning
-            as block 01. desktopWidthPx=490 maps 430→~530px on-screen at
-            `lg`, matching block 01's target range (§2.4). */}
+            as block 01. desktopWidthPx=391 (matched to block 01's scale in
+            ТЗ-4) maps 430→~473px on-screen at `lg`.
+            frameExtraBottomPct (ТЗ-5 §1.1): at this shorter containerHPx,
+            the corpus's own fixed 2.4rem corner radius is a big enough
+            share of the window's height that its rounded bottom edge sat
+            inside the still-partly-opaque band instead of past
+            transparentPx — visible as a "rounded sole" instead of a device
+            bleeding off the block (block 01's much taller portrait card
+            never shows this: its frame overflows the window and hard-clips
+            long before its own rounded corner). PhoneMockup now squares
+            that corner off entirely (rounded-t only) so there's no curve
+            left to leak through, and this pads the frame's flat bottom
+            edge down past transparentPx with margin. Expressed as % of
+            width (not a fixed px) so the same number holds at both
+            mobileWidthPx and desktopWidthPx — percentage padding resolves
+            against the containing block's width per the CSS spec, which
+            here is exactly the axis this whole mask already scales along. */}
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
@@ -253,6 +271,7 @@ export default function PartnersClient() {
               fadeStartPx={350}
               transparentPx={390}
               containerHPx={430}
+              frameExtraBottomPct={6.5}
               desktopWidthPx={391}
             />
           }
@@ -303,13 +322,17 @@ export default function PartnersClient() {
             {t.offerReadyLine}
           </p>
 
-          {/* The one moment on the page where a decision actually gets made,
-              so the number gets its own block instead of living as a clause
-              inside a paragraph. The eyebrow (ТЗ-4 §4.3) replaces the old
-              full-sentence "one at a time" note — same claim, same size
-              treatment as includedTitle/addonsTitle below it. Both
-              conditions in it (shop count, deadline) apply only to this
-              price, never to the subscription beneath it. */}
+          {/* SECTION 1 — the one-time purchase. The one moment on the page
+              where a decision actually gets made, so the number gets its
+              own block instead of living as a clause inside a paragraph.
+              The eyebrow (ТЗ-4 §4.3) replaces the old full-sentence "one at
+              a time" note — same claim, same size treatment as
+              includedTitle below it. Both conditions in it (shop count,
+              deadline) apply only to this price, never to the subscription
+              in section 2. offerPriceMonthly no longer sits under this
+              price (ТЗ-5 §3) — typesetting a standing ฿2,400/month as a
+              footnote of the ฿9,000 made it read as a detail of the setup
+              purchase rather than a second, separate obligation. */}
           <div className="mt-5">
             <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-1.5">
               {t.offerPriceEyebrow}
@@ -322,9 +345,6 @@ export default function PartnersClient() {
                 {t.offerPriceWas}
               </span>
             </div>
-            <p className="mt-1 text-2xl sm:text-[28px] font-black text-brand-light tabular-nums">
-              {t.offerPriceMonthly}
-            </p>
           </div>
 
           {/* The page's one guarantee, right under the price where a reader
@@ -333,17 +353,13 @@ export default function PartnersClient() {
             {t.guaranteeLine}
           </p>
 
-          {/* Subscription terms, moved up ahead of the included list (ТЗ-4
-              §4.5/§4.6) — right after the guarantee, since both are about
-              what happens to your money, not what you get. */}
-          <p className="mt-4 text-[12px] font-bold text-brand-light/50">
-            {t.subscriptionLine}
-          </p>
-          <p className="mt-2 text-[12px] font-bold text-brand-light/50">
-            {t.subscriptionYearlyLine}
-          </p>
-
-          <div className="mt-5 pt-4 border-t border-white/10">
+          {/* Included list stays nested inside section 1 — it's what the
+              ฿9,000 above buys, not a section of its own, so it keeps the
+              same muted /35 label weight as the eyebrow above it rather
+              than the brighter /45 that opens sections 2 and 3 below
+              (ТЗ-5 §3.1: the two need to read as different levels, not two
+              labels of the same kind back to back). */}
+          <div className="mt-5">
             <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-2">
               {t.includedTitle}
             </p>
@@ -357,12 +373,38 @@ export default function PartnersClient() {
             </ul>
           </div>
 
-          {/* Prices lifted to the section's primary text colour — these are
-              the numbers a reader is here for, and used to run as dim as
-              the labels beside them (ТЗ rewrite §5.7). Nothing follows this
-              list now — both subscription lines moved up above (ТЗ-4 §4.9). */}
-          <div className="mt-5">
-            <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-2">
+          {/* SECTION 2 — the standing subscription (ТЗ-5 §3). A visible
+              divider (not just extra margin — §3.1) plus a brighter /45
+              eyebrow than the nested includedTitle above mark this as a new
+              section, not another line in the setup list. subscriptionEyebrow
+              ("Then, every month") is what lets offerPriceMonthly sit at
+              the same size as offerPriceNow without reading as orphaned —
+              "then" is what tells the reader everything in section 1 was
+              one-time. */}
+          <div className="mt-7 pt-6 border-t border-white/15">
+            <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/45 mb-1.5">
+              {t.subscriptionEyebrow}
+            </p>
+            <p className="text-4xl sm:text-5xl font-black text-brand-light tabular-nums">
+              {t.offerPriceMonthly}
+            </p>
+            <p className="mt-3 text-[12px] font-bold text-brand-light/50">
+              {t.subscriptionLine}
+            </p>
+            <p className="mt-2 text-[12px] font-bold text-brand-light/50">
+              {t.subscriptionYearlyLine}
+            </p>
+          </div>
+
+          {/* SECTION 3 — optional extras (ТЗ-5 §3). Same divider treatment
+              as section 2's own opening, so setup → subscription → addons
+              reads as three obligations of decreasing weight (required,
+              required, optional) rather than one list with two gaps in it.
+              Prices lifted to the section's primary text colour — these
+              are the numbers a reader is here for, and used to run as dim
+              as the labels beside them (ТЗ rewrite §5.7). */}
+          <div className="mt-7 pt-6 border-t border-white/15">
+            <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/45 mb-2">
               {t.addonsTitle}
             </p>
             <ul className="space-y-1.5">

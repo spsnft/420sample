@@ -49,6 +49,8 @@ interface PhoneMockupProps {
   desktopWidthPx: number;
   mobileWidthPx?: number;
   sizes?: string;
+  /** Extra bottom padding on the corpus frame, as % of the frame's own rendered width — percentage padding resolves against the containing block's *width* per the CSS spec, which conveniently means one number holds at both mobileWidthPx and desktopWidthPx instead of needing a per-breakpoint px value (ТЗ-5 §1.1). Pushes the frame's own flat bottom edge past transparentPx so nothing of the corpus's boundary sits in the semi-visible band. Leave unset when the frame already overflows the window on its own (block 01's tall portrait card hard-clips well before its own end — see fadeStartPx/transparentPx there). */
+  frameExtraBottomPct?: number;
 }
 
 export function PhoneMockup({
@@ -56,6 +58,7 @@ export function PhoneMockup({
   fadeStartPx, transparentPx, containerHPx,
   desktopWidthPx, mobileWidthPx = 300,
   sizes = "(min-width: 1024px) 500px, 300px",
+  frameExtraBottomPct,
 }: PhoneMockupProps) {
   const frameRef = React.useRef<HTMLDivElement>(null);
   const entered = useInView(frameRef, { once: true, amount: 0.4 });
@@ -83,10 +86,13 @@ export function PhoneMockup({
       >
         <div
           ref={frameRef}
-          className="absolute inset-x-0 top-0 rounded-[2.4rem] p-2 bg-black border border-white/10"
-          style={{ boxShadow: "0 22px 38px rgba(0,0,0,0.55)" }}
+          className="absolute inset-x-0 top-0 rounded-t-[2.4rem] p-2 bg-black border border-white/10"
+          style={{
+            boxShadow: "0 22px 38px rgba(0,0,0,0.55)",
+            paddingBottom: frameExtraBottomPct ? `calc(0.5rem + ${frameExtraBottomPct}%)` : undefined,
+          }}
         >
-          <div className="relative rounded-[1.8rem] overflow-hidden">
+          <div className="relative rounded-t-[1.8rem] overflow-hidden">
             <Image
               src={src}
               alt={alt}

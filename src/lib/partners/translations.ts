@@ -59,8 +59,11 @@ export interface PartnersDictionary {
   // Standalone price block — the page's one moment of decision gets its own
   // typographic weight instead of living as a clause inside a paragraph.
   // offerPriceNow is the number the whole block exists to show;
-  // offerPriceWas is struck through beside it, offerPriceMonthly sits
-  // under both.
+  // offerPriceWas is struck through beside it. offerPriceMonthly moved into
+  // its own section (ТЗ-5 §3, see subscriptionEyebrow below) rather than
+  // sitting directly under the setup price — the two are separate
+  // obligations, one-time and standing, and typesetting them as one block
+  // read as if the subscription were a detail of the setup purchase.
   offerPriceNow: string;
   offerPriceWas: string;
   offerPriceMonthly: string;
@@ -80,16 +83,26 @@ export interface PartnersDictionary {
   // reads "Optional extras" now (ТЗ-4 §4.8) — the old "Add if you need it"
   // repeated "if" once as the section label and again in its own first
   // row's copy. Row order also changed: one-off/small-recurring work first,
-  // the second shop (the biggest single line item) last.
+  // the second shop (the biggest single line item) last. Opens its own
+  // section now (ТЗ-5 §3) — the third of three, after setup and
+  // subscription, behind a visible divider.
   addonsTitle: string;
   addonsItems: { label: string; price: string }[];
 
-  // Subscription price and terms — moved up ahead of the included list
-  // (ТЗ-4 §4.5/§4.6, was two screens below the price). Two lines: the
-  // monthly rate, then the annual option with its saving spelled out as a
-  // number. "Locked: shops that come in now keep ฿2,400…" is gone — that
-  // promise was aimed at the market, not this reader, and it named a rate
-  // that doesn't otherwise appear on the page.
+  // The price block's second section (ТЗ-5 §3): a standing obligation
+  // (฿2,400/month, forever) was previously typeset as a footnote under the
+  // one-time ฿9,000, reading as a detail of the setup purchase rather than
+  // a second, separate commitment. subscriptionEyebrow ("Then, every
+  // month") is what lets offerPriceMonthly sit in its own section, set at
+  // the same weight as offerPriceNow, without the number looking orphaned —
+  // the word "then" is what tells the reader everything above was one-time.
+  // subscriptionLine now opens with "Covers…" rather than repeating the
+  // price, since the price is now the heading directly above it, not a
+  // clause the sentence needs to reintroduce. subscriptionYearlyLine is
+  // unchanged. "Locked: shops that come in now keep ฿2,400…" stays gone —
+  // that promise was aimed at the market, not this reader, and it named a
+  // rate that doesn't otherwise appear on the page.
+  subscriptionEyebrow: string;
   subscriptionLine: string;
   subscriptionYearlyLine: string;
 
@@ -102,8 +115,12 @@ export interface PartnersDictionary {
   // price." — that headline told the reader, last thing on the page, that
   // none of the numbers above were final (ТЗ rewrite §7). ctaButton
   // (WhatsApp) and ctaButtonLine (LINE) are how to answer it — deliberately
-  // just the brand name on both, equal weight. pricingLine is the page's
-  // own closing price recap.
+  // just the brand name on both, equal weight. ctaSubtitle no longer
+  // hedges on the logo or restates the setup price (ТЗ-5 §4) — both are
+  // said, correctly, one screen up, and repeating a price here that the
+  // addons list has already priced a piece of (the logo) read as the page
+  // not knowing its own numbers. pricingLine now carries only the one
+  // thing this block adds that nothing above it has said: reply time.
   ctaHeadline: string;
   ctaSubtitle: string;
   ctaButton: string;
@@ -126,9 +143,10 @@ const en: PartnersDictionary = {
   blockPt33Subtitle: "Type a name, get their PT.33, their history and everything they've bought. About five seconds, from any device behind the counter.",
 
   blockStorefrontTitle: "Your storefront,\nalready open.",
-  // ТЗ-4 §2: was 47 words against block 01's 21 — same short shape now,
-  // action → result → consequence.
-  blockStorefrontSubtitle: "Send them one link. They get their certificate, then today's menu with live prices. Change a price once and it's changed everywhere.",
+  // ТЗ-5 §2: "them" landed before its own referent — the reader hit the
+  // pronoun before knowing who it meant. Referent first now ("every
+  // customer"), owner back as the sentence's subject ("you give").
+  blockStorefrontSubtitle: "One link you give every customer. They ask for their certificate, then walk into today's menu with live prices. Change a price once and it's changed everywhere.",
 
   ctaStaff: "Open the staff panel",
   ctaStaffPending: "Signing in to demo…",
@@ -164,7 +182,8 @@ const en: PartnersDictionary = {
     { label: "A second shop", price: `${P.addonSecondShopSetup} setup + ${P.addonSecondShopMonthly}/month` },
   ],
 
-  subscriptionLine: `${P.subscriptionMonthly}/month covers hosting, domain, backups, updates and support. That doesn't go up while you're with us.`,
+  subscriptionEyebrow: "Then, every month",
+  subscriptionLine: "Covers hosting, domain, backups, updates and support. That doesn't go up while you're with us.",
   subscriptionYearlyLine: `Pay for the year instead — ${P.subscriptionYearly}. Two months off, ${P.annualSavings} saved.`,
 
   faqTitle: "Questions",
@@ -192,10 +211,10 @@ const en: PartnersDictionary = {
   ],
 
   ctaHeadline: "Send your logo and your menu. We'll do the rest.",
-  ctaSubtitle: `A spreadsheet, a photo of the board, a WhatsApp message — whatever you've got. No logo? Say so, and we'll price that separately. Everything else is the ${P.setupPrice}.`,
+  ctaSubtitle: "A spreadsheet, a photo of the board, a WhatsApp message — whatever you've got.",
   ctaButton: "WhatsApp",
   ctaButtonLine: "LINE",
-  pricingLine: `${P.setupPrice} setup · ${P.subscriptionMonthly}/month · we reply the same day, 9:00–20:00 Phuket time`,
+  pricingLine: "We reply the same day, 9:00–20:00 Phuket time.",
 
   footerPrivacy: "Privacy",
 };
@@ -209,7 +228,7 @@ const ru: PartnersDictionary = {
   blockPt33Subtitle: "Впишите имя — получите его PT.33, историю и всё, что он покупал. Около пяти секунд с любого устройства за прилавком.",
 
   blockStorefrontTitle: "Ваша витрина,\nуже открыта.",
-  blockStorefrontSubtitle: "Отправьте одну ссылку. Клиент получает справку, а затем сегодняшнее меню с живыми ценами. Меняете цену один раз — и она меняется везде.",
+  blockStorefrontSubtitle: "Одна ссылка — вы даёте её каждому клиенту. Он получает справку, а затем сразу попадает в сегодняшнее меню с живыми ценами. Меняете цену один раз — и она меняется везде.",
 
   ctaStaff: "Открыть панель персонала",
   ctaStaffPending: "Вход в демо…",
@@ -241,7 +260,8 @@ const ru: PartnersDictionary = {
     { label: "Второй магазин", price: `${P.addonSecondShopSetup} настройка + ${P.addonSecondShopMonthly}/мес` },
   ],
 
-  subscriptionLine: `${P.subscriptionMonthly}/месяц покрывает хостинг, домен, бэкапы, обновления и поддержку. Эта цена не растёт, пока вы с нами.`,
+  subscriptionEyebrow: "Потом — каждый месяц",
+  subscriptionLine: "Покрывает хостинг, домен, бэкапы, обновления и поддержку. Эта цена не растёт, пока вы с нами.",
   subscriptionYearlyLine: `Можно оплатить год — ${P.subscriptionYearly}. Два месяца бесплатно, экономия ${P.annualSavings}.`,
 
   faqTitle: "Вопросы",
@@ -269,10 +289,10 @@ const ru: PartnersDictionary = {
   ],
 
   ctaHeadline: "Пришлите логотип и меню. Остальное на нас.",
-  ctaSubtitle: `Таблица, фото доски, сообщение в WhatsApp — подойдёт что угодно. Логотипа нет? Скажите, посчитаем отдельно. Всё остальное — это те самые ${P.setupPrice}.`,
+  ctaSubtitle: "Таблица, фото доски, сообщение в WhatsApp — подойдёт что угодно.",
   ctaButton: "WhatsApp",
   ctaButtonLine: "LINE",
-  pricingLine: `${P.setupPrice} установка · ${P.subscriptionMonthly}/месяц · отвечаем в тот же день, 9:00–20:00 по Пхукету`,
+  pricingLine: "Отвечаем в тот же день, 9:00–20:00 по Пхукету.",
 
   footerPrivacy: "Конфиденциальность",
 };
@@ -286,7 +306,7 @@ const th: PartnersDictionary = {
   blockPt33Subtitle: "พิมพ์ชื่อ แล้วดู PT.33 ประวัติ และทุกอย่างที่เขาเคยซื้อ ใช้เวลาประมาณห้าวินาที จากอุปกรณ์ใดก็ได้หลังเคาน์เตอร์",
 
   blockStorefrontTitle: "หน้าร้านของคุณ\nเปิดอยู่แล้ว",
-  blockStorefrontSubtitle: "ส่งลิงก์เดียวให้พวกเขา ลูกค้าจะได้รับใบรับรอง จากนั้นเข้าสู่เมนูวันนี้พร้อมราคาสด เปลี่ยนราคาครั้งเดียว แล้วมันจะเปลี่ยนทุกที่",
+  blockStorefrontSubtitle: "ลิงก์เดียวที่คุณส่งให้ลูกค้าทุกคน เขาขอใบรับรองของตัวเอง แล้วเข้าสู่เมนูวันนี้ที่มีราคาสด เปลี่ยนราคาครั้งเดียว แล้วมันเปลี่ยนทุกที่",
 
   ctaStaff: "เปิดแผงควบคุมพนักงาน",
   ctaStaffPending: "กำลังเข้าสู่ระบบเดโม…",
@@ -318,7 +338,8 @@ const th: PartnersDictionary = {
     { label: "ร้านที่สอง", price: `${P.addonSecondShopSetup} ตั้งค่า + ${P.addonSecondShopMonthly}/เดือน` },
   ],
 
-  subscriptionLine: `${P.subscriptionMonthly}/เดือน ครอบคลุมโฮสติ้ง โดเมน สำรองข้อมูล อัปเดต และซัพพอร์ต ราคานี้ไม่ขึ้นตลอดเวลาที่คุณใช้งานกับเรา`,
+  subscriptionEyebrow: "จากนั้น ทุกเดือน",
+  subscriptionLine: "ครอบคลุมโฮสติ้ง โดเมน สำรองข้อมูล อัปเดต และซัพพอร์ต ราคานี้ไม่ขึ้นตลอดเวลาที่คุณใช้งานกับเรา",
   subscriptionYearlyLine: `หรือจ่ายเป็นรายปีแทน — ${P.subscriptionYearly} ฟรี 2 เดือน ประหยัด ${P.annualSavings}`,
 
   faqTitle: "คำถามที่พบบ่อย",
@@ -346,10 +367,10 @@ const th: PartnersDictionary = {
   ],
 
   ctaHeadline: "ส่งโลโก้และเมนูของคุณมา ที่เหลือเราจัดการเอง",
-  ctaSubtitle: `สเปรดชีต รูปถ่ายกระดานเมนู ข้อความใน WhatsApp — มีอะไรส่งมาได้เลย ไม่มีโลโก้ใช่ไหม? บอกเราได้เลย แล้วเราจะคิดราคาแยกให้ ส่วนที่เหลือทั้งหมดคือราคา ${P.setupPrice}`,
+  ctaSubtitle: "สเปรดชีต รูปถ่ายกระดานเมนู ข้อความใน WhatsApp — มีอะไรส่งมาได้เลย",
   ctaButton: "WhatsApp",
   ctaButtonLine: "LINE",
-  pricingLine: `${P.setupPrice} ค่าติดตั้ง · ${P.subscriptionMonthly}/เดือน · ตอบกลับภายในวันเดียวกัน 9:00–20:00 เวลาภูเก็ต`,
+  pricingLine: "ตอบกลับภายในวันเดียวกัน 9:00–20:00 เวลาภูเก็ต",
 
   footerPrivacy: "ความเป็นส่วนตัว",
 };
