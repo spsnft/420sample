@@ -1,19 +1,24 @@
 // Recaptures the product screenshots on the buds.digital pitch page ("/"):
-//   public/images/partners/staff-view.png        — DesktopMockup, block 01 (sm and up)
-//   public/images/partners/staff-view-mobile.png — DesktopMockup, block 01 (below sm)
-//   public/images/partners/customer-view.png     — DeviceMockup, block 02
+//   public/images/partners/staff-view.png    — PhoneMockup, block 01 (all widths)
+//   public/images/partners/customer-view.png — PhoneMockup, block 02 (all widths)
 //
-// NOTE (ТЗ-2, mockup rewrite): the three PNGs currently checked in were NOT
-// produced by this script. They're hand-assembled (cropped/scaled/composited
-// with Playwright, not this file's own capture flow) from screenshots taken
-// manually against the live site and handed off for that pass — the client
-// card screen for the staff ones, in particular, which this script's own
-// captureStaffView()/captureStaffViewMobile() below still don't know how to
-// reach (they search for a client and land on the directory, not a specific
-// card). This script is left intact as the fallback path and still targets
-// the client-directory search screen described in its functions below;
-// bringing it in line with the hand-assembled client-card versions (picking
-// a client, or seeding a direct client-detail URL) is unstarted.
+// NOTE (ТЗ-2/ТЗ-3, mockup rewrites): the two PNGs currently checked in were
+// NOT produced by this script. They're hand-assembled (cropped/scaled/
+// composited with Playwright, not this file's own capture flow) from
+// screenshots taken manually against the live site and handed off for those
+// passes — the client-card screen for staff, in particular, which this
+// script's own captureStaffView()/captureStaffViewMobile() below still don't
+// know how to reach (they search for a client and land on the directory, not
+// a specific card). ТЗ-3 also dropped the synthetic browser chrome this
+// script's staff capture was built around — both blocks are a phone mockup
+// now, at every width, no browser window anywhere on the page — so even
+// once this script is taught to reach the card screen, its 860×560
+// desktop-viewport capture (see captureStaffView() below) is the wrong
+// shape for what DesktopMockup.tsx's successor (PhoneMockup) actually
+// consumes; that capture would need to change to a phone-shaped viewport
+// like captureStaffViewMobile() already uses. This script is left intact as
+// the fallback path, unreached by either ТЗ; bringing it in line with the
+// hand-assembled client-card, phone-only versions is unstarted.
 //
 // Run with:
 //   npm run capture:mockups                        # boots its own dev server
@@ -25,10 +30,11 @@
 // VERCEL_AUTOMATION_BYPASS_SECRET (Project Settings → Deployment Protection →
 // Protection Bypass for Automation) — every request then carries the
 // x-vercel-protection-bypass header instead of hitting Vercel's own login wall.
-// Read src/components/partners/DesktopMockup.tsx and DeviceMockup.tsx before
-// touching this file — they explain why the staff shot is 860x560 rather
-// than a full desktop width (client rows turn to mush once scaled down from
-// wider), and exactly what the customer-view composite drops and why.
+// Read src/components/partners/PhoneMockup.tsx and its two call sites in
+// PartnersClient.tsx before touching this file — the 860x560 desktop
+// viewport captureStaffView() below targets is a leftover from the old
+// browser-chrome staff mockup (see the NOTE above) and no longer matches
+// what PhoneMockup actually consumes.
 //
 // SUPABASE: staff-view is a real render of the live /staff search screen,
 // which means this script authenticates against whatever project

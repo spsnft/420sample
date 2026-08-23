@@ -11,8 +11,7 @@ import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { WhatsAppIcon, LineIcon } from "@/components/icons/BrandIcons"
 import { DemoLoginButton } from "@/components/partners/DemoLoginButton"
-import { DeviceMockup } from "@/components/partners/DeviceMockup"
-import { DesktopMockup } from "@/components/partners/DesktopMockup"
+import { PhoneMockup } from "@/components/partners/PhoneMockup"
 import { FaqSection } from "@/components/partners/FaqSection"
 import { siteConfig } from "@/config/site"
 import { triggerHaptic } from "@/lib/utils"
@@ -47,17 +46,31 @@ const AGENCY_PORTFOLIO_URL = siteConfig.partners.agencyUrl;
 // so the observer considers the block "in view" while it's still ~200px
 // below the viewport's own bottom edge — the animation is done well before
 // the block is actually scrolled into sight.
+//
+// mockupSide (ТЗ-3 §2.1): block 01 (action — type a name, get the card) puts
+// its mockup on the left; block 02 (result — what the client sees) puts it
+// on the right — a left-to-right zigzag matching the action→result read,
+// instead of both blocks mirroring each other. Implemented with `lg:order`
+// rather than swapping DOM order: the DOM stays head-then-mockup either way,
+// so mobile's stacking (§2.3 — head → body → mockup → button, unchanged)
+// falls out for free and only `lg:` reflows the grid tracks. Text keeps the
+// 45fr track and mockup the 55fr track regardless of which side either
+// lands on.
 function PitchBlock({
   title,
   subtitle,
   mockup,
   cta,
+  mockupSide = "right",
 }: {
   title: string;
   subtitle?: string;
   mockup: React.ReactNode;
   cta: React.ReactNode;
+  mockupSide?: "left" | "right";
 }) {
+  const textOrder = mockupSide === "left" ? "lg:order-2" : "";
+  const mockupOrder = mockupSide === "left" ? "lg:order-1" : "";
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -66,8 +79,15 @@ function PitchBlock({
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="gradient-ring rounded-card"
     >
-      <section className="relative overflow-hidden p-5 lg:p-8 rounded-card bg-white/5 lg:grid lg:grid-cols-[45fr_55fr] lg:gap-x-10 lg:items-center">
-        <div>
+      {/* Vertical padding trimmed at `lg` (was `lg:p-8` all round) — the
+          phone corpus renders noticeably shorter than the old browser
+          window it replaces, and the card should shrink to hug it rather
+          than leave dead air top and bottom (ТЗ-3 §2.4). Horizontal stays
+          at 2rem. `items-center` (unchanged) is what actually centres the
+          text column against the mockup's own height — no extra centring
+          needed. */}
+      <section className="relative overflow-hidden p-5 lg:px-8 lg:py-6 rounded-card bg-white/5 lg:grid lg:grid-cols-[45fr_55fr] lg:gap-x-10 lg:items-center">
+        <div className={textOrder}>
           <div className="relative mb-5 lg:mb-6">
             <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light whitespace-pre-line">
               {title}
@@ -80,7 +100,7 @@ function PitchBlock({
           </div>
           <div className="hidden lg:block">{cta}</div>
         </div>
-        <div>
+        <div className={mockupOrder}>
           {mockup}
           <div className="mt-6 lg:hidden">{cta}</div>
         </div>
@@ -149,11 +169,40 @@ export default function PartnersClient() {
             btn-tonal-light) sits above the card's own warm-lit screenshot —
             gold is reserved for the closing WhatsApp/LINE actions, and a
             dark fill here used to sit darker than the card itself (ТЗ
-            rewrite §11). */}
+            rewrite §11). Mockup on the left (ТЗ-3 §2.1): this block is the
+            owner's own action, read left-to-right into block 02's result.
+            No tilt (§2.2) — dense text, numbers and dates get read, not
+            admired.
+            Geometry: source is 780×1466 (390×733 CSS @2x). Verified against
+            the actual rendered page, not just the source image — the two
+            don't share a coordinate space (the corpus's own 8px padding
+            scales content down slightly), so numbers eyeballed off the raw
+            PNG land a bit off in the browser. NEW SALE/NEW RX end at ~478px
+            in the rendered corpus; fade starts right there (478) and
+            reaches zero at 498 — PREVIOUS PRESCRIPTIONS starts at ~500,
+            so the label never surfaces through the fade, just barely. The
+            498→538 gap is pure buffer: the window's own bottom edge (538)
+            sits well past where the gradient already hit zero, so there's
+            no coincidence between "fully faded" and "hard clip" left to
+            show a seam (ТЗ-3 §3). desktopWidthPx=391 maps 538→~540px
+            on-screen at `lg`, inside the 520–560 target (§2.4). */}
         <PitchBlock
           title={t.blockPt33Title}
           subtitle={t.blockPt33Subtitle}
-          mockup={<DesktopMockup />}
+          mockupSide="left"
+          mockup={
+            <PhoneMockup
+              src="/images/partners/staff-view.png"
+              alt="buds.digital staff panel — client card with PT.33 status and quota"
+              imgWidth={390}
+              imgHeight={733}
+              rotateDeg={0}
+              fadeStartPx={478}
+              transparentPx={498}
+              containerHPx={538}
+              desktopWidthPx={391}
+            />
+          }
           cta={
             <DemoLoginButton
               label={t.ctaStaff}
@@ -165,11 +214,34 @@ export default function PartnersClient() {
         />
 
         {/* Block 02 — the client storefront the same system ships. Same
-            light fill as block 01's CTA (ТЗ rewrite §11). */}
+            light fill as block 01's CTA (ТЗ rewrite §11). Mockup on the
+            right (ТЗ-3 §2.1) — unchanged from before, this is the result
+            side of the zigzag. 5° tilt kept (§2.2): two big cards read as
+            product photography, not data to parse.
+            Geometry: source is 780×749 (390×374.5 CSS @2x) — the cards plus
+            a short tail of the page's own dark gradient, nothing past the
+            green card worth keeping crisp. Fade starts at 350 (a little
+            before the content's own end) and hits zero at 390, comfortably
+            inside the already-dark trailing margin. Buffer to 430 keeps the
+            window's hard edge well clear of that zero point, same reasoning
+            as block 01. desktopWidthPx=490 maps 430→~530px on-screen at
+            `lg`, matching block 01's target range (§2.4). */}
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
-          mockup={<DeviceMockup />}
+          mockup={
+            <PhoneMockup
+              src="/images/partners/customer-view.png"
+              alt="buds.digital home screen — hero cards"
+              imgWidth={390}
+              imgHeight={375}
+              rotateDeg={-5}
+              fadeStartPx={350}
+              transparentPx={390}
+              containerHPx={430}
+              desktopWidthPx={490}
+            />
+          }
           cta={
             <Link
               href="/demo"
