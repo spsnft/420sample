@@ -1,6 +1,7 @@
-// Recaptures both product screenshots on the buds.digital pitch page ("/"):
-//   public/images/partners/staff-view.png    — DesktopMockup, block 01
-//   public/images/partners/customer-view.png — DeviceMockup, block 02
+// Recaptures the product screenshots on the buds.digital pitch page ("/"):
+//   public/images/partners/staff-view.png        — DesktopMockup, block 01 (sm and up)
+//   public/images/partners/staff-view-mobile.png — DesktopMockup, block 01 (below sm)
+//   public/images/partners/customer-view.png     — DeviceMockup, block 02
 //
 // Run with:
 //   npm run capture:mockups                        # boots its own dev server
@@ -59,6 +60,7 @@ const EXTRA_HEADERS = VERCEL_BYPASS_SECRET
 
 const OUT_DIR = path.join(process.cwd(), "public", "images", "partners");
 const STAFF_OUT = path.join(OUT_DIR, "staff-view.png");
+const STAFF_MOBILE_OUT = path.join(OUT_DIR, "staff-view-mobile.png");
 const CUSTOMER_OUT = path.join(OUT_DIR, "customer-view.png");
 
 // Injected before any page script runs. Neutralizes CSS transitions and
@@ -287,10 +289,79 @@ async function captureStaffView(browser) {
   console.log(`Wrote ${STAFF_OUT}`);
 }
 
-async function captureCustomerView(browser) {
-  // Air above the tagline block, replacing the page's own section padding.
-  const TAGLINE_PAD = 40;
+// The full staff-view capture above collapses into an unreadable grey
+// texture once scaled down to a 390pt phone — statuses and dates disappear.
+// This is a separate, dedicated login and capture at phone width instead of
+// a crop of the desktop shot: cropping would still be scaling 860px-wide
+// content down, the exact problem this exists to avoid. Content kept: the
+// search bar and the first three client rows (name, status, last-visit
+// date). Dropped: the "Find a client"/"New client" header row, the
+// "Recently viewed" chip row, and the "All clients" filter/sort chip row —
+// none of it reads at this size, and none of it is the point (ТЗ rewrite
+// §9.2). Selectors below walk DOM structure rather than test ids, same as
+// captureCustomerView's own section-index approach — brittle against a
+// SearchScreen/ClientDirectoryTable markup change, but there's nothing
+// stable to hook here today.
+async function captureStaffViewMobile(browser) {
+  const { email, password } = requireDemoStaffCreds();
 
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 700 },
+    deviceScaleFactor: 2,
+    reducedMotion: "reduce",
+  });
+  await freezeMotion(context);
+  if (EXTRA_HEADERS) await context.setExtraHTTPHeaders(EXTRA_HEADERS);
+
+  const page = await context.newPage();
+  await gotoOrThrow(page, `${ORIGIN}/staff/login`);
+  await assertNotVercelProtection(page);
+
+  await page.fill('input[name="email"]', email);
+  await page.fill('input[name="password"]', password);
+
+  await page.click('button[type="submit"]');
+  await waitForLoginOutcome(page);
+  await page.waitForLoadState("networkidle");
+  await assertNotVercelProtection(page);
+  await page.evaluate(() => document.fonts.ready);
+  await sleep(300);
+
+  const clipHeight = await page.evaluate(() => {
+    // layout.tsx: <main class="max-w-2xl mx-auto p-4">{children}</main>,
+    // children === SearchScreen's own root (space-y-4: header row, search
+    // box, then — with no query typed and at least one client — a
+    // space-y-6 wrapping RecentlyViewedRow and ClientDirectoryTable).
+    // .remove() rather than display:none — Tailwind's space-y-* applies
+    // margin-top by a `:not([hidden]) ~ :not([hidden])` sibling selector,
+    // which still matches a display:none sibling (only the `hidden`
+    // attribute is excluded) and would leave a phantom gap where the
+    // removed row used to be.
+    const main = document.querySelector("main");
+    const root = main.children[0];
+    const [headerRow, , content] = root.children;
+    headerRow.remove();
+
+    // ClientDirectoryTable's own root (space-y-3: the "All clients" label +
+    // filter/sort row, then the row list).
+    const [recentlyViewed, directory] = content.children;
+    recentlyViewed.remove();
+    const [filterSortRow, rowList] = directory.children;
+    filterSortRow.remove();
+    [...rowList.children].slice(3).forEach((el) => el.remove());
+
+    return rowList.getBoundingClientRect().bottom;
+  });
+
+  await page.screenshot({
+    path: STAFF_MOBILE_OUT,
+    clip: { x: 0, y: 0, width: 390, height: Math.round(clipHeight) },
+  });
+  await context.close();
+  console.log(`Wrote ${STAFF_MOBILE_OUT}`);
+}
+
+async function captureCustomerView(browser) {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
     deviceScaleFactor: 2,
@@ -315,7 +386,7 @@ async function captureCustomerView(browser) {
   await assertNotVercelProtection(page);
   await page.evaluate(() => document.fonts.ready);
 
-  await page.evaluate((pad) => {
+  await page.evaluate(() => {
     // The page's own <main> is the inner one — the layout wraps the app in a
     // <main> of its own.
     const mains = document.querySelectorAll("main");
@@ -341,16 +412,36 @@ async function captureCustomerView(browser) {
     if (demoBar) demoBar.style.display = "none";
     header.style.top = "0px";
 
-    sections.slice(2).forEach((el) => { el.style.display = "none"; });
-    sections[1].style.paddingTop = `${pad}px`;
-    sections[1].style.paddingBottom = "0px";
-  }, TAGLINE_PAD);
+    // sections[0] is the hero-cards grid; everything from sections[1] on —
+    // starting with the "Flowers. Done properly." tagline section — is
+    // dropped. That tagline used to be pulled up under the cards and kept
+    // in the composite, but at mockup scale it renders at ~9-10px tilted
+    // and unreadable while still eating room in an already dense block, so
+    // the composite now ends right under the second card (ТЗ rewrite
+    // §9.1).
+    sections.slice(1).forEach((el) => { el.style.display = "none"; });
+    sections[0].style.paddingBottom = "0px";
+  });
 
   // The hero cards animate in on scroll; give them their moment before shooting.
   await page.evaluate(() => window.scrollTo(0, 0));
   await sleep(600);
 
-  await page.screenshot({ path: CUSTOMER_OUT });
+  // Crop tight to just below the second card, plus a short tail of the
+  // page's own dark background — DeviceMockup's own mask-image fades that
+  // tail out over the crop's last ~8%, the same "uh into darkness" it
+  // already does today, just starting right after the cards instead of
+  // after the (now-hidden) tagline.
+  const cardsBottom = await page.evaluate(() => {
+    const mains = document.querySelectorAll("main");
+    const main = mains[mains.length - 1];
+    return main.children[0].getBoundingClientRect().bottom;
+  });
+  const CROP_TAIL = 50;
+  await page.screenshot({
+    path: CUSTOMER_OUT,
+    clip: { x: 0, y: 0, width: 390, height: Math.round(cardsBottom + CROP_TAIL) },
+  });
   await context.close();
   console.log(`Wrote ${CUSTOMER_OUT}`);
 }
@@ -366,7 +457,10 @@ await withServer(async () => {
   );
   activeBrowser = browser;
   try {
-    if (ONLY !== "customer") await captureStaffView(browser);
+    if (ONLY !== "customer") {
+      await captureStaffView(browser);
+      await captureStaffViewMobile(browser);
+    }
     if (ONLY !== "staff") await captureCustomerView(browser);
   } finally {
     await browser.close();
