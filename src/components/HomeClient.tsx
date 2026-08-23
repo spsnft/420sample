@@ -84,39 +84,141 @@ const StorefrontPhoto: React.FC<{ label: string; alt: string }> = ({ label, alt 
   );
 };
 
-// Stands in for the live Google Maps embed the map block used to be. That
-// embed was the one white rectangle on an otherwise dark page — on mobile it
-// weighed visually more than the storefront photo beside it, the wrong way
-// round for a page selling "look at our shop" (audit ТЗ pitch-layout №6).
+// Boat Avenue, Cherngtalay/Bang Tao, Phuket — the neutral public landmark
+// siteConfig.address and mapOpenUrl already point at (not any specific
+// dispensary's real coordinates). Looked up once via Google's own redirect
+// for that place (goo.gl/maps/LxVaLsSyr2f5821Z6 → .../@7.9935695,98.3049359
+// .../3d7.9935586/4d98.3049313) rather than estimated from the address text.
+const MAP_LAT = 7.9935586;
+const MAP_LON = 98.3049313;
+// 15 is the level a "how do I get there" glance needs — road names and the
+// coastline both read at this zoom without the tile grid needing to be
+// large enough to feel wasteful.
+const MAP_ZOOM = 15;
+const TILE_SIZE = 256;
+// 5x5 tiles centered on MAP_LAT/LON — 1280x1280px, comfortably larger than
+// this block gets on any real layout (its widest point is well under
+// 1280px, from the 45/55 split... a two-column grid at most a few hundred
+// px), so the grid always fully covers the visible area after centering,
+// with no edge ever showing through.
+const MAP_GRID_RADIUS = 2;
+
+// Standard Web Mercator slippy-map projection (the same math every tile
+// provider's {x}/{y}/{z} scheme is built on) — converts a lat/lon into a
+// fractional "world pixel" position at a given zoom, which is what lets the
+// grid below be centered on the *exact* coordinate rather than just
+// snapped to whichever tile contains it.
+function projectToTilePixels(lat: number, lon: number, zoom: number) {
+  const latRad = (lat * Math.PI) / 180;
+  const scale = 2 ** zoom;
+  const x = ((lon + 180) / 360) * scale;
+  const y = ((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * scale;
+  return { x, y };
+}
+
+const mapCenterPx = projectToTilePixels(MAP_LAT, MAP_LON, MAP_ZOOM);
+const mapCenterTileX = Math.floor(mapCenterPx.x);
+const mapCenterTileY = Math.floor(mapCenterPx.y);
+// Where MAP_LAT/LON actually falls within its own tile (0-256, not
+// necessarily the tile's center) — the grid gets shifted by exactly this
+// much off its own geometric middle so the real coordinate, not just the
+// tile boundary, lands under the pin.
+const mapOffsetX = (mapCenterPx.x - mapCenterTileX) * TILE_SIZE;
+const mapOffsetY = (mapCenterPx.y - mapCenterTileY) * TILE_SIZE;
+const mapShiftX = TILE_SIZE / 2 - mapOffsetX;
+const mapShiftY = TILE_SIZE / 2 - mapOffsetY;
+const MAP_GRID_PX = (MAP_GRID_RADIUS * 2 + 1) * TILE_SIZE;
+
+// CARTO's Dark Matter basemap — free, no API key, no account (the fair-use
+// key CARTO's docs mention is for their hosted analytics/Maps APIs; the
+// public basemap CDN itself has served unauthenticated {z}/{x}/{y} tile
+// requests this way for years, confirmed live at the URL below rather than
+// assumed). Subdomains a-d spread requests across the CDN, which is why
+// tile position (not something arbitrary) picks which one each uses.
+const MAP_TILE_SUBDOMAINS = ["a", "b", "c", "d"];
+const mapTiles: { key: string; left: number; top: number; url: string }[] = [];
+for (let dy = -MAP_GRID_RADIUS; dy <= MAP_GRID_RADIUS; dy++) {
+  for (let dx = -MAP_GRID_RADIUS; dx <= MAP_GRID_RADIUS; dx++) {
+    const tileX = mapCenterTileX + dx;
+    const tileY = mapCenterTileY + dy;
+    const subdomain = MAP_TILE_SUBDOMAINS[(tileX + tileY) % MAP_TILE_SUBDOMAINS.length];
+    mapTiles.push({
+      key: `${tileX}-${tileY}`,
+      left: (dx + MAP_GRID_RADIUS) * TILE_SIZE,
+      top: (dy + MAP_GRID_RADIUS) * TILE_SIZE,
+      url: `https://${subdomain}.basemaps.cartocdn.com/dark_all/${MAP_ZOOM}/${tileX}/${tileY}.png`,
+    });
+  }
+}
+
+// Real geography, not a schematic placeholder: a grid of CARTO Dark Matter
+// tiles (audit ТЗ pitch-layout-2 №1 — a blank abstract grid read as "the
+// map failed to load," worse than no map at all) — actual coastline, roads
+// and place names, in a basemap that's already dark by design rather than
+// a light tile with a dark filter over it. No address text inside the
+// block any more; the info strip below is now the address's only home
+// (пп. №2 — it used to appear in both places, ~200px apart on desktop).
 //
-// The classic no-API-key iframe embed (`maps.google.com/maps?...&output=
-// embed`, what this used to be) doesn't take a `styles` param — dark-theme
-// Maps embeds need either the JS Maps API or the Static Maps API, and this
-// project has no Google Maps API key or billing set up for either. Rather
-// than guess at standing that up, this swaps the live embed for a static,
-// palette-matched graphic (schematic streets, a pin) with a real "Open in
-// Maps" link over it — the option the ТЗ itself names as the fallback.
-const StorefrontMap: React.FC<{ addressLabel: string; openLabel: string; href: string }> = ({ addressLabel, openLabel, href }) => (
+// Google's Maps Embed still can't go dark without an API key this project
+// doesn't have (see the previous attempt's note, kept for context: the
+// classic no-key `maps.google.com/maps?...&output=embed` iframe doesn't
+// accept a `styles` param at all) — this route sidesteps that entirely by
+// not going through Google for the visible tiles, while "Open in Maps"
+// still opens the real Google Maps listing.
+const StorefrontMap: React.FC<{ openLabel: string; href: string }> = ({ openLabel, href }) => (
   <div className="relative surface rounded-card overflow-hidden">
-    <div className="relative w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card overflow-hidden bg-[#14171a]">
-      <svg
+    <div className="relative w-full aspect-[16/9] lg:aspect-auto lg:h-full lg:min-h-[224px] rounded-card overflow-hidden bg-[#0c0e0f]">
+      <div
         aria-hidden
-        viewBox="0 0 400 225"
-        preserveAspectRatio="none"
-        className="absolute inset-0 w-full h-full opacity-[0.35]"
+        className="absolute"
+        style={{
+          width: MAP_GRID_PX,
+          height: MAP_GRID_PX,
+          top: "50%",
+          left: "50%",
+          transform: `translate(calc(-50% + ${mapShiftX}px), calc(-50% + ${mapShiftY}px))`,
+        }}
       >
-        <line x1="0" y1="55" x2="400" y2="55" stroke="#C89E58" strokeWidth="1" />
-        <line x1="0" y1="140" x2="400" y2="140" stroke="#C89E58" strokeWidth="1" />
-        <line x1="90" y1="0" x2="90" y2="225" stroke="#C89E58" strokeWidth="1" />
-        <line x1="260" y1="0" x2="260" y2="225" stroke="#C89E58" strokeWidth="1" />
-        <line x1="0" y1="0" x2="400" y2="225" stroke="#3A543F" strokeWidth="1" />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center px-6">
-        <div className="w-9 h-9 rounded-full bg-brand-secondary/20 border border-brand-secondary/50 flex items-center justify-center text-brand-secondary">
+        {mapTiles.map((tile) => (
+          // eslint-disable-next-line @next/next/no-img-element -- fixed-size
+          // external tiles at exact pixel coordinates; next/image's own
+          // optimizer has nothing to add here and would need the CARTO CDN
+          // allow-listed in next.config for no benefit.
+          <img
+            key={tile.key}
+            src={tile.url}
+            alt=""
+            width={TILE_SIZE}
+            height={TILE_SIZE}
+            loading="lazy"
+            style={{ position: "absolute", left: tile.left, top: tile.top, width: TILE_SIZE, height: TILE_SIZE }}
+            // A tile failing to load (offline, CDN hiccup) disappears
+            // instead of showing a broken-image glyph — the dark
+            // background underneath reads as fine either way.
+            onError={(e) => { e.currentTarget.style.display = "none"; }}
+          />
+        ))}
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-9 h-9 rounded-full bg-brand-secondary/20 border border-brand-secondary/50 flex items-center justify-center text-brand-secondary shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
           <MapPin size={18} />
         </div>
-        <p className="text-[11px] font-bold text-brand-light/50 leading-snug">{addressLabel}</p>
       </div>
+
+      {/* Small and in the corner, per the provider's terms — legible on
+          request, not competing with the map itself. */}
+      <p className="absolute bottom-1.5 left-2 text-[8px] leading-none text-brand-light/30">
+        ©{" "}
+        <a href="https://carto.com/attributions" target="_blank" rel="noopener" className="hover:text-brand-light/50">
+          CARTO
+        </a>
+        , ©{" "}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" className="hover:text-brand-light/50">
+          OpenStreetMap
+        </a>
+      </p>
+
       <Link
         href={href}
         target="_blank"
@@ -131,17 +233,25 @@ const StorefrontMap: React.FC<{ addressLabel: string; openLabel: string; href: s
   </div>
 );
 
-// One row of the collapsed info strip below — icon, then label, then value,
-// all on one line at a fixed 56px height (h-14) rather than the label
-// stacked over the value the old, much taller InfoCard used. The icon
-// circle shrinks to match (28px, was 36px).
+// One cell of the collapsed info strip below. Label sits above value,
+// not beside it — three labels of different lengths (ADDRESS, WORKING
+// HOURS, REVIEWS) starting their values at three different x-positions
+// read as the text jittering line to line (audit ТЗ pitch-layout-2 №3).
+// Stacked, both edges land on the same left edge regardless of label
+// length, and the label (small, muted, uppercase) reads clearly lighter
+// than the value (larger, full-strength) it sits above — before, at
+// similar size and weight, WORKING HOURS nearly matched 12:00 — 00:00.
+// Row height (h-14, 56px) is unchanged from the single-line layout it
+// replaces, so the strip's total height doesn't grow.
 const InfoRow: React.FC<{ icon: LucideIcon; label: string; value: React.ReactNode }> = ({ icon: Icon, label, value }) => (
-  <div className="h-14 px-2.5 flex items-center gap-1.5">
-    <div className="w-6 h-6 rounded-full border border-brand-secondary/30 bg-brand-secondary/15 flex items-center justify-center text-brand-secondary shrink-0">
-      <Icon size={12} />
+  <div className="h-14 px-3 lg:flex-1 flex items-center gap-2.5">
+    <div className="w-7 h-7 rounded-full border border-brand-secondary/30 bg-brand-secondary/15 flex items-center justify-center text-brand-secondary shrink-0">
+      <Icon size={13} />
     </div>
-    <span className="text-[10px] font-black uppercase text-brand-light/40 shrink-0">{label}</span>
-    <span className="text-[13px] font-bold text-brand-light truncate">{value}</span>
+    <div className="min-w-0 text-left">
+      <p className="text-[9px] font-bold uppercase tracking-wide text-brand-light/35 leading-none">{label}</p>
+      <p className="mt-1 text-[13px] font-bold text-brand-light leading-none truncate">{value}</p>
+    </div>
   </div>
 );
 
@@ -215,7 +325,7 @@ export default function HomeClient({ demoInstance = false }: { demoInstance?: bo
         <section className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <StorefrontPhoto label={t.aboutPhotoLabel} alt={siteConfig.name} />
-            <StorefrontMap addressLabel={siteConfig.address} openLabel={t.mapOpenCta} href={siteConfig.mapOpenUrl} />
+            <StorefrontMap openLabel={t.mapOpenCta} href={siteConfig.mapOpenUrl} />
           </div>
 
           {/* One collapsed strip instead of three ~150px cards — each used
@@ -223,8 +333,10 @@ export default function HomeClient({ demoInstance = false }: { demoInstance?: bo
               mobile stacked into ~450px of mostly empty screen (audit ТЗ
               pitch-layout №7). Reviews keeps the same tap-for-tooltip
               treatment as the contacts row below (ТЗ №2.2) since it's still
-              not wired to a real Google listing on this demo. */}
-          <div className="surface rounded-card divide-y divide-white/10">
+              not wired to a real Google listing on this demo. Three equal
+              thirds in a row at lg (a vertical hairline between them
+              instead of the mobile stack's horizontal one). */}
+          <div className="surface rounded-card divide-y divide-white/10 lg:flex lg:divide-y-0 lg:divide-x">
             <InfoRow
               icon={MapPin}
               label={t.addressLabel}
@@ -240,8 +352,8 @@ export default function HomeClient({ demoInstance = false }: { demoInstance?: bo
               label={t.hoursLabel}
               value={<span className="tracking-[0.1em]">{siteConfig.workingHours}</span>}
             />
-            <Tooltip text={t.reviewsTooltip} className="w-full">
-              <button type="button" className="w-full text-left">
+            <Tooltip text={t.reviewsTooltip} className="w-full lg:flex-1">
+              <button type="button" className="w-full h-full text-left">
                 <InfoRow icon={Star} label={t.reviewsLabel} value={`${siteConfig.trustBadge.rating} · ${siteConfig.trustBadge.reviews}`} />
               </button>
             </Tooltip>
@@ -291,13 +403,12 @@ export default function HomeClient({ demoInstance = false }: { demoInstance?: bo
         </section>
 
         <div className="pb-6 text-center">
-          <p className="text-[10px] text-brand-light/30 leading-relaxed">{t.footerDisclaimer[0]}</p>
-          <p className="text-[10px] text-brand-light/30 leading-relaxed">{t.footerDisclaimer[1]}</p>
+          <p className="text-[10px] text-brand-light/30 leading-relaxed">{t.footerDisclaimer}</p>
         </div>
       </main>
 
       {showConsultModal && (
-        <Consultation t={t} onClose={closeConsult} demoInstance={demoInstance} />
+        <Consultation t={t} onClose={closeConsult} />
       )}
     </div>
   );
