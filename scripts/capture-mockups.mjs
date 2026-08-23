@@ -3,6 +3,18 @@
 //   public/images/partners/staff-view-mobile.png — DesktopMockup, block 01 (below sm)
 //   public/images/partners/customer-view.png     — DeviceMockup, block 02
 //
+// NOTE (ТЗ-2, mockup rewrite): the three PNGs currently checked in were NOT
+// produced by this script. They're hand-assembled (cropped/scaled/composited
+// with Playwright, not this file's own capture flow) from screenshots taken
+// manually against the live site and handed off for that pass — the client
+// card screen for the staff ones, in particular, which this script's own
+// captureStaffView()/captureStaffViewMobile() below still don't know how to
+// reach (they search for a client and land on the directory, not a specific
+// card). This script is left intact as the fallback path and still targets
+// the client-directory search screen described in its functions below;
+// bringing it in line with the hand-assembled client-card versions (picking
+// a client, or seeding a direct client-detail URL) is unstarted.
+//
 // Run with:
 //   npm run capture:mockups                        # boots its own dev server
 //   npm run capture:mockups -- --url=https://preview.vercel.app   # against a deployed preview instead

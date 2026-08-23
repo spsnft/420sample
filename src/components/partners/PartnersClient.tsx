@@ -286,7 +286,14 @@ export default function PartnersClient() {
           </p>
         </section>
 
-        <div className="max-w-prose mx-auto">
+        {/* Matched to the price section's own box (ТЗ-2 axis rewrite §2,
+            per-conversation follow-up): same max-w-prose cap, same lg:mx-0
+            left-flush switch, so the same continuous left margin runs
+            through the FAQ too. FaqSection's own `px-2` (0.5rem = 8px) is
+            baked into that component already — `lg:pl-6` (1.5rem) tops it
+            up to the price section's 32px total (0.5rem base overridden to
+            2rem there) rather than doubling a second padding on top of it. */}
+        <div className="max-w-prose mx-auto lg:mx-0 lg:pl-6">
           <FaqSection title={t.faqTitle} items={t.faqItems} />
         </div>
 
