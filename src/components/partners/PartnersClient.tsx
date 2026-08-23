@@ -62,12 +62,20 @@ function PitchBlock({
   mockup,
   cta,
   mockupSide = "right",
+  mobileCtaGapClassName = "mt-6",
 }: {
   title: string;
   subtitle?: string;
   mockup: React.ReactNode;
   cta: React.ReactNode;
   mockupSide?: "left" | "right";
+  // ТЗ-4 §3.5 — each mockup's mask leaves a different amount of fully-
+  // transparent box below its last visible pixel (more on block 02, whose
+  // rotation also grows its own bounding box), so a single shared margin
+  // can't put both blocks in the 40–48px *visible* gap target at once.
+  // Tuned per block against screenshots rather than computed, since "looks
+  // like a pair" is a visual judgment the mask's own box math can't give us.
+  mobileCtaGapClassName?: string;
 }) {
   const textOrder = mockupSide === "left" ? "lg:order-2" : "";
   const mockupOrder = mockupSide === "left" ? "lg:order-1" : "";
@@ -102,7 +110,7 @@ function PitchBlock({
         </div>
         <div className={mockupOrder}>
           {mockup}
-          <div className="mt-6 lg:hidden">{cta}</div>
+          <div className={`${mobileCtaGapClassName} lg:hidden`}>{cta}</div>
         </div>
       </section>
     </motion.div>
@@ -145,21 +153,25 @@ export default function PartnersClient() {
           ТЗ's №2) so their body copy doesn't just stretch to fill the extra
           room — only blocks 01/02 use it, for the two-column layout below. */}
       <main className="max-w-xl lg:max-w-5xl mx-auto space-y-6 pb-10">
-        {/* H1 is the one thing centred on mobile (ТЗ rewrite §12) — every
-            other block below runs left-aligned there, including this
-            section's own lead and price line. */}
-        <section className="max-w-prose mx-auto py-4">
-          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-balance text-brand-light text-center">
+        {/* Hero and the final CTA are the page's two direct-address moments,
+            centred as whole blocks at every width, with everything
+            argumentative between them left-aligned (ТЗ-4 §1.2 — previously
+            three different axes across four lines here: H1 centred, lead
+            left, price line centred again). H1 stays the one thing centred
+            on mobile per the earlier ТЗ; §1.2 just adds the lead and price
+            line to that same axis rather than carving out an exception. */}
+        <section className="max-w-prose mx-auto py-4 text-center">
+          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-balance text-brand-light">
             {t.heroTitle}
           </h1>
-          <p className="mt-3 text-[14px] sm:text-[15px] font-normal text-brand-light/75 text-balance text-left">
+          <p className="mt-3 text-[14px] sm:text-[15px] font-normal text-brand-light/75 text-balance">
             {t.heroSubtitle}
           </p>
           {/* Replaces the old two-pill row: gold there meant "press this",
               and a gold-filled, unclickable pill sitting in the page's most
               visible spot taught the wrong rule (ТЗ rewrite §2.1). Plain
               text, no button — blocks 01/02 already carry the two real CTAs. */}
-          <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.14em] text-brand-light/45 text-left sm:text-center">
+          <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.14em] text-brand-light/45">
             {t.heroPriceLine}
           </p>
         </section>
@@ -190,6 +202,7 @@ export default function PartnersClient() {
           title={t.blockPt33Title}
           subtitle={t.blockPt33Subtitle}
           mockupSide="left"
+          mobileCtaGapClassName="mt-1"
           mockup={
             <PhoneMockup
               src="/images/partners/staff-view.png"
@@ -229,6 +242,7 @@ export default function PartnersClient() {
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
+          mobileCtaGapClassName="mt-0"
           mockup={
             <PhoneMockup
               src="/images/partners/customer-view.png"
@@ -239,7 +253,7 @@ export default function PartnersClient() {
               fadeStartPx={350}
               transparentPx={390}
               containerHPx={430}
-              desktopWidthPx={490}
+              desktopWidthPx={391}
             />
           }
           cta={
@@ -248,7 +262,7 @@ export default function PartnersClient() {
               target="_blank"
               rel="noopener"
               onClick={() => triggerHaptic('light')}
-              className="w-full h-12 btn-tonal-light border border-white/25 text-brand-primary font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
+              className="w-full lg:w-auto h-12 px-6 btn-tonal-light border border-white/25 text-brand-primary font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex lg:inline-flex items-center justify-center gap-2"
             >
               {t.ctaMenu}
               <ArrowRight size={16} className="text-brand-secondary" />
@@ -256,14 +270,15 @@ export default function PartnersClient() {
           }
         />
 
-        {/* Offer block: the launch-price headline as the block's dominant
-            element, the price itself, the reason-and-deadline line, an
-            abstract, the guarantee, the included scope, an add-on price
-            list and the subscription rate. The old attribution line above
-            this heading ("Built by FT.Agency") is gone — it linked out to
-            the portfolio right at the page's hottest point; the agency
-            stays credited in the header and footer, both untouched (ТЗ
-            rewrite §5.1). No photos, no names, no invented experience or
+        {/* Offer block (ТЗ-4 §4 reorder): title → readiness line → price
+            (with its eyebrow) → guarantee → subscription terms → included
+            scope → add-ons. "Done" leads, then "how much", then "how you
+            pay" — the old order argued the price before establishing the
+            thing was even finished. The old attribution line above this
+            heading ("Built by FT.Agency") is gone — it linked out to the
+            portfolio right at the page's hottest point; the agency stays
+            credited in the header and footer, both untouched (ТЗ rewrite
+            §5.1). No photos, no names, no invented experience or
             project-count figures — see ТЗ №1 A9. Left-aligned at every
             width now (ТЗ rewrite §12, axis rewrite §2.1) — this is a
             content section making an argument, same as blocks 01/02, not
@@ -282,10 +297,23 @@ export default function PartnersClient() {
             {t.offerTitle}
           </p>
 
+          {/* Leads the section now (ТЗ-4 §4.2) — "this is done" before "here's
+              how much." Shortened from three sentences to two. */}
+          <p className="mt-4 text-[13px] font-medium text-brand-light/70 leading-relaxed">
+            {t.offerReadyLine}
+          </p>
+
           {/* The one moment on the page where a decision actually gets made,
               so the number gets its own block instead of living as a clause
-              inside offerBody's paragraph. */}
+              inside a paragraph. The eyebrow (ТЗ-4 §4.3) replaces the old
+              full-sentence "one at a time" note — same claim, same size
+              treatment as includedTitle/addonsTitle below it. Both
+              conditions in it (shop count, deadline) apply only to this
+              price, never to the subscription beneath it. */}
           <div className="mt-5">
+            <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-1.5">
+              {t.offerPriceEyebrow}
+            </p>
             <div className="flex items-baseline flex-wrap gap-x-3 gap-y-1">
               <span className="text-4xl sm:text-5xl font-black text-brand-light tabular-nums">
                 {t.offerPriceNow}
@@ -297,26 +325,25 @@ export default function PartnersClient() {
             <p className="mt-1 text-2xl sm:text-[28px] font-black text-brand-light tabular-nums">
               {t.offerPriceMonthly}
             </p>
-            {/* Raised to body-text size — this is the block's only argument
-                for acting now, and it used to run as the smallest line in
-                the section (ТЗ rewrite §5.3). */}
-            <p className="mt-2 text-[13px] font-bold text-brand-light/70 leading-relaxed">
-              {t.offerPriceNote}
-            </p>
           </div>
 
-          <p className="mt-4 text-[13px] font-medium text-brand-light/70 leading-relaxed">
-            {t.offerBody}
-          </p>
-
-          {/* NEW: the page's one guarantee, promoted from small print under
-              the add-ons list up to where a reader is actually weighing the
-              risk (ТЗ rewrite §5.5). */}
+          {/* The page's one guarantee, right under the price where a reader
+              is actually weighing the risk (ТЗ rewrite §5.5). */}
           <p className="mt-4 text-[13px] font-bold text-brand-light">
             {t.guaranteeLine}
           </p>
 
-          <div className="mt-5">
+          {/* Subscription terms, moved up ahead of the included list (ТЗ-4
+              §4.5/§4.6) — right after the guarantee, since both are about
+              what happens to your money, not what you get. */}
+          <p className="mt-4 text-[12px] font-bold text-brand-light/50">
+            {t.subscriptionLine}
+          </p>
+          <p className="mt-2 text-[12px] font-bold text-brand-light/50">
+            {t.subscriptionYearlyLine}
+          </p>
+
+          <div className="mt-5 pt-4 border-t border-white/10">
             <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-2">
               {t.includedTitle}
             </p>
@@ -328,14 +355,12 @@ export default function PartnersClient() {
                 </li>
               ))}
             </ul>
-            <p className="mt-2.5 text-[12px] font-medium text-brand-light/45">
-              {t.includedNote}
-            </p>
           </div>
 
           {/* Prices lifted to the section's primary text colour — these are
               the numbers a reader is here for, and used to run as dim as
-              the labels beside them (ТЗ rewrite §5.7). */}
+              the labels beside them (ТЗ rewrite §5.7). Nothing follows this
+              list now — both subscription lines moved up above (ТЗ-4 §4.9). */}
           <div className="mt-5">
             <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-2">
               {t.addonsTitle}
@@ -349,13 +374,6 @@ export default function PartnersClient() {
               ))}
             </ul>
           </div>
-
-          <p className="mt-4 pt-4 border-t border-white/10 text-[12px] font-bold text-brand-light/50">
-            {t.subscriptionLine}
-          </p>
-          <p className="mt-2 text-[12px] font-bold text-brand-light/50">
-            {t.subscriptionYearlyLine}
-          </p>
         </section>
 
         {/* Matched to the price section's own box (ТЗ-2 axis rewrite §2,
