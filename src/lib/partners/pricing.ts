@@ -34,9 +34,6 @@ export const partnersPricing = {
   // year, English's day/month order varying by region) for one number that
   // rarely changes independently of the day anyway.
   launchDeadlineDay: 6,
-  // ТЗ-4 §4.3 — the "first five shops" claim now printed on the page, so it
-  // lives here rather than as a bare literal in translations.ts.
-  launchShopCount: 5,
   addonLogo: "฿6,000",
   addonPt33Cards: "฿2,500 per 300",
   addonSecondShopSetup: "฿4,000",

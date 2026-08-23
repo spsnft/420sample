@@ -185,22 +185,19 @@ export default function PartnersClient() {
             owner's own action, read left-to-right into block 02's result.
             No tilt (§2.2) — dense text, numbers and dates get read, not
             admired.
-            Geometry: source is 780×1466 (390×733 CSS @2x). Verified against
-            the actual rendered page, not just the source image — the two
-            don't share a coordinate space (the corpus's own 8px padding
-            scales content down slightly), so numbers eyeballed off the raw
-            PNG land a bit off in the browser. NEW SALE/NEW RX end at ~478px
-            in the rendered corpus; fade starts right there (478). transparentPx
-            was 498 through ТЗ-3/4, but pixel-sampled against the live mobile
-            render (ТЗ-5 §1.2) PREVIOUS PRESCRIPTIONS' own glyphs peak around
-            492px, well inside that old fade band — legible ghosting, not a
-            hard bug, so it survived until someone looked at 4x zoom. 486
-            clears it with margin. The 486→538 gap is pure buffer: the
-            window's own bottom edge (538) sits well past where the gradient
-            already hit zero, so there's no coincidence between "fully
-            faded" and "hard clip" left to show a seam (ТЗ-3 §3).
-            desktopWidthPx=391 maps 538→~540px on-screen at `lg`, inside the
-            520–560 target (§2.4). */}
+            Geometry (ТЗ-6 §1): staff-view.png is no longer the raw capture
+            — it's cropped 16 reference px below NEW SALE/NEW RX (pixel-
+            sampled on the source PNG directly: buttons' last solid-gold row
+            is native 989, PREVIOUS PRESCRIPTIONS' first glyph row is native
+            1026 — cropped at 1021, i.e. 16 reference px below the buttons,
+            inside that 37px/18.5-reference-px native gap) and extended with
+            the screen's own sampled background colour down to 1550px (775
+            reference px) — the length PhoneMockup's shared WINDOW_H_PX +
+            corner buffer needs.
+            PREVIOUS PRESCRIPTIONS isn't "faded below visibility" any more,
+            it's not in the file, so no mask value here can regress it. See
+            PhoneMockup.tsx's own file comment for the window/mask numbers
+            and the live-render calibration method. */}
         <PitchBlock
           title={t.blockPt33Title}
           subtitle={t.blockPt33Subtitle}
@@ -211,11 +208,8 @@ export default function PartnersClient() {
               src="/images/partners/staff-view.png"
               alt="buds.digital staff panel — client card with PT.33 status and quota"
               imgWidth={390}
-              imgHeight={733}
+              imgHeight={775}
               rotateDeg={0}
-              fadeStartPx={478}
-              transparentPx={486}
-              containerHPx={538}
               desktopWidthPx={391}
             />
           }
@@ -234,29 +228,27 @@ export default function PartnersClient() {
             right (ТЗ-3 §2.1) — unchanged from before, this is the result
             side of the zigzag. 5° tilt kept (§2.2): two big cards read as
             product photography, not data to parse.
-            Geometry: source is 780×749 (390×374.5 CSS @2x) — the cards plus
-            a short tail of the page's own dark gradient, nothing past the
-            green card worth keeping crisp. Fade starts at 350 (a little
-            before the content's own end) and hits zero at 390, comfortably
-            inside the already-dark trailing margin. Buffer to 430 keeps the
-            window's hard edge well clear of that zero point, same reasoning
-            as block 01. desktopWidthPx=391 (matched to block 01's scale in
-            ТЗ-4) maps 430→~473px on-screen at `lg`.
-            frameExtraBottomPct (ТЗ-5 §1.1): at this shorter containerHPx,
-            the corpus's own fixed 2.4rem corner radius is a big enough
-            share of the window's height that its rounded bottom edge sat
-            inside the still-partly-opaque band instead of past
-            transparentPx — visible as a "rounded sole" instead of a device
-            bleeding off the block (block 01's much taller portrait card
-            never shows this: its frame overflows the window and hard-clips
-            long before its own rounded corner). PhoneMockup now squares
-            that corner off entirely (rounded-t only) so there's no curve
-            left to leak through, and this pads the frame's flat bottom
-            edge down past transparentPx with margin. Expressed as % of
-            width (not a fixed px) so the same number holds at both
-            mobileWidthPx and desktopWidthPx — percentage padding resolves
-            against the containing block's width per the CSS spec, which
-            here is exactly the axis this whole mask already scales along. */}
+            Geometry (ТЗ-6 §1): customer-view.png's two cards end well
+            inside PhoneMockup's shared window (both fully opaque, nowhere
+            near the fade), but the file itself was short — the corpus's
+            own natural end (with its corner radius restored, ТЗ-5 had
+            squared it off as a workaround this rebuild replaces) landed
+            inside the still-partly-visible band, the exact "rounded sole"
+            defect ТЗ-5/6 both flagged. Extended with the screen's own
+            sampled background colour to the same 1550px (775 reference px)
+            length as block 01's asset, so its corpus now hard-clips past
+            the window's own edge before the radius ever paints, same
+            mechanism as block 01 rather than a per-block padding hack.
+            Also fixed at the source (ТЗ-6 §1.6): a light-grey scrollbar-
+            artifact column at the image's right edge (columns 769-779 of
+            780px width, present in the original capture, invisible
+            untilted but reading as a stray render seam once rotated) is
+            gone, painted over with its own left-neighbour colour for the
+            full height of the original capture — separate from, and
+            unrelated to, this block's rotated-mask overlay workaround (see
+            PhoneMockup.tsx's FADE_OVERLAY_BG comment for why this mockup
+            can't use a true CSS mask and needs the extra -inset-x-10
+            width on that overlay to cover its rotated corners). */}
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
@@ -266,12 +258,8 @@ export default function PartnersClient() {
               src="/images/partners/customer-view.png"
               alt="buds.digital home screen — hero cards"
               imgWidth={390}
-              imgHeight={375}
+              imgHeight={775}
               rotateDeg={-5}
-              fadeStartPx={350}
-              transparentPx={390}
-              containerHPx={430}
-              frameExtraBottomPct={6.5}
               desktopWidthPx={391}
             />
           }

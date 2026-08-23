@@ -53,8 +53,11 @@ export interface PartnersDictionary {
   // NEW (ТЗ-4 §4.3): small-caps eyebrow above the price, replacing the old
   // offerPriceNote ("we're setting up the first shops one at a time…") —
   // same claim (launch pricing, a deadline), compressed to a label instead
-  // of a sentence. Both conditions here (shop count, deadline) apply only
-  // to the setup price, never to the subscription.
+  // of a sentence. Applies only to the setup price, never to the
+  // subscription. ТЗ-6 §3 dropped the "first five shops" half of the claim
+  // entirely (here and everywhere else on the page, all locales) — a shop
+  // count isn't something the reader can verify, unlike the date, and
+  // leaving it in read as a number they had to take on faith.
   offerPriceEyebrow: string;
   // Standalone price block — the page's one moment of decision gets its own
   // typographic weight instead of living as a clause inside a paragraph.
@@ -72,7 +75,11 @@ export interface PartnersDictionary {
   // (ТЗ rewrite §5.5, position confirmed unchanged by ТЗ-4 §4.4). The old
   // second sentence ("nothing on your side switches off while we build")
   // is gone — ТЗ-4 §4.4: unclear what it referred to, and at this point in
-  // the pitch the reader has nothing running yet to switch off.
+  // the pitch the reader has nothing running yet to switch off. ТЗ-6 §4
+  // also dropped "...and you've looked at it yourself" from the end: it
+  // gave the reader a pretext to stall the second half indefinitely ("I
+  // haven't looked yet"), where "when it's running" alone is already an
+  // objectively checkable condition and needs no witness clause.
   guaranteeLine: string;
 
   includedTitle: string;
@@ -98,8 +105,10 @@ export interface PartnersDictionary {
   // the word "then" is what tells the reader everything above was one-time.
   // subscriptionLine now opens with "Covers…" rather than repeating the
   // price, since the price is now the heading directly above it, not a
-  // clause the sentence needs to reintroduce. subscriptionYearlyLine is
-  // unchanged. "Locked: shops that come in now keep ฿2,400…" stays gone —
+  // clause the sentence needs to reintroduce. subscriptionYearlyLine
+  // (ТЗ-6 §5) dropped "Two months off" — it and the ฿ savings figure said
+  // the same thing twice, so only the number (computed from P.annualSavings,
+  // never hardcoded) stays. "Locked: shops that come in now keep ฿2,400…" stays gone —
   // that promise was aimed at the market, not this reader, and it named a
   // rate that doesn't otherwise appear on the page.
   subscriptionEyebrow: string;
@@ -143,10 +152,11 @@ const en: PartnersDictionary = {
   blockPt33Subtitle: "Type a name, get their PT.33, their history and everything they've bought. About five seconds, from any device behind the counter.",
 
   blockStorefrontTitle: "Your storefront,\nalready open.",
-  // ТЗ-5 §2: "them" landed before its own referent — the reader hit the
-  // pronoun before knowing who it meant. Referent first now ("every
-  // customer"), owner back as the sentence's subject ("you give").
-  blockStorefrontSubtitle: "One link you give every customer. They ask for their certificate, then walk into today's menu with live prices. Change a price once and it's changed everywhere.",
+  // ТЗ-6 §2: "you give" dropped — the owner-as-subject framing (ТЗ-5 §2)
+  // made the sentence about the act of handing out a link rather than
+  // about the link itself; "for every customer" keeps the same referent-
+  // first order without it.
+  blockStorefrontSubtitle: "One link for every customer. They request a certificate, then walk into today's menu with live prices. Change a price once and it's changed everywhere.",
 
   ctaStaff: "Open the staff panel",
   ctaStaffPending: "Signing in to demo…",
@@ -156,15 +166,14 @@ const en: PartnersDictionary = {
 
   offerTitle: "What it costs.",
   offerReadyLine: "Everything you just clicked through is finished. The only new thing here is that it's for sale.",
-  // "five" is written out rather than pulled from P.launchShopCount as a
-  // numeral — the eyebrow already carries one numeral (the date) and a
-  // second so close by read as busier, not clearer. Update by hand
-  // alongside P.launchShopCount if the count changes.
-  offerPriceEyebrow: `First five shops · until ${P.launchDeadlineDay} September`,
+  // ТЗ-6 §3: "First five shops" dropped — a shop count isn't something the
+  // reader can check, unlike the date, so it read as a claim taken on
+  // faith rather than a fact. The eyebrow is now just the deadline.
+  offerPriceEyebrow: `Until ${P.launchDeadlineDay} September`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/month`,
-  guaranteeLine: `You pay ${P.deposit} to start. The rest only when it's running and you've looked at it yourself.`,
+  guaranteeLine: `You pay ${P.deposit} to start. The rest when it's running.`,
 
   includedTitle: `Included at ${P.setupPrice}`,
   includedItems: [
@@ -184,7 +193,7 @@ const en: PartnersDictionary = {
 
   subscriptionEyebrow: "Then, every month",
   subscriptionLine: "Covers hosting, domain, backups, updates and support. That doesn't go up while you're with us.",
-  subscriptionYearlyLine: `Pay for the year instead — ${P.subscriptionYearly}. Two months off, ${P.annualSavings} saved.`,
+  subscriptionYearlyLine: `Pay for the year instead — ${P.subscriptionYearly}. You save ${P.annualSavings}.`,
 
   faqTitle: "Questions",
   faqItems: [
@@ -228,7 +237,7 @@ const ru: PartnersDictionary = {
   blockPt33Subtitle: "Впишите имя — получите его PT.33, историю и всё, что он покупал. Около пяти секунд с любого устройства за прилавком.",
 
   blockStorefrontTitle: "Ваша витрина,\nуже открыта.",
-  blockStorefrontSubtitle: "Одна ссылка — вы даёте её каждому клиенту. Он получает справку, а затем сразу попадает в сегодняшнее меню с живыми ценами. Меняете цену один раз — и она меняется везде.",
+  blockStorefrontSubtitle: "Одна ссылка для каждого клиента. Он запрашивает справку — и сразу попадает в сегодняшнее меню с живыми ценами. Меняете цену один раз — и она меняется везде.",
 
   ctaStaff: "Открыть панель персонала",
   ctaStaffPending: "Вход в демо…",
@@ -238,11 +247,11 @@ const ru: PartnersDictionary = {
 
   offerTitle: "Сколько это стоит.",
   offerReadyLine: "Всё, что вы только что посмотрели, — готово. Единственное новое здесь — то, что это можно купить.",
-  offerPriceEyebrow: `Первые пять магазинов · до ${P.launchDeadlineDay} сентября`,
+  offerPriceEyebrow: `До ${P.launchDeadlineDay} сентября`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/мес`,
-  guaranteeLine: `На старте вы платите ${P.deposit}. Остальное — только когда всё работает и вы сами это посмотрели.`,
+  guaranteeLine: `На старте вы платите ${P.deposit}. Остальное — когда всё работает.`,
 
   includedTitle: `Что входит за ${P.setupPrice}`,
   includedItems: [
@@ -262,7 +271,7 @@ const ru: PartnersDictionary = {
 
   subscriptionEyebrow: "Потом — каждый месяц",
   subscriptionLine: "Покрывает хостинг, домен, бэкапы, обновления и поддержку. Эта цена не растёт, пока вы с нами.",
-  subscriptionYearlyLine: `Можно оплатить год — ${P.subscriptionYearly}. Два месяца бесплатно, экономия ${P.annualSavings}.`,
+  subscriptionYearlyLine: `Можно оплатить год — ${P.subscriptionYearly}. Экономия ${P.annualSavings}.`,
 
   faqTitle: "Вопросы",
   faqItems: [
@@ -306,7 +315,7 @@ const th: PartnersDictionary = {
   blockPt33Subtitle: "พิมพ์ชื่อ แล้วดู PT.33 ประวัติ และทุกอย่างที่เขาเคยซื้อ ใช้เวลาประมาณห้าวินาที จากอุปกรณ์ใดก็ได้หลังเคาน์เตอร์",
 
   blockStorefrontTitle: "หน้าร้านของคุณ\nเปิดอยู่แล้ว",
-  blockStorefrontSubtitle: "ลิงก์เดียวที่คุณส่งให้ลูกค้าทุกคน เขาขอใบรับรองของตัวเอง แล้วเข้าสู่เมนูวันนี้ที่มีราคาสด เปลี่ยนราคาครั้งเดียว แล้วมันเปลี่ยนทุกที่",
+  blockStorefrontSubtitle: "ลิงก์เดียวสำหรับลูกค้าทุกคน เขาขอใบรับรอง แล้วเข้าสู่เมนูวันนี้ที่มีราคาสด เปลี่ยนราคาครั้งเดียว แล้วมันเปลี่ยนทุกที่",
 
   ctaStaff: "เปิดแผงควบคุมพนักงาน",
   ctaStaffPending: "กำลังเข้าสู่ระบบเดโม…",
@@ -316,11 +325,11 @@ const th: PartnersDictionary = {
 
   offerTitle: "ราคาเท่าไหร่",
   offerReadyLine: "ทุกอย่างที่คุณเพิ่งคลิกผ่านไปเสร็จสมบูรณ์แล้ว สิ่งใหม่มีอย่างเดียวคือตอนนี้มันวางขายแล้ว",
-  offerPriceEyebrow: `ห้าร้านแรก · ถึงวันที่ ${P.launchDeadlineDay} กันยายน`,
+  offerPriceEyebrow: `ถึงวันที่ ${P.launchDeadlineDay} กันยายน`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/เดือน`,
-  guaranteeLine: `จ่ายแค่ ${P.deposit} เพื่อเริ่มต้น ส่วนที่เหลือจ่ายเมื่อระบบทำงานแล้วและคุณได้ดูด้วยตัวเองแล้วเท่านั้น`,
+  guaranteeLine: `จ่ายแค่ ${P.deposit} เพื่อเริ่มต้น ส่วนที่เหลือจ่ายเมื่อระบบทำงานแล้ว`,
 
   includedTitle: `รวมอยู่ในราคา ${P.setupPrice}`,
   includedItems: [
@@ -340,7 +349,7 @@ const th: PartnersDictionary = {
 
   subscriptionEyebrow: "จากนั้น ทุกเดือน",
   subscriptionLine: "ครอบคลุมโฮสติ้ง โดเมน สำรองข้อมูล อัปเดต และซัพพอร์ต ราคานี้ไม่ขึ้นตลอดเวลาที่คุณใช้งานกับเรา",
-  subscriptionYearlyLine: `หรือจ่ายเป็นรายปีแทน — ${P.subscriptionYearly} ฟรี 2 เดือน ประหยัด ${P.annualSavings}`,
+  subscriptionYearlyLine: `หรือจ่ายเป็นรายปีแทน — ${P.subscriptionYearly} ประหยัด ${P.annualSavings}`,
 
   faqTitle: "คำถามที่พบบ่อย",
   faqItems: [
