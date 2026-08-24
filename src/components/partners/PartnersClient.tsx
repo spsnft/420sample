@@ -63,6 +63,7 @@ function PitchBlock({
   cta,
   mockupSide = "right",
   mobileCtaGapClassName = "mt-6",
+  mockupTopMarginClassName = "",
 }: {
   title: string;
   subtitle?: string;
@@ -115,6 +116,23 @@ function PitchBlock({
   // that's wrong, it's the mere presence of `transform` on one side and
   // its absence on the other.)
   mobileCtaGapClassName?: string;
+  // ТЗ-13 §2: external spacing above the mockup AS A WHOLE, separate from
+  // translateYPx (which only ever moved content *inside* the mockup's own
+  // window — now locked, see mobileCtaGapClassName's own comment above).
+  // Same mechanism as mobileCtaGapClassName — a plain margin utility
+  // string on a wrapper the caller controls per block — just applied
+  // above the mockup instead of above the CTA below it. Only meaningful
+  // on mobile: below `lg` the layout is a stacked column (title → subtitle
+  // → mockup → cta), so a negative top margin here pulls the mockup up
+  // toward the subtitle directly above it. At `lg` and up, title/subtitle
+  // and mockup sit in separate grid columns (items-center on the grid,
+  // not a vertical stack), so this margin would just nudge the mockup's
+  // position within its own column rather than closing a "gap to the
+  // subtitle" that doesn't exist in that layout the same way — callers
+  // that want a mobile-only effect should scope the value themselves
+  // (e.g. `-mt-3 lg:mt-0`), the same way mobileCtaGapClassName's own
+  // values are hand-picked per block rather than shared.
+  mockupTopMarginClassName?: string;
 }) {
   const textOrder = mockupSide === "left" ? "lg:order-2" : "";
   const mockupOrder = mockupSide === "left" ? "lg:order-1" : "";
@@ -148,7 +166,7 @@ function PitchBlock({
           <div className="hidden lg:block">{cta}</div>
         </div>
         <div className={mockupOrder}>
-          {mockup}
+          <div className={mockupTopMarginClassName}>{mockup}</div>
           <div className={`${mobileCtaGapClassName} lg:hidden relative z-10`}>{cta}</div>
         </div>
       </section>
@@ -308,67 +326,45 @@ export default function PartnersClient() {
             content sits inside the window, which is what translateYPx
             controls. Measured live (mask stripped, full-window pixel
             scan for card colour): the "EXPLORE TODAY'S MENU" card's own
-            bottom sat at ~353 reference px against a window 533 tall.
+            bottom sat at ~353 reference px against a window 533 tall,
+            leaving a visible gap before the window's own bottom edge.
+            translateYPx={22} closes most of that gap (card bottom lands
+            around ~375, matching the shared fade band's own start) and
+            is the confirmed, settled value — see ТЗ-9/ТЗ-10 (commit
+            6df5ddf). ТЗ-11 and ТЗ-12 tried larger values (101, then 50)
+            to close the remaining gap further; each pushed a *new* gap
+            above the header ("YOUR STORE") that read as worse than the
+            one it fixed, so both were reverted. translateYPx is LOCKED
+            at 22 as of ТЗ-13 — do not retune it, or WINDOW_H_PX,
+            MASK_IMAGE or FADE_OVERLAY_BG, without an explicit separate
+            ask. Any remaining gap around the mockup is handled with a
+            plain external margin instead (see the mockup wrapper's own
+            className below) — a layout knob outside PhoneMockup, not
+            another pass at this constant.
 
-            ТЗ-11 pushed translateYPx further (22 → 101) to roughly halve
-            the *visible* gap between the card and the window's own
-            bottom edge (not the fade-start percentage this time — a
-            different, coarser target than ТЗ-10's "clear the fade band"
-            one). Re-measured live at 101: card bottom now ~453-456
-            reference px against the same 533-tall window, i.e. the gap
-            shrank from ~158px to ~78-80px, matching the "roughly half"
-            target. Accepted consequence, present and correct: the fade
-            now visibly touches the bottom of the green card instead of
-            clearing it entirely.
-
-            Checked for the specific regression ТЗ-11 flagged as a reason
-            to roll back — the corpus's corner radius hard-clipping while
-            still opaque (window's own rounded-[2.4rem] clip boundary
-            catching material that hasn't faded enough yet, the "rounded
-            sole" ТЗ-6 fixed) — and found something the ТЗ didn't
-            anticipate: that shape is NOT a function of translateYPx at
-            all. It's identical, pixel-for-pixel, at translateYPx 22, 60
-            and 101 — it's the window's own always-present rounded clip
-            corner catching corpus material that was never going to fade
-            to nothing by 100% regardless of where the frame sits inside
-            it. On mobile it's a non-issue either way: the CTA button's
-            own -30px overlap (see mobileCtaGapClassName above) sits
-            exactly over that corner and fully covers it — confirmed by
-            comparing the corner with the button hidden (shape clearly
-            visible) against the button shown (fully covered, both
-            bottom corners individually checked). On DESKTOP, though,
-            there's no such button — desktop's CTA is a separate inline
-            element next to the text column, never overlapping the
-            mockup — and the same shape IS visibly present there, at
-            translateYPx 0, 22 AND 101 alike. This is a pre-existing
-            defect, not something this pass introduced or could have
-            fixed by picking a different translateYPx value; fixing it
-            for real needs one of WINDOW_H_PX/MASK_IMAGE/imgHeight, all
-            explicitly off-limits this pass. Flagged for a follow-up, not
-            fixed here.
-
-            Side effect, expected and unchanged in kind from ТЗ-10 (just
-            larger now): the header ("YOUR STORE") sits further from the
-            window's own top edge — a bigger version of the same gap
-            ТЗ-10 already accepted.
-
-            ТЗ-12: 101 pushed that top-side side effect too far — the gap
-            above "YOUR STORE" read as more of a problem than the one it
-            replaced. translateYPx is 50 now, roughly the midpoint,
-            splitting the leftover space between top and bottom instead
-            of dumping all of it on one side. Chosen by eye on the live
-            preview (mobile + desktop), not by a target percentage or
-            pixel figure this time — the earlier reference numbers above
-            (card bottom ~453-456 at 101) will have shifted proportionally
-            with this value but weren't re-measured, since the brief this
-            round was explicitly visual balance, not a fade-geometry
-            target. The corner-radius finding two paragraphs up still
-            holds unchanged (it was never a function of translateYPx to
-            begin with). */}
+            One finding from that back-and-forth is still live and worth
+            keeping: the corpus's corner radius hard-clipping while still
+            opaque (window's own rounded-[2.4rem] clip boundary catching
+            material that hasn't faded enough yet, the "rounded sole"
+            ТЗ-6 fixed) turned out NOT to be a function of translateYPx —
+            identical, pixel-for-pixel, at 22, 50, 60 and 101 alike. It's
+            the window's own always-present rounded clip corner, not
+            something any particular translateYPx value causes or cures.
+            On mobile it's a non-issue: the CTA button's own -30px
+            overlap (see mobileCtaGapClassName above) sits exactly over
+            that corner and fully covers it (checked with the button
+            both hidden and shown, both bottom corners). On DESKTOP,
+            where the CTA is a separate inline element that never
+            overlaps the mockup, the same shape IS visibly present, at
+            every translateYPx value tested including 0. Pre-existing,
+            unrelated to this constant, still unfixed — fixing it for
+            real needs WINDOW_H_PX/MASK_IMAGE/imgHeight, all locked above
+            pending a separate ask. */}
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
           mobileCtaGapClassName="mt-[-30px]"
+          mockupTopMarginClassName="-mt-3 lg:mt-0"
           mockup={
             <PhoneMockup
               src="/images/partners/customer-view.png"
@@ -376,7 +372,7 @@ export default function PartnersClient() {
               imgWidth={390}
               imgHeight={620}
               rotateDeg={0}
-              translateYPx={50}
+              translateYPx={22}
               desktopWidthPx={391}
             />
           }
