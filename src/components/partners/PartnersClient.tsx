@@ -284,7 +284,24 @@ export default function PartnersClient() {
             a light-grey scrollbar-artifact column at the image's right
             edge (columns 769-779 of 780px width, present in the original
             capture) is gone, painted over with its own left-neighbour
-            colour for the full height of the original capture. */}
+            colour for the full height of the original capture.
+            ТЗ-10 §1: the 620-reference-px recrop above only trims the
+            file's own invisible tail (already past WINDOW_H_PX's 100%
+            mark either way) — it does nothing to where the VISIBLE
+            content sits inside the window, which is what translateYPx
+            controls. Measured live (mask stripped, full-window pixel
+            scan for card colour): the "EXPLORE TODAY'S MENU" card's own
+            bottom sits at ~353 reference px, while MASK_IMAGE's fade
+            doesn't start until 72% of WINDOW_H_PX = ~384 — a ~30px band
+            of plain opaque fill between real content and any fade at
+            all, reading as a flat dead zone. translateYPx={22} pushes
+            the frame down inside the window (this is what the prop was
+            always for — see PhoneMockup.tsx) so the card's bottom lands
+            at ~375, an 8px margin short of the fade band instead of 30.
+            Side effect, expected: the header ("YOUR STORE") no longer
+            sits flush with the window's own top edge — there's now a
+            small gap above it, symmetrical to the smaller gap this
+            closed at the bottom. */}
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
@@ -296,6 +313,7 @@ export default function PartnersClient() {
               imgWidth={390}
               imgHeight={620}
               rotateDeg={0}
+              translateYPx={22}
               desktopWidthPx={391}
             />
           }
