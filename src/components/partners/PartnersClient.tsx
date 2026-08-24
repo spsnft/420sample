@@ -372,7 +372,7 @@ export default function PartnersClient() {
               imgWidth={390}
               imgHeight={620}
               rotateDeg={0}
-              translateYPx={22}
+              translateYPx={101}
               desktopWidthPx={391}
             />
           }
