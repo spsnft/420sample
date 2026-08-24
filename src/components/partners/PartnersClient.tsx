@@ -350,7 +350,21 @@ export default function PartnersClient() {
             Side effect, expected and unchanged in kind from ТЗ-10 (just
             larger now): the header ("YOUR STORE") sits further from the
             window's own top edge — a bigger version of the same gap
-            ТЗ-10 already accepted. */}
+            ТЗ-10 already accepted.
+
+            ТЗ-12: 101 pushed that top-side side effect too far — the gap
+            above "YOUR STORE" read as more of a problem than the one it
+            replaced. translateYPx is 50 now, roughly the midpoint,
+            splitting the leftover space between top and bottom instead
+            of dumping all of it on one side. Chosen by eye on the live
+            preview (mobile + desktop), not by a target percentage or
+            pixel figure this time — the earlier reference numbers above
+            (card bottom ~453-456 at 101) will have shifted proportionally
+            with this value but weren't re-measured, since the brief this
+            round was explicitly visual balance, not a fade-geometry
+            target. The corner-radius finding two paragraphs up still
+            holds unchanged (it was never a function of translateYPx to
+            begin with). */}
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
@@ -362,7 +376,7 @@ export default function PartnersClient() {
               imgWidth={390}
               imgHeight={620}
               rotateDeg={0}
-              translateYPx={101}
+              translateYPx={50}
               desktopWidthPx={391}
             />
           }
