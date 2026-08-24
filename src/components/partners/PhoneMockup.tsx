@@ -55,30 +55,61 @@ import { motion, useInView } from "framer-motion"
 // window needs) — "not distinguishable at any opacity" is now true because
 // there's nothing there to render, not because a fade curve was tuned
 // tightly enough to hide it. Both assets are padded to 775 reference px
-// (1550px @2x) content height — found empirically, not from a fixed
-// buffer formula: a first pass computed 684 reference px from
-// `frame_height = image_height + 16px` alone, which undercounts because
-// the image itself renders `frame_width - 16px` wide (the frame's own 8px
-// p-2 padding eats into it) and so proportionally shorter too; 775 is the
-// value that actually pushes both corpuses' restored corner radius past
-// the window's 100% mark before overflow-hidden ever needs to clip it.
-// Padding past that point is a no-op — tested by tripling it to 1000
-// reference px with no visible change — so the exact number isn't
-// load-bearing, only "comfortably past 100%" is.
-const WINDOW_H_PX = 650;
+// (1550px @2x) content height — comfortably past WINDOW_H_PX (below) either
+// way, so the corpus's own bottom always hard-clips before it's painted;
+// the exact padding number stopped being load-bearing once ТЗ-7 (next
+// comment) made WINDOW_H_PX itself the thing sized around real content.
+//
+// ТЗ-7: WINDOW_H_PX shrunk from 650 to 533, and the stops below moved with
+// it — both recomputed from the same live-render pixel sampling as always
+// (see the calibration-method comment above), not eyeballed. The 650
+// window was sized loosely around panel's own content; it left storefront,
+// whose real content (the two cards) ends ~115 reference px higher than
+// panel's buttons do, with a long stretch — measured at ~29% of the window,
+// ~190px — of plain corpus below the cards before the fade band even
+// started, and a further ~42%/273px fade band on top of that. Because that
+// whole span is dark corpus fading toward a dark background, none of it
+// reads as motion to the eye — the two together read as one long flat dark
+// rectangle under the cards, which is the defect this pass fixes.
+//
+// WINDOW_H_PX is now sized off STOREFRONT's own content-end (measured live:
+// ~363 reference px), not panel's: 20px buffer (content must clear the fade
+// band, same §1.5 logic as before) + a 150px fade tail (enough to dissolve
+// the frame's fixed 2.4rem/38.4px corner radius and its box-shadow blur
+// without reading as an abrupt cut — roughly 4× the radius) = 533. Panel's
+// own content (buttons, ending ~478 reference px) no longer fits inside
+// that fade-free 0–72% band the way it did at the old window height —
+// explicit, accepted trade-off, not an oversight: at H=533 panel's button
+// bottom sits at ~90% of the window, which the stops below put at roughly
+// 45–50% mask opacity (measured live, not assumed — re-check on the live
+// render if this constant moves again). The buttons stay legible — gold
+// against near-black still reads as gold, muted, rather than vanishing —
+// but they are visibly fainter than before. Storefront's own flat zone
+// (content-end to fade-start) shrinks from ~190px to ~20px, and its fade
+// tail from ~273px to ~150px, which is the actual fix. If a future pass
+// needs panel's buttons back at full opacity, the only lever that doesn't
+// reopen storefront's flat zone is separating panel back onto its own
+// window height — a real reversal of ТЗ-6's "one shared window" premise,
+// not a number to nudge here.
+const WINDOW_H_PX = 533;
 
 // Same seven stops power both the true CSS mask (unrotated corpus, below)
 // and the overlay fallback (rotated corpus, FADE_OVERLAY_BG further down)
 // — see that constant's comment for why two implementations exist for
-// what should be one gradient.
+// what should be one gradient. Stops are NOT the old 58/70/80/89/95
+// percentages carried over as-is (they were sized for a 650px window) —
+// recomputed at the same relative positions within the new, narrower
+// 72–100% fade band (28% wide, vs. the old 42%), which is what keeps the
+// curve's character (dense/near-opaque until the band starts, then
+// accelerating) rather than just compressing the same numbers.
 const MASK_IMAGE = [
   "linear-gradient(to bottom,",
   "#000 0%,",
-  "#000 58%,",
-  "rgba(0,0,0,0.88) 70%,",
-  "rgba(0,0,0,0.62) 80%,",
-  "rgba(0,0,0,0.32) 89%,",
-  "rgba(0,0,0,0.12) 95%,",
+  "#000 72%,",
+  "rgba(0,0,0,0.88) 80%,",
+  "rgba(0,0,0,0.62) 87%,",
+  "rgba(0,0,0,0.32) 93%,",
+  "rgba(0,0,0,0.12) 97%,",
   "transparent 100%)",
 ].join(" ");
 
@@ -108,15 +139,20 @@ const MASK_IMAGE = [
 // matches the card's own resting tone in the lower, glow-free portion
 // where this fade lives). Same stops as MASK_IMAGE, expressed as opaque
 // background-color instead of alpha, since this is compositing over the
-// content rather than punching a hole in it.
+// content rather than punching a hole in it — hand-duplicated, not
+// generated from one source, so it's the one spot in this file where the
+// two constants can silently drift apart: whenever MASK_IMAGE's stops
+// move (ТЗ-7 moved them from 58/70/80/89/95 to 72/80/87/93/97), copy the
+// same percentages here too, alpha-inverted (mask's 1→0.88→0.62→0.32→0.12→0
+// becomes this gradient's 0→0.12→0.38→0.68→0.88→1 at each matching stop).
 const FADE_OVERLAY_BG = [
   "linear-gradient(to bottom,",
   "rgba(22,24,25,0) 0%,",
-  "rgba(22,24,25,0) 58%,",
-  "rgba(22,24,25,0.12) 70%,",
-  "rgba(22,24,25,0.38) 80%,",
-  "rgba(22,24,25,0.68) 89%,",
-  "rgba(22,24,25,0.88) 95%,",
+  "rgba(22,24,25,0) 72%,",
+  "rgba(22,24,25,0.12) 80%,",
+  "rgba(22,24,25,0.38) 87%,",
+  "rgba(22,24,25,0.68) 93%,",
+  "rgba(22,24,25,0.88) 97%,",
   "rgba(22,24,25,1) 100%)",
 ].join(" ");
 

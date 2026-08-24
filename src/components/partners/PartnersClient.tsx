@@ -72,9 +72,25 @@ function PitchBlock({
   // ТЗ-4 §3.5 — each mockup's mask leaves a different amount of fully-
   // transparent box below its last visible pixel (more on block 02, whose
   // rotation also grows its own bounding box), so a single shared margin
-  // can't put both blocks in the 40–48px *visible* gap target at once.
-  // Tuned per block against screenshots rather than computed, since "looks
-  // like a pair" is a visual judgment the mask's own box math can't give us.
+  // can't put both blocks in the same *visible* gap target at once.
+  //
+  // ТЗ-7 recomputed both values from the live-rendered bounding box after
+  // WINDOW_H_PX shrunk (see PhoneMockup.tsx): `rotate()` doesn't change an
+  // element's own LAYOUT size, only where it paints, so the CTA div below
+  // (a plain flow sibling) is positioned against the mockup's *unrotated*
+  // layout height — block 02's actual (rotated) bottom edge paints lower
+  // than that, and a margin sized for the unrotated box lands short. At
+  // the old window height block 02's old `mt-0` had just enough accidental
+  // slack to cover that gap; the shrink used up that slack and then some —
+  // measured live, the rotated corpus's own deepest point (its bounding
+  // box's bottom-right corner, since -5° tilts that corner lowest) was
+  // landing 12px *below* the CTA button's own top edge, a real overlap,
+  // not just a tight gap. Both values below are chosen to clear that
+  // (measured, not assumed) bounding box with a ~28px reserve on top —
+  // reverify live (strip the mask, read getBoundingClientRect on the
+  // window div and the CTA div, see PhoneMockup.tsx's calibration-method
+  // comment for the general technique) if WINDOW_H_PX or either corpus's
+  // asset changes again.
   mobileCtaGapClassName?: string;
 }) {
   const textOrder = mockupSide === "left" ? "lg:order-2" : "";
@@ -202,7 +218,7 @@ export default function PartnersClient() {
           title={t.blockPt33Title}
           subtitle={t.blockPt33Subtitle}
           mockupSide="left"
-          mobileCtaGapClassName="mt-1"
+          mobileCtaGapClassName="mt-6"
           mockup={
             <PhoneMockup
               src="/images/partners/staff-view.png"
@@ -252,7 +268,7 @@ export default function PartnersClient() {
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
-          mobileCtaGapClassName="mt-0"
+          mobileCtaGapClassName="mt-10"
           mockup={
             <PhoneMockup
               src="/images/partners/customer-view.png"
