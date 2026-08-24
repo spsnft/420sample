@@ -364,7 +364,7 @@ export default function PartnersClient() {
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
           mobileCtaGapClassName="mt-[-30px]"
-          mockupTopMarginClassName="-mt-3 lg:mt-0"
+          mockupTopMarginClassName="-mt-10 lg:mt-16"
           mockup={
             <PhoneMockup
               src="/images/partners/customer-view.png"
