@@ -227,7 +227,13 @@
    * distinct from both.
    */
   .btn-tonal-light {
-    background-color: rgba(227, 221, 209, 0.92);
+    /* ТЗ-9: fully opaque, not 0.92 — this fill now overlaps the mockup's
+       own fade tail (negative mobileCtaGapClassName, ТЗ-8), and an 8%
+       transparent background let the corpus's edges (frame corner radius,
+       NEW SALE/NEW RX button edges) read faintly through it. Diagnosed as
+       the button's own alpha, not a z-index/paint-order bug: DOM order
+       already paints this CTA after the mockup with no z-index needed. */
+    background-color: rgb(227, 221, 209);
     background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 55%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 8px 20px rgba(0, 0, 0, 0.3);
   }
