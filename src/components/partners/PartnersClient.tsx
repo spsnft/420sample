@@ -151,7 +151,7 @@ function PitchBlock({
           at 2rem. `items-center` (unchanged) is what actually centres the
           text column against the mockup's own height — no extra centring
           needed. */}
-      <section className="relative overflow-hidden p-5 lg:px-8 lg:py-6 rounded-card bg-white/5 lg:grid lg:grid-cols-[45fr_55fr] lg:gap-x-10 lg:items-center">
+      <section className="relative overflow-hidden p-5 lg:px-8 lg:py-6 rounded-card bg-white/5 lg:grid lg:grid-cols-[45fr_55fr] lg:gap-x-10 lg:items-start">
         <div className={textOrder}>
           <div className="relative mb-5 lg:mb-6">
             <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-brand-light whitespace-pre-line">
