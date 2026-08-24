@@ -70,27 +70,33 @@ function PitchBlock({
   cta: React.ReactNode;
   mockupSide?: "left" | "right";
   // ТЗ-4 §3.5 — each mockup's mask leaves a different amount of fully-
-  // transparent box below its last visible pixel (more on block 02, whose
-  // rotation also grows its own bounding box), so a single shared margin
-  // can't put both blocks in the same *visible* gap target at once.
+  // transparent box below its last visible pixel, so a single shared
+  // margin can't put both blocks in the same *visible* gap target at once.
   //
-  // ТЗ-7 recomputed both values from the live-rendered bounding box after
-  // WINDOW_H_PX shrunk (see PhoneMockup.tsx): `rotate()` doesn't change an
-  // element's own LAYOUT size, only where it paints, so the CTA div below
-  // (a plain flow sibling) is positioned against the mockup's *unrotated*
-  // layout height — block 02's actual (rotated) bottom edge paints lower
-  // than that, and a margin sized for the unrotated box lands short. At
-  // the old window height block 02's old `mt-0` had just enough accidental
-  // slack to cover that gap; the shrink used up that slack and then some —
-  // measured live, the rotated corpus's own deepest point (its bounding
-  // box's bottom-right corner, since -5° tilts that corner lowest) was
-  // landing 12px *below* the CTA button's own top edge, a real overlap,
-  // not just a tight gap. Both values below are chosen to clear that
-  // (measured, not assumed) bounding box with a ~28px reserve on top —
-  // reverify live (strip the mask, read getBoundingClientRect on the
-  // window div and the CTA div, see PhoneMockup.tsx's calibration-method
-  // comment for the general technique) if WINDOW_H_PX or either corpus's
-  // asset changes again.
+  // ТЗ-8 flipped the sign: both values are now NEGATIVE, so the CTA
+  // button overlaps the tail end of the mockup's own fade instead of
+  // sitting in the gap below it — the fade visually continues *behind*
+  // the button rather than finishing in empty space first (this is how
+  // the pre-merge DesktopMockup.tsx used to read, before the two mockups
+  // became one component). The overlap is safe only because it's
+  // confirmed live, pixel-sampled, not assumed: at the depth both values
+  // below reach, the composited pixel colour is already within a few RGB
+  // units of the page's own background (see PhoneMockup.tsx's
+  // calibration-method comment for the technique) — i.e. there's no
+  // still-legible corpus content getting abruptly sliced by the button's
+  // opaque fill, just a near-invisible tail.
+  //
+  // Both blocks now share the same window/mask geometry (ТЗ-8 also
+  // dropped block 02's tilt — see its call site below), so the two
+  // numbers target the same actual overlap depth (-30px, measured from
+  // the window's own bottom edge to the CTA's top) — but they're NOT the
+  // same class string: block 01's `-38px` and block 02's `-30px` differ by
+  // exactly the incidental DOM offset between the two CTAs (block 01's is
+  // a form-wrapped DemoLoginButton, block 02's a plain Link), which eats
+  // 8px of margin before it reaches the button itself. Copying one
+  // block's class value onto the other will NOT reproduce the same visual
+  // depth — reverify live (getBoundingClientRect on the window div and
+  // the CTA wrapper) rather than assuming a shared number.
   mobileCtaGapClassName?: string;
 }) {
   const textOrder = mockupSide === "left" ? "lg:order-2" : "";
@@ -218,7 +224,7 @@ export default function PartnersClient() {
           title={t.blockPt33Title}
           subtitle={t.blockPt33Subtitle}
           mockupSide="left"
-          mobileCtaGapClassName="mt-6"
+          mobileCtaGapClassName="mt-[-38px]"
           mockup={
             <PhoneMockup
               src="/images/partners/staff-view.png"
@@ -242,40 +248,54 @@ export default function PartnersClient() {
         {/* Block 02 — the client storefront the same system ships. Same
             light fill as block 01's CTA (ТЗ rewrite §11). Mockup on the
             right (ТЗ-3 §2.1) — unchanged from before, this is the result
-            side of the zigzag. 5° tilt kept (§2.2): two big cards read as
-            product photography, not data to parse.
-            Geometry (ТЗ-6 §1): customer-view.png's two cards end well
-            inside PhoneMockup's shared window (both fully opaque, nowhere
-            near the fade), but the file itself was short — the corpus's
-            own natural end (with its corner radius restored, ТЗ-5 had
-            squared it off as a workaround this rebuild replaces) landed
-            inside the still-partly-visible band, the exact "rounded sole"
-            defect ТЗ-5/6 both flagged. Extended with the screen's own
-            sampled background colour to the same 1550px (775 reference px)
-            length as block 01's asset, so its corpus now hard-clips past
-            the window's own edge before the radius ever paints, same
-            mechanism as block 01 rather than a per-block padding hack.
-            Also fixed at the source (ТЗ-6 §1.6): a light-grey scrollbar-
-            artifact column at the image's right edge (columns 769-779 of
-            780px width, present in the original capture, invisible
-            untilted but reading as a stray render seam once rotated) is
-            gone, painted over with its own left-neighbour colour for the
-            full height of the original capture — separate from, and
-            unrelated to, this block's rotated-mask overlay workaround (see
-            PhoneMockup.tsx's FADE_OVERLAY_BG comment for why this mockup
-            can't use a true CSS mask and needs the extra -inset-x-10
-            width on that overlay to cover its rotated corners). */}
+            side of the zigzag.
+            ТЗ-8 dropped the 5° tilt (§2.2's "product photography" framing
+            is gone with it) and rotateDeg={0} now — this block renders
+            through the same true CSS mask (MASK_IMAGE) block 01 always
+            has, not the FADE_OVERLAY_BG workaround. That workaround only
+            ever existed because mask-image doesn't render correctly on a
+            rotated + overflow-hidden element in this Chromium build (see
+            PhoneMockup.tsx) — its own fade target is a flat constant
+            (#161819) rather than whatever is actually behind the corpus,
+            which is exactly why it couldn't dissolve into this card's own
+            (non-flat) background convincingly. Untilted, that bug doesn't
+            apply and the flat-constant compromise isn't needed. The branch
+            itself is left in PhoneMockup.tsx (rotateDeg !== 0) rather than
+            deleted — this call site just no longer takes it.
+            Flagged, not fixed: dropping the tilt makes this block read
+            structurally closer to block 01 (both now upright phones, same
+            window height) than it used to — the zigzag mockup-side order
+            still varies, but the tilt was carrying most of the "these are
+            two different kinds of thing" feeling on its own. Left as-is
+            per explicit instruction to look at the live render and discuss
+            before compensating with anything else.
+            Geometry: customer-view.png's own imgHeight (620 reference px)
+            is sized independently of block 01's (775) — reusing that
+            number here was the ТЗ-7 mistake this pass corrects, padding
+            the file to a length sized around block 01's *longer* content
+            when block 02's own content (the two cards, ending ~363
+            reference px in) needs far less. 620 is the measured minimum
+            (mobile's 300px actual render width is the binding constraint,
+            not desktop's 391px — a fixed 8px frame padding + 1px border
+            eat proportionally more of a narrower render) for the corpus's
+            2.4rem/38.4px corner radius to clear WINDOW_H_PX's 100% mark
+            with a small (~10px) margin, not the old, much longer buffer.
+            Also fixed at the source (ТЗ-6 §1.6, unaffected by this pass):
+            a light-grey scrollbar-artifact column at the image's right
+            edge (columns 769-779 of 780px width, present in the original
+            capture) is gone, painted over with its own left-neighbour
+            colour for the full height of the original capture. */}
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
-          mobileCtaGapClassName="mt-10"
+          mobileCtaGapClassName="mt-[-30px]"
           mockup={
             <PhoneMockup
               src="/images/partners/customer-view.png"
               alt="buds.digital home screen — hero cards"
               imgWidth={390}
-              imgHeight={775}
-              rotateDeg={-5}
+              imgHeight={620}
+              rotateDeg={0}
               desktopWidthPx={391}
             />
           }
