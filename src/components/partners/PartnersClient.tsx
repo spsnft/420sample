@@ -97,6 +97,23 @@ function PitchBlock({
   // block's class value onto the other will NOT reproduce the same visual
   // depth — reverify live (getBoundingClientRect on the window div and
   // the CTA wrapper) rather than assuming a shared number.
+  //
+  // ТЗ-11: the mobile CTA wrapper (below) also carries `relative z-10`
+  // now. Root cause of the "mockup showing through the button" report:
+  // the mockup's own frame element always carries a `translate-y-[...]`
+  // utility (even when the resulting offset is 0), and any element with
+  // an active `transform` gets promoted to its own stacking layer by the
+  // browser — painted according to that layer's own order, not simple
+  // DOM/z-index:auto sequencing. The CTA div here has no transform of
+  // its own, so despite coming later in the DOM it was competing with a
+  // transformed layer on uneven footing. `position:relative` + `z-10`
+  // gives the CTA an explicit stacking context that unambiguously wins,
+  // regardless of what the mockup's own transform does. (Diagnosed
+  // first — checked opacity, backdrop-filter and DOM order and found
+  // all correct on this exact commit — this stacking-context gap is
+  // what those checks couldn't surface, since it isn't a property VALUE
+  // that's wrong, it's the mere presence of `transform` on one side and
+  // its absence on the other.)
   mobileCtaGapClassName?: string;
 }) {
   const textOrder = mockupSide === "left" ? "lg:order-2" : "";
@@ -132,7 +149,7 @@ function PitchBlock({
         </div>
         <div className={mockupOrder}>
           {mockup}
-          <div className={`${mobileCtaGapClassName} lg:hidden`}>{cta}</div>
+          <div className={`${mobileCtaGapClassName} lg:hidden relative z-10`}>{cta}</div>
         </div>
       </section>
     </motion.div>
@@ -291,17 +308,49 @@ export default function PartnersClient() {
             content sits inside the window, which is what translateYPx
             controls. Measured live (mask stripped, full-window pixel
             scan for card colour): the "EXPLORE TODAY'S MENU" card's own
-            bottom sits at ~353 reference px, while MASK_IMAGE's fade
-            doesn't start until 72% of WINDOW_H_PX = ~384 — a ~30px band
-            of plain opaque fill between real content and any fade at
-            all, reading as a flat dead zone. translateYPx={22} pushes
-            the frame down inside the window (this is what the prop was
-            always for — see PhoneMockup.tsx) so the card's bottom lands
-            at ~375, an 8px margin short of the fade band instead of 30.
-            Side effect, expected: the header ("YOUR STORE") no longer
-            sits flush with the window's own top edge — there's now a
-            small gap above it, symmetrical to the smaller gap this
-            closed at the bottom. */}
+            bottom sat at ~353 reference px against a window 533 tall.
+
+            ТЗ-11 pushed translateYPx further (22 → 101) to roughly halve
+            the *visible* gap between the card and the window's own
+            bottom edge (not the fade-start percentage this time — a
+            different, coarser target than ТЗ-10's "clear the fade band"
+            one). Re-measured live at 101: card bottom now ~453-456
+            reference px against the same 533-tall window, i.e. the gap
+            shrank from ~158px to ~78-80px, matching the "roughly half"
+            target. Accepted consequence, present and correct: the fade
+            now visibly touches the bottom of the green card instead of
+            clearing it entirely.
+
+            Checked for the specific regression ТЗ-11 flagged as a reason
+            to roll back — the corpus's corner radius hard-clipping while
+            still opaque (window's own rounded-[2.4rem] clip boundary
+            catching material that hasn't faded enough yet, the "rounded
+            sole" ТЗ-6 fixed) — and found something the ТЗ didn't
+            anticipate: that shape is NOT a function of translateYPx at
+            all. It's identical, pixel-for-pixel, at translateYPx 22, 60
+            and 101 — it's the window's own always-present rounded clip
+            corner catching corpus material that was never going to fade
+            to nothing by 100% regardless of where the frame sits inside
+            it. On mobile it's a non-issue either way: the CTA button's
+            own -30px overlap (see mobileCtaGapClassName above) sits
+            exactly over that corner and fully covers it — confirmed by
+            comparing the corner with the button hidden (shape clearly
+            visible) against the button shown (fully covered, both
+            bottom corners individually checked). On DESKTOP, though,
+            there's no such button — desktop's CTA is a separate inline
+            element next to the text column, never overlapping the
+            mockup — and the same shape IS visibly present there, at
+            translateYPx 0, 22 AND 101 alike. This is a pre-existing
+            defect, not something this pass introduced or could have
+            fixed by picking a different translateYPx value; fixing it
+            for real needs one of WINDOW_H_PX/MASK_IMAGE/imgHeight, all
+            explicitly off-limits this pass. Flagged for a follow-up, not
+            fixed here.
+
+            Side effect, expected and unchanged in kind from ТЗ-10 (just
+            larger now): the header ("YOUR STORE") sits further from the
+            window's own top edge — a bigger version of the same gap
+            ТЗ-10 already accepted. */}
         <PitchBlock
           title={t.blockStorefrontTitle}
           subtitle={t.blockStorefrontSubtitle}
@@ -313,7 +362,7 @@ export default function PartnersClient() {
               imgWidth={390}
               imgHeight={620}
               rotateDeg={0}
-              translateYPx={22}
+              translateYPx={101}
               desktopWidthPx={391}
             />
           }
