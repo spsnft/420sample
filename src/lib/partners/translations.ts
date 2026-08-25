@@ -161,7 +161,7 @@ const en: PartnersDictionary = {
   // made the sentence about the act of handing out a link rather than
   // about the link itself; "for every customer" keeps the same referent-
   // first order without it.
-  blockStorefrontSubtitle: "One link for every customer. They request a certificate, then walk into today's menu with live prices. Change a price once and it's changed everywhere.",
+  blockStorefrontSubtitle: "One link for every customer — your contacts, their PT.33 request and today's menu with live prices. One address that always works, whatever happens to your other pages.",
 
   ctaStaff: "Open the staff panel",
   ctaStaffPending: "Signing in to demo…",
@@ -170,7 +170,7 @@ const en: PartnersDictionary = {
   ctaMenu: "Open the customer menu",
 
   offerTitle: "What it costs.",
-  offerReadyLine: "Everything you just clicked through is finished.",
+  offerReadyLine: "Everything you just clicked through is finished. Your version is the same, with your name on it.",
   // ТЗ-6 §3: "First five shops" dropped — a shop count isn't something the
   // reader can check, unlike the date, so it read as a claim taken on
   // faith rather than a fact. The eyebrow is now just the deadline.
@@ -179,7 +179,7 @@ const en: PartnersDictionary = {
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/month`,
   guaranteeLine: `You pay ${P.deposit} to start. The rest when it's running.`,
-  liveInDaysLine: `Live in 7 days or your ${P.deposit} back.`,
+  liveInDaysLine: "Live in 7 days or your money back.",
 
   includedTitle: `Included at ${P.setupPrice}`,
   includedItems: [
@@ -205,7 +205,7 @@ const en: PartnersDictionary = {
   faqItems: [
     {
       q: "What happens after I message you?",
-      a: "We reply the same day. You tell us what you already have and we quote it. You pay half, send the logo and the product list, and we build. Most shops are running within a few days — it depends on how much of it we're typing up for you. The 7 days start when we have your logo and your product list.",
+      a: "We reply the same day. You tell us what you already have and we quote it. You pay half, send the logo and the product list, and we build. Most shops are running within a few days. The 7 days start when we have your logo and your product list.",
     },
     {
       q: "My staff don't read English.",
@@ -221,7 +221,7 @@ const en: PartnersDictionary = {
     },
     {
       q: "Who actually builds this?",
-      a: "FT.Agency, on Phuket. Marketing and web work since 2016 — see the portfolio. Small team, and you'll be dealing with the person doing the work rather than a manager. We'll come to your shop if you'd rather talk in person.",
+      a: "FT.Agency, on Phuket. Marketing and web work since 2016 — see the portfolio. We'll come to your shop if you'd rather talk in person.",
       aLinkText: "the portfolio",
     },
   ],
@@ -237,14 +237,14 @@ const en: PartnersDictionary = {
 
 const ru: PartnersDictionary = {
   heroTitle: "Уже готово. Осталось только поставить ваше имя.",
-  heroSubtitle: "Витрина для клиентов, живое меню и панель PT.33 — работают как одна система. Пройдите по ней сами.",
+  heroSubtitle: "Витрина для клиентов, живое меню и панель PT.33 — работают как одна система. Попробуйте сами.",
   heroPriceLine: `${P.setupPrice} · запуск за несколько дней`,
 
-  blockPt33Title: "Ваши документы\nуже готовы.",
+  blockPt33Title: "Документы —\nуже готовы.",
   blockPt33Subtitle: "Впишите имя — получите его PT.33, историю и всё, что он покупал. Около пяти секунд с любого устройства за прилавком.",
 
-  blockStorefrontTitle: "Ваша витрина,\nуже открыта.",
-  blockStorefrontSubtitle: "Одна ссылка для каждого клиента. Он запрашивает справку — и сразу попадает в сегодняшнее меню с живыми ценами. Меняете цену один раз — и она меняется везде.",
+  blockStorefrontTitle: "Витрина —\nуже открыта.",
+  blockStorefrontSubtitle: "Одна ссылка для каждого клиента — ваши контакты, его запрос PT.33 и сегодняшнее меню с живыми ценами. Один адрес, который всегда работает, что бы ни случилось с остальными вашими страницами.",
 
   ctaStaff: "Открыть панель персонала",
   ctaStaffPending: "Вход в демо…",
@@ -253,13 +253,13 @@ const ru: PartnersDictionary = {
   ctaMenu: "Открыть меню для клиентов",
 
   offerTitle: "Сколько это стоит.",
-  offerReadyLine: "Всё, что вы только что посмотрели, — готово.",
+  offerReadyLine: "Всё, что вы только что посмотрели, — готово. Ваша версия будет точно такой же, только с вашим именем.",
   offerPriceEyebrow: `До ${P.launchDeadlineDay} сентября`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/мес`,
   guaranteeLine: `На старте вы платите ${P.deposit}. Остальное — когда всё работает.`,
-  liveInDaysLine: `Заработает за 7 дней — или мы вернём ${P.deposit}.`,
+  liveInDaysLine: "Заработает за 7 дней — или мы вернём деньги.",
 
   includedTitle: `Что входит за ${P.setupPrice}`,
   includedItems: [
@@ -271,9 +271,9 @@ const ru: PartnersDictionary = {
 
   addonsTitle: "Дополнительно",
   addonsItems: [
-    { label: "Логотип и айдентика, если своих ещё нет", price: P.addonLogo },
+    { label: "Логотип и айдентика", price: P.addonLogo },
     { label: "Перенос ваших действующих PT.33", price: P.addonPt33Cards },
-    { label: "Мы сами обновляем меню за вас", price: `${P.addonMenuUpkeepMonthly}/мес` },
+    { label: "Мы обновляем меню за вас", price: `${P.addonMenuUpkeepMonthly}/мес` },
     { label: "Второй магазин", price: `${P.addonSecondShopSetup} настройка + ${P.addonSecondShopMonthly}/мес` },
   ],
 
@@ -285,7 +285,7 @@ const ru: PartnersDictionary = {
   faqItems: [
     {
       q: "Что будет после того, как я вам напишу?",
-      a: "Отвечаем в тот же день. Вы рассказываете, что у вас уже есть, мы называем цену. Платите половину, присылаете логотип и список товаров — мы делаем. Большинство магазинов работает через несколько дней; зависит от того, сколько за вас набирать. Эти 7 дней начинаются, когда у нас есть ваш логотип и список товаров.",
+      a: "Отвечаем в тот же день. Вы рассказываете, что у вас уже есть, мы называем цену. Платите половину, присылаете логотип и список товаров — мы делаем. Большинство магазинов работает через несколько дней. Эти 7 дней начинаются, когда у нас есть ваш логотип и список товаров.",
     },
     {
       q: "Мой персонал не читает по-английски.",
@@ -301,7 +301,7 @@ const ru: PartnersDictionary = {
     },
     {
       q: "Кто на самом деле это делает?",
-      a: "FT.Agency, на Пхукете. Маркетинг и веб-разработка с 2016 года — смотрите портфолио. Небольшая команда — вы будете общаться с тем, кто непосредственно делает работу, а не с менеджером. Если удобнее поговорить лично, приедем к вам в магазин.",
+      a: "FT.Agency, на Пхукете. Маркетинг и веб-разработка с 2016 года — смотрите портфолио. Если удобнее поговорить лично, приедем к вам в магазин.",
       aLinkText: "портфолио",
     },
   ],
@@ -324,7 +324,7 @@ const th: PartnersDictionary = {
   blockPt33Subtitle: "พิมพ์ชื่อ แล้วดู PT.33 ประวัติ และทุกอย่างที่เขาเคยซื้อ ใช้เวลาประมาณห้าวินาที จากอุปกรณ์ใดก็ได้หลังเคาน์เตอร์",
 
   blockStorefrontTitle: "หน้าร้านของคุณ\nเปิดอยู่แล้ว",
-  blockStorefrontSubtitle: "ลิงก์เดียวสำหรับลูกค้าทุกคน เขาขอใบรับรอง แล้วเข้าสู่เมนูวันนี้ที่มีราคาสด เปลี่ยนราคาครั้งเดียว แล้วมันเปลี่ยนทุกที่",
+  blockStorefrontSubtitle: "ลิงก์เดียวสำหรับลูกค้าทุกคน — ข้อมูลติดต่อของคุณ คำขอ PT.33 ของเขา และเมนูวันนี้พร้อมราคาสด ที่อยู่เดียวที่ใช้งานได้เสมอ ไม่ว่าจะเกิดอะไรขึ้นกับหน้าอื่น ๆ ของคุณ",
 
   ctaStaff: "เปิดแผงควบคุมพนักงาน",
   ctaStaffPending: "กำลังเข้าสู่ระบบเดโม…",
@@ -333,13 +333,13 @@ const th: PartnersDictionary = {
   ctaMenu: "เปิดเมนูสำหรับลูกค้า",
 
   offerTitle: "ราคาเท่าไหร่",
-  offerReadyLine: "ทุกอย่างที่คุณเพิ่งคลิกผ่านไปเสร็จสมบูรณ์แล้ว",
+  offerReadyLine: "ทุกอย่างที่คุณเพิ่งคลิกผ่านไปเสร็จสมบูรณ์แล้ว เวอร์ชันของคุณก็เหมือนกันทุกอย่าง เพียงแค่ใส่ชื่อร้านของคุณ",
   offerPriceEyebrow: `ถึงวันที่ ${P.launchDeadlineDay} กันยายน`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/เดือน`,
   guaranteeLine: `จ่ายแค่ ${P.deposit} เพื่อเริ่มต้น ส่วนที่เหลือจ่ายเมื่อระบบทำงานแล้ว`,
-  liveInDaysLine: `เริ่มใช้งานได้ภายใน 7 วัน หรือคืนเงิน ${P.deposit} ให้เต็มจำนวน`,
+  liveInDaysLine: "เริ่มใช้งานได้ภายใน 7 วัน หรือคืนเงินให้เต็มจำนวน",
 
   includedTitle: `รวมอยู่ในราคา ${P.setupPrice}`,
   includedItems: [
@@ -365,7 +365,7 @@ const th: PartnersDictionary = {
   faqItems: [
     {
       q: "หลังจากที่ทักหาแล้วจะเกิดอะไรขึ้น?",
-      a: "เราตอบกลับภายในวันเดียวกัน คุณบอกเราว่ามีอะไรอยู่แล้วบ้าง เราจะเสนอราคาให้ คุณจ่ายครึ่งหนึ่ง ส่งโลโก้และรายการสินค้า แล้วเราจะเริ่มสร้าง ร้านส่วนใหญ่พร้อมใช้งานภายในไม่กี่วัน ขึ้นอยู่กับว่าเราต้องพิมพ์ข้อมูลให้คุณมากแค่ไหน 7 วันนี้เริ่มนับตั้งแต่วันที่เราได้รับโลโก้และรายการสินค้าของคุณ",
+      a: "เราตอบกลับภายในวันเดียวกัน คุณบอกเราว่ามีอะไรอยู่แล้วบ้าง เราจะเสนอราคาให้ คุณจ่ายครึ่งหนึ่ง ส่งโลโก้และรายการสินค้า แล้วเราจะเริ่มสร้าง ร้านส่วนใหญ่พร้อมใช้งานภายในไม่กี่วัน 7 วันนี้เริ่มนับตั้งแต่วันที่เราได้รับโลโก้และรายการสินค้าของคุณ",
     },
     {
       q: "พนักงานของฉันอ่านภาษาอังกฤษไม่ออก",
@@ -381,7 +381,7 @@ const th: PartnersDictionary = {
     },
     {
       q: "ใครเป็นคนสร้างระบบนี้จริง ๆ?",
-      a: "FT.Agency ที่ภูเก็ต ทำงานด้านการตลาดและเว็บไซต์มาตั้งแต่ปี 2016 — ดูผลงานได้ที่นี่ ทีมงานขนาดเล็ก คุณจะได้คุยกับคนที่ลงมือทำงานจริง ไม่ใช่ผู้จัดการ หากสะดวกคุยกันต่อหน้า เรายินดีไปที่ร้านของคุณ",
+      a: "FT.Agency ที่ภูเก็ต ทำงานด้านการตลาดและเว็บไซต์มาตั้งแต่ปี 2016 — ดูผลงานได้ที่นี่ หากสะดวกคุยกันต่อหน้า เรายินดีไปที่ร้านของคุณ",
       aLinkText: "ผลงาน",
     },
   ],
