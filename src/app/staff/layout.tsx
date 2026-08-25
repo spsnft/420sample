@@ -1,7 +1,9 @@
 import type { ReactNode } from "react"
 import { isSupabaseConfigured } from "@/lib/supabase/config"
 import { getCurrentStaff } from "@/lib/staff/queries"
+import { isDemoInstance } from "@/lib/demo"
 import { StaffHeader } from "@/components/staff/StaffHeader"
+import { DemoBar } from "@/components/layout/DemoBar"
 import { PageBackdrop } from "@/components/layout/PageBackdrop"
 
 // Every screen under /staff is per-user, RLS-gated data — never let the
@@ -32,10 +34,12 @@ export default async function StaffLayout({ children }: { children: ReactNode })
   }
 
   const staff = await getCurrentStaff();
+  const demoInstance = isDemoInstance();
 
   return (
     <PageBackdrop>
-      {staff && <StaffHeader staff={staff} />}
+      {demoInstance && <DemoBar label="DEMO STAFF PANEL — sample data" cta="Back to buds.digital" />}
+      {staff && <StaffHeader staff={staff} demoInstance={demoInstance} />}
       <main className="max-w-2xl mx-auto p-4">{children}</main>
     </PageBackdrop>
   );
