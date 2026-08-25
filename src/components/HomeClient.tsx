@@ -423,16 +423,7 @@ export default function HomeClient({ demoInstance = false }: { demoInstance?: bo
               thirds in a row at lg (a vertical hairline between them
               instead of the mobile stack's horizontal one). */}
           <div className="surface rounded-card divide-y divide-white/10 lg:flex lg:divide-y-0 lg:divide-x">
-            <InfoRow
-              icon={MapPin}
-              label={t.addressLabel}
-              value={
-                <>
-                  <span className="sm:hidden">{siteConfig.addressShort}</span>
-                  <span className="hidden sm:inline">{siteConfig.address}</span>
-                </>
-              }
-            />
+            <InfoRow icon={MapPin} label={t.addressLabel} value={siteConfig.address} />
             <InfoRow
               icon={Clock}
               label={t.hoursLabel}

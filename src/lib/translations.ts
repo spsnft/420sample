@@ -193,7 +193,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     // Home page
     heroDoorCertTitle: "GET MEDICAL\nCERTIFICATE",
     heroDoorMenuTitle: "EXPLORE\nTODAY'S MENU",
-    heroDoorCertLine: "Free, next-day certificate — stay legally protected",
+    heroDoorCertLine: "Free certificate, ready tomorrow — stay legally protected",
     heroDoorMenuLine: "Full selection, always in stock",
     addressLabel: "Address",
     hoursLabel: "Working hours",
@@ -208,7 +208,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       { title: "Receive", description: "your certificate the next day" },
     ],
     contactsTitle: "Contact & Follow",
-    footerDisclaimer: "18+. Sold only with a valid PT.33 card. Reference only — not advertising.",
+    footerDisclaimer: "18+. A valid PT.33 is required to buy. Reference only — not advertising.",
 
     demoBarLabel: "DEMO STORE — sample data",
     demoBarCta: "Back to buds.digital",
@@ -275,7 +275,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     // Home page
     heroDoorCertTitle: "ОФОРМИТЬ\nСПРАВКУ",
     heroDoorMenuTitle: "МЕНЮ\nСЕГОДНЯ",
-    heroDoorCertLine: "Бесплатно, уже на следующий день — под защитой закона",
+    heroDoorCertLine: "Бесплатно, уже завтра — под защитой закона",
     heroDoorMenuLine: "Полный ассортимент, всегда в наличии",
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
@@ -293,7 +293,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       { title: "Получите", description: "справку на следующий день" },
     ],
     contactsTitle: "Контакты и соцсети",
-    footerDisclaimer: "18+. Отпускается только по действующей карте PT.33. Справочная информация, не реклама.",
+    footerDisclaimer: "18+. Для покупки необходима действующая карта PT.33. Справочная информация, не реклама.",
 
     demoBarLabel: "ДЕМО-МАГАЗИН — тестовые данные",
     demoBarCta: "Вернуться на buds.digital",
@@ -363,7 +363,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     // Home page
     heroDoorCertTitle: "รับใบรับรอง\nทางการแพทย์",
     heroDoorMenuTitle: "ดูเมนู\nวันนี้",
-    heroDoorCertLine: "ฟรี รับใบรับรองในวันถัดไป — อุ่นใจได้ตามกฎหมาย",
+    heroDoorCertLine: "ใบรับรองฟรี พร้อมรับพรุ่งนี้ — อุ่นใจได้ตามกฎหมาย",
     heroDoorMenuLine: "สินค้าครบครัน พร้อมจำหน่ายเสมอ",
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
@@ -379,7 +379,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       { title: "รับ", description: "ใบรับรองของคุณในวันถัดไป" },
     ],
     contactsTitle: "ติดต่อและติดตามเรา",
-    footerDisclaimer: "อายุ 18 ปีขึ้นไป จำหน่ายเฉพาะผู้มีบัตร PT.33 ที่ยังไม่หมดอายุ ข้อมูลอ้างอิงเท่านั้น ไม่ใช่การโฆษณา",
+    footerDisclaimer: "อายุ 18 ปีขึ้นไป ต้องมีบัตร PT.33 ที่ยังไม่หมดอายุจึงจะซื้อได้ ข้อมูลอ้างอิงเท่านั้น ไม่ใช่การโฆษณา",
 
     demoBarLabel: "ร้านสาธิต — ข้อมูลตัวอย่าง",
     demoBarCta: "กลับไปที่ buds.digital",
