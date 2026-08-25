@@ -7,6 +7,12 @@ import { triggerHaptic } from "@/lib/utils"
 interface DemoBarProps {
   label: string;
   cta: string;
+  /** Default true: cancel an ambient page p-4 via -mx-4 so the bar bleeds
+   *  edge-to-edge (see the comment below). Set false where the bar has no
+   *  such ambient padding to cancel — there, -mx-4 would just pull the box
+   *  past the screen edge with nothing offsetting it back, clipping the
+   *  label instead of insetting it. */
+  bleed?: boolean;
 }
 
 // Marks every storefront-demo page reached from the pitch page's links as
@@ -26,8 +32,8 @@ interface DemoBarProps {
 // storefront (pitch-layout audit №9). Transparent fill, a thin gold
 // border and muted gold text keep it easy to find without competing with
 // what's actually being demoed.
-export const DemoBar: React.FC<DemoBarProps> = ({ label, cta }) => (
-  <div className="sticky top-0 z-[110] -mx-4 px-4 h-9 flex items-center justify-between gap-3 bg-brand-dark text-brand-light text-[11px] font-black">
+export const DemoBar: React.FC<DemoBarProps> = ({ label, cta, bleed = true }) => (
+  <div className={`sticky top-0 z-[110] ${bleed ? "-mx-4" : ""} px-4 h-9 flex items-center justify-between gap-3 bg-brand-dark text-brand-light text-[11px] font-black`}>
     <p className="truncate">{label}</p>
     <Link
       href="/"

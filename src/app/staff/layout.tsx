@@ -38,7 +38,17 @@ export default async function StaffLayout({ children }: { children: ReactNode })
 
   return (
     <PageBackdrop>
-      {demoInstance && <DemoBar label="DEMO STAFF PANEL — sample data" cta="Back to buds.digital" />}
+      {/* bleed={false}: DemoBar's default -mx-4/px-4 trick bleeds edge-to-edge
+          by cancelling an ambient page p-4 (see /demo's page wrapper) — /staff
+          has no such ambient padding, so with the trick on, -mx-4 had nothing
+          to cancel and the label sat flush against (and clipped by) the
+          screen edge instead. Also: wrapping DemoBar in its own padded div to
+          fake that ambient padding would shrink its sticky containing block
+          down to the bar's own height, breaking the stickiness itself — see
+          PageBackdrop for the other half of that fix. */}
+      {demoInstance && (
+        <DemoBar bleed={false} label="DEMO STAFF PANEL — sample data" cta="Back to buds.digital" />
+      )}
       {staff && <StaffHeader staff={staff} demoInstance={demoInstance} />}
       <main className="max-w-2xl mx-auto p-4">{children}</main>
     </PageBackdrop>

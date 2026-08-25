@@ -10,8 +10,8 @@ function monthsSince(dateStr: string): number {
   return Math.max(0, months);
 }
 
-// Four tiles across means the narrower labels ("Purchases") sit on one line
-// while the wider ones ("Lifetime Spent") wrap to two, at every phone width.
+// Four tiles across means the narrower labels ("Spent") sit on one line
+// while the wider ones ("Client Since") wrap to two, at every phone width.
 // Left to flow, that pushes each tile's number to a different height and the
 // row of figures — the part staff actually read across — comes out ragged.
 // So the label block reserves two lines' worth of height whether it needs
@@ -68,7 +68,7 @@ export function ClientStats({ lifetimeSpent, purchaseCount, firstVisitDate }: Cl
 
   return (
     <div className="grid grid-cols-4 gap-1.5">
-      <StatTile label="Lifetime Spent" value={<>{formatBaht(lifetimeSpent)}<Baht /></>} />
+      <StatTile label="Spent" value={<>{formatBaht(lifetimeSpent)}<Baht /></>} />
       <StatTile label="Purchases" value={purchaseCount.toLocaleString("en-US")} />
       <StatTile label="Client Since" value={months === 0 ? "New" : `${months} mo`} />
       <StatTile label="Avg / Visit" value={avgPerVisit !== null ? <>{formatBaht(avgPerVisit)}<Baht /></> : "—"} />

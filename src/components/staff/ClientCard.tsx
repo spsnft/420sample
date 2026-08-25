@@ -120,18 +120,23 @@ export function ClientCard({ data }: { data: ClientCardData }) {
         </div>
       </div>
 
+      {/* w-3/4 / w-1/4 below sm: on a narrow phone the New PT.33 button's
+          own content width ate ~35% of the row, crowding the primary
+          action down to ~65%. Above sm the row is wide enough that
+          content-based sizing already lands close to correct, so it
+          reverts to the original flex-1/auto split there untouched. */}
       <div className="flex gap-2">
         <button
           type="button"
           onClick={() => { triggerHaptic("medium"); setIsSaleOpen(true); }}
-          className="flex-1 h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all"
+          className="w-3/4 sm:w-auto sm:flex-1 h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all"
         >
           New Sale
         </button>
         <button
           type="button"
           onClick={() => { triggerHaptic("medium"); setIsNewRxOpen(true); }}
-          className="h-14 px-4 rounded-button surface-row hover:brightness-110 font-black uppercase tracking-widest text-[12px] text-brand-light/70 hover:text-brand-light active:translate-y-px transition-all whitespace-nowrap"
+          className="w-1/4 sm:w-auto h-14 px-2 sm:px-4 rounded-button surface-row hover:brightness-110 font-black uppercase tracking-widest text-[11px] sm:text-[12px] text-brand-light/70 hover:text-brand-light active:translate-y-px transition-all whitespace-nowrap overflow-hidden"
         >
           New PT.33
         </button>
