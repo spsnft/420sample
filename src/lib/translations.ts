@@ -30,7 +30,9 @@ export interface TranslationDictionary {
   close: string;
   remove: string;
   basket: string;
-  items: string;
+  /** The noun for a basket count — e.g. `${n} ${t.items(n)}` — in the
+   *  grammatically correct plural form for that language and count. */
+  items: (count: number) => string;
   total: string;
 
   // Catalogue states — shown in place of the product sections when the menu
@@ -161,7 +163,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     close: "Close",
     remove: "Remove",
     basket: "Basket",
-    items: "items",
+    items: (count) => (count === 1 ? "item" : "items"),
     total: "Total",
 
     catalogErrorTitle: "Menu unavailable",
@@ -243,7 +245,16 @@ export const translations: Record<Language, TranslationDictionary> = {
     close: "Закрыть",
     remove: "Удалить",
     basket: "Корзина",
-    items: "тов.",
+    // Standard Russian cardinal-number plural rule: 1/21/31… → nominative
+    // singular, 2-4/22-24… (excluding the 11-14 teens) → paucal, else →
+    // genitive plural.
+    items: (count) => {
+      const mod10 = count % 10;
+      const mod100 = count % 100;
+      if (mod10 === 1 && mod100 !== 11) return "товар";
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return "товара";
+      return "товаров";
+    },
     total: "Итого",
 
     catalogErrorTitle: "Меню недоступно",
@@ -331,7 +342,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     close: "ปิด",
     remove: "ลบ",
     basket: "ตะกร้า",
-    items: "ชิ้น",
+    // Thai classifier nouns don't inflect for number — "ชิ้น" is already
+    // correct at any count, so this ignores its argument.
+    items: () => "ชิ้น",
     total: "ยอดรวม",
 
     catalogErrorTitle: "ไม่สามารถแสดงเมนูได้",

@@ -272,7 +272,7 @@ export default function MenuClient({
                 >
                   {getTotal()}<BahtSymbol />
                 </motion.div>
-                <span className="font-black uppercase text-[11px] text-brand-secondary leading-none">{items.length} {t.items}</span>
+                <span className="font-black uppercase text-[11px] text-brand-secondary leading-none">{items.length} {t.items(items.length)}</span>
               </div>
             </div>
             <div className="flex items-center gap-2 text-brand-light opacity-80">

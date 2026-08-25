@@ -141,7 +141,7 @@ export const Order = ({ items, total, t, onClose, onEdit }: OrderProps) => {
               </div>
               <div>
                 <h2 id="order-dialog-title" className="text-xl font-black uppercase tracking-tight text-brand-light">{t.orderTitle}</h2>
-                <p className="text-xs text-brand-light/50">{items.length} {t.items}</p>
+                <p className="text-xs text-brand-light/50">{items.length} {t.items(items.length)}</p>
               </div>
             </div>
 
