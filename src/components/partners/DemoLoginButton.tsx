@@ -19,6 +19,13 @@ interface DemoLoginButtonProps {
 // §11); it's lighter than the plate now, still short of the solid
 // btn-metal gold reserved for the page's single closing WhatsApp/LINE
 // actions.
+//
+// Full width on mobile, content width from `lg` (ТЗ-4 §3.4): a button
+// stretched across the whole text column reads as a form field, not an
+// invitation. `inline-flex` is what actually makes `lg:w-auto` shrink to
+// content — a plain `flex` block still fills its container's width
+// regardless of the width utility, since block-level `width:auto` means
+// "fill available width," not "shrink-to-fit."
 function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: string }) {
   const { pending } = useFormStatus();
   return (
@@ -26,7 +33,7 @@ function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: st
       type="submit"
       disabled={pending}
       onClick={() => triggerHaptic('medium')}
-      className="w-full h-12 btn-tonal-light border border-white/25 text-brand-primary font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+      className="w-full lg:w-auto h-12 px-6 btn-tonal-light border border-white/25 text-brand-primary font-black uppercase tracking-widest text-[12px] rounded-button active:scale-95 transition-all flex lg:inline-flex items-center justify-center gap-2 disabled:opacity-60"
     >
       {pending ? pendingLabel : label}
       {!pending && <ArrowRight size={16} className="text-brand-secondary" />}

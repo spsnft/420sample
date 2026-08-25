@@ -46,41 +46,72 @@ export interface PartnersDictionary {
   ctaMenu: string;
 
   offerTitle: string;
-  // Standalone price block between offerTitle and offerPriceNote — the
-  // page's one moment of decision gets its own typographic weight instead
-  // of living as a clause inside a paragraph. offerPriceNow is the number
-  // the whole block exists to show; offerPriceWas is struck through beside
-  // it, offerPriceMonthly sits under both.
+  // ТЗ-4 §4.2: moved up to lead the section (was after the price, 30 words —
+  // now the section's opening move: "this is done" before "here's how
+  // much"). Shortened to two sentences.
+  offerReadyLine: string;
+  // NEW (ТЗ-4 §4.3): small-caps eyebrow above the price, replacing the old
+  // offerPriceNote ("we're setting up the first shops one at a time…") —
+  // same claim (launch pricing, a deadline), compressed to a label instead
+  // of a sentence. Applies only to the setup price, never to the
+  // subscription. ТЗ-6 §3 dropped the "first five shops" half of the claim
+  // entirely (here and everywhere else on the page, all locales) — a shop
+  // count isn't something the reader can verify, unlike the date, and
+  // leaving it in read as a number they had to take on faith.
+  offerPriceEyebrow: string;
+  // Standalone price block — the page's one moment of decision gets its own
+  // typographic weight instead of living as a clause inside a paragraph.
+  // offerPriceNow is the number the whole block exists to show;
+  // offerPriceWas is struck through beside it. offerPriceMonthly moved into
+  // its own section (ТЗ-5 §3, see subscriptionEyebrow below) rather than
+  // sitting directly under the setup price — the two are separate
+  // obligations, one-time and standing, and typesetting them as one block
+  // read as if the subscription were a detail of the setup purchase.
   offerPriceNow: string;
   offerPriceWas: string;
   offerPriceMonthly: string;
-  // Replaces the old fine-print "until … · then …" line: now the block's
-  // only argument for acting now, so it runs at body-text size instead of
-  // the smallest type in the section (ТЗ rewrite §5.3).
-  offerPriceNote: string;
-  // Shortened to its first two sentences — the "nobody on your street /
-  // that won't stay true" close is dropped (ТЗ rewrite §5.4).
-  offerBody: string;
-  // NEW: the page's one guarantee (the old 50/50 split), promoted from a
-  // small grey line under the add-ons list up to right where a reader is
-  // actually weighing the risk — bold, body-text size, above the included
-  // list (ТЗ rewrite §5.5). Replaces the old termsLine.
+  // The page's one guarantee (the old 50/50 split) — bold, body-text size,
+  // right under the price where a reader is actually weighing the risk
+  // (ТЗ rewrite §5.5, position confirmed unchanged by ТЗ-4 §4.4). The old
+  // second sentence ("nothing on your side switches off while we build")
+  // is gone — ТЗ-4 §4.4: unclear what it referred to, and at this point in
+  // the pitch the reader has nothing running yet to switch off. ТЗ-6 §4
+  // also dropped "...and you've looked at it yourself" from the end: it
+  // gave the reader a pretext to stall the second half indefinitely ("I
+  // haven't looked yet"), where "when it's running" alone is already an
+  // objectively checkable condition and needs no witness clause.
   guaranteeLine: string;
 
   includedTitle: string;
   includedItems: string[];
-  // NEW: plain-text line under the included list (not a bullet) naming
-  // what "your products loaded" accepts as input.
-  includedNote: string;
 
   // Add-on price list. A separate shape from includedItems because the
-  // price is right-aligned and is not part of the label string.
+  // price is right-aligned and is not part of the label string. Title
+  // reads "Optional extras" now (ТЗ-4 §4.8) — the old "Add if you need it"
+  // repeated "if" once as the section label and again in its own first
+  // row's copy. Row order also changed: one-off/small-recurring work first,
+  // the second shop (the biggest single line item) last. Opens its own
+  // section now (ТЗ-5 §3) — the third of three, after setup and
+  // subscription, behind a visible divider.
   addonsTitle: string;
   addonsItems: { label: string; price: string }[];
 
-  // Subscription price and terms — now two lines: the locked monthly rate,
-  // then the annual option. "locked for your first year" is gone (it begged
-  // the question of what happens after); ТЗ rewrite §5.8.
+  // The price block's second section (ТЗ-5 §3): a standing obligation
+  // (฿2,400/month, forever) was previously typeset as a footnote under the
+  // one-time ฿9,000, reading as a detail of the setup purchase rather than
+  // a second, separate commitment. subscriptionEyebrow ("Then, every
+  // month") is what lets offerPriceMonthly sit in its own section, set at
+  // the same weight as offerPriceNow, without the number looking orphaned —
+  // the word "then" is what tells the reader everything above was one-time.
+  // subscriptionLine now opens with "Covers…" rather than repeating the
+  // price, since the price is now the heading directly above it, not a
+  // clause the sentence needs to reintroduce. subscriptionYearlyLine
+  // (ТЗ-6 §5) dropped "Two months off" — it and the ฿ savings figure said
+  // the same thing twice, so only the number (computed from P.annualSavings,
+  // never hardcoded) stays. "Locked: shops that come in now keep ฿2,400…" stays gone —
+  // that promise was aimed at the market, not this reader, and it named a
+  // rate that doesn't otherwise appear on the page.
+  subscriptionEyebrow: string;
   subscriptionLine: string;
   subscriptionYearlyLine: string;
 
@@ -93,8 +124,12 @@ export interface PartnersDictionary {
   // price." — that headline told the reader, last thing on the page, that
   // none of the numbers above were final (ТЗ rewrite §7). ctaButton
   // (WhatsApp) and ctaButtonLine (LINE) are how to answer it — deliberately
-  // just the brand name on both, equal weight. pricingLine is the page's
-  // own closing price recap.
+  // just the brand name on both, equal weight. ctaSubtitle no longer
+  // hedges on the logo or restates the setup price (ТЗ-5 §4) — both are
+  // said, correctly, one screen up, and repeating a price here that the
+  // addons list has already priced a piece of (the logo) read as the page
+  // not knowing its own numbers. pricingLine now carries only the one
+  // thing this block adds that nothing above it has said: reply time.
   ctaHeadline: string;
   ctaSubtitle: string;
   ctaButton: string;
@@ -106,14 +141,22 @@ export interface PartnersDictionary {
 
 const en: PartnersDictionary = {
   heroTitle: "Already built. Just needs your name on it.",
-  heroSubtitle: "A customer storefront, a live menu and a PT.33 client panel, running as one system. Have a click through it yourself.",
+  // "client" dropped — a shop owner has their own clients, and "PT.33
+  // client panel" read as a second, competing use of the word right next
+  // to "customer storefront." "running as one" tightened to "working as
+  // one system" (ТЗ-4 §1.1).
+  heroSubtitle: "A customer storefront, a live menu and a PT.33 panel — working as one system. Have a click through it yourself.",
   heroPriceLine: `${P.setupPrice} · live in a few days`,
 
   blockPt33Title: "Your paperwork,\nalready done.",
   blockPt33Subtitle: "Type a name, get their PT.33, their history and everything they've bought. About five seconds, from any device behind the counter.",
 
   blockStorefrontTitle: "Your storefront,\nalready open.",
-  blockStorefrontSubtitle: "One page under your name for everyone you send it to. Your customers request their certificate, then walk straight into a menu with live prices. Change a price or mark something sold out once — it's changed on the screen in the shop, on the site, and in the link your staff send on WhatsApp.",
+  // ТЗ-6 §2: "you give" dropped — the owner-as-subject framing (ТЗ-5 §2)
+  // made the sentence about the act of handing out a link rather than
+  // about the link itself; "for every customer" keeps the same referent-
+  // first order without it.
+  blockStorefrontSubtitle: "One link for every customer. They request a certificate, then walk into today's menu with live prices. Change a price once and it's changed everywhere.",
 
   ctaStaff: "Open the staff panel",
   ctaStaffPending: "Signing in to demo…",
@@ -122,12 +165,15 @@ const en: PartnersDictionary = {
   ctaMenu: "Open the customer menu",
 
   offerTitle: "What it costs.",
+  offerReadyLine: "Everything you just clicked through is finished. The only new thing here is that it's for sale.",
+  // ТЗ-6 §3: "First five shops" dropped — a shop count isn't something the
+  // reader can check, unlike the date, so it read as a claim taken on
+  // faith rather than a fact. The eyebrow is now just the deadline.
+  offerPriceEyebrow: `Until ${P.launchDeadlineDay} September`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/month`,
-  offerPriceNote: `We're setting up the first shops one at a time and pricing them at ${P.setupPrice} while we do. Until ${P.launchDeadlineDay} September.`,
-  offerBody: "What you just clicked through is finished. It's not a prototype and you wouldn't be testing anything — the only new thing here is that it's for sale.",
-  guaranteeLine: `You pay ${P.deposit} to start. The rest only when it's running and you've looked at it yourself. Nothing on your side switches off while we build.`,
+  guaranteeLine: `You pay ${P.deposit} to start. The rest when it's running.`,
 
   includedTitle: `Included at ${P.setupPrice}`,
   includedItems: [
@@ -136,18 +182,18 @@ const en: PartnersDictionary = {
     "Your products loaded — up to 80 items with prices, categories and photos",
     "Domain, hosting and setup",
   ],
-  includedNote: "Send a spreadsheet, a photo of the board, a WhatsApp message — whatever you've got.",
 
-  addonsTitle: "Add if you need it",
+  addonsTitle: "Optional extras",
   addonsItems: [
     { label: "A logo and identity, if you don't have one", price: P.addonLogo },
     { label: "Your existing PT.33 cards entered", price: P.addonPt33Cards },
-    { label: "A second shop", price: `${P.addonSecondShopSetup} setup + ${P.addonSecondShopMonthly}/month` },
     { label: "We keep the menu updated for you", price: `${P.addonMenuUpkeepMonthly}/month` },
+    { label: "A second shop", price: `${P.addonSecondShopSetup} setup + ${P.addonSecondShopMonthly}/month` },
   ],
 
-  subscriptionLine: `${P.subscriptionMonthly}/month — hosting, domain, backups, updates and support. Locked: shops that come in now keep ${P.subscriptionMonthly} for as long as they stay with us.`,
-  subscriptionYearlyLine: `Pay for the year instead — ${P.subscriptionYearly}. Two months off.`,
+  subscriptionEyebrow: "Then, every month",
+  subscriptionLine: "Covers hosting, domain, backups, updates and support. That doesn't go up while you're with us.",
+  subscriptionYearlyLine: `Pay for the year instead — ${P.subscriptionYearly}. You save ${P.annualSavings}.`,
 
   faqTitle: "Questions",
   faqItems: [
@@ -174,24 +220,24 @@ const en: PartnersDictionary = {
   ],
 
   ctaHeadline: "Send your logo and your menu. We'll do the rest.",
-  ctaSubtitle: `A spreadsheet, a photo of the board, a WhatsApp message — whatever you've got. No logo? Say so, and we'll price that separately. Everything else is the ${P.setupPrice}.`,
+  ctaSubtitle: "A spreadsheet, a photo of the board, a WhatsApp message — whatever you've got.",
   ctaButton: "WhatsApp",
   ctaButtonLine: "LINE",
-  pricingLine: `${P.setupPrice} setup · ${P.subscriptionMonthly}/month · we reply the same day, 9:00–20:00 Phuket time`,
+  pricingLine: "We reply the same day, 9:00–20:00 Phuket time.",
 
   footerPrivacy: "Privacy",
 };
 
 const ru: PartnersDictionary = {
   heroTitle: "Уже готово. Осталось только поставить ваше имя.",
-  heroSubtitle: "Витрина для клиентов, живое меню и панель PT.33 — одна система. Пройдите по ней сами.",
+  heroSubtitle: "Витрина для клиентов, живое меню и панель PT.33 — работают как одна система. Пройдите по ней сами.",
   heroPriceLine: `${P.setupPrice} · запуск за несколько дней`,
 
   blockPt33Title: "Ваши документы\nуже готовы.",
   blockPt33Subtitle: "Впишите имя — получите его PT.33, историю и всё, что он покупал. Около пяти секунд с любого устройства за прилавком.",
 
   blockStorefrontTitle: "Ваша витрина,\nуже открыта.",
-  blockStorefrontSubtitle: "Одна страница под вашим именем — та, которую вы даёте всем. Клиент оттуда подаёт заявку на справку и сразу попадает в меню с живыми ценами. Меняете цену или отмечаете, что позиция кончилась, один раз — и это меняется на экране в магазине, на сайте и в ссылке, которую персонал отправляет в WhatsApp.",
+  blockStorefrontSubtitle: "Одна ссылка для каждого клиента. Он запрашивает справку — и сразу попадает в сегодняшнее меню с живыми ценами. Меняете цену один раз — и она меняется везде.",
 
   ctaStaff: "Открыть панель персонала",
   ctaStaffPending: "Вход в демо…",
@@ -200,12 +246,12 @@ const ru: PartnersDictionary = {
   ctaMenu: "Открыть меню для клиентов",
 
   offerTitle: "Сколько это стоит.",
+  offerReadyLine: "Всё, что вы только что посмотрели, — готово. Единственное новое здесь — то, что это можно купить.",
+  offerPriceEyebrow: `До ${P.launchDeadlineDay} сентября`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/мес`,
-  offerPriceNote: `Первые магазины мы запускаем по одному и делаем их по ${P.setupPrice}, пока запускаем. До ${P.launchDeadlineDay} сентября.`,
-  offerBody: "То, что вы только что покликали, — готовое. Это не прототип, и тестировать вам ничего не придётся. Новое здесь только одно: это можно купить.",
-  guaranteeLine: `На старте вы платите ${P.deposit}. Остальное — только когда всё работает и вы сами это посмотрели. Пока мы делаем, у вас ничего не выключается.`,
+  guaranteeLine: `На старте вы платите ${P.deposit}. Остальное — когда всё работает.`,
 
   includedTitle: `Что входит за ${P.setupPrice}`,
   includedItems: [
@@ -214,18 +260,18 @@ const ru: PartnersDictionary = {
     "Ваши товары загружены — до 80 позиций с ценами, категориями и фото",
     "Домен, хостинг и настройка",
   ],
-  includedNote: "Пришлите таблицу, фото доски или сообщение в WhatsApp — что есть, то и подойдёт.",
 
-  addonsTitle: "Добавьте, если нужно",
+  addonsTitle: "Дополнительно",
   addonsItems: [
     { label: "Логотип и айдентика, если своих ещё нет", price: P.addonLogo },
     { label: "Перенос ваших действующих карт PT.33", price: P.addonPt33Cards },
-    { label: "Второй магазин", price: `${P.addonSecondShopSetup} настройка + ${P.addonSecondShopMonthly}/мес` },
     { label: "Мы сами обновляем меню за вас", price: `${P.addonMenuUpkeepMonthly}/мес` },
+    { label: "Второй магазин", price: `${P.addonSecondShopSetup} настройка + ${P.addonSecondShopMonthly}/мес` },
   ],
 
-  subscriptionLine: `${P.subscriptionMonthly}/месяц — хостинг, домен, бэкапы, обновления и поддержка. Ставка фиксируется: магазины, которые заходят сейчас, платят ${P.subscriptionMonthly} столько, сколько остаются с нами.`,
-  subscriptionYearlyLine: `Можно оплатить год — ${P.subscriptionYearly}. Два месяца в подарок.`,
+  subscriptionEyebrow: "Потом — каждый месяц",
+  subscriptionLine: "Покрывает хостинг, домен, бэкапы, обновления и поддержку. Эта цена не растёт, пока вы с нами.",
+  subscriptionYearlyLine: `Можно оплатить год — ${P.subscriptionYearly}. Экономия ${P.annualSavings}.`,
 
   faqTitle: "Вопросы",
   faqItems: [
@@ -252,10 +298,10 @@ const ru: PartnersDictionary = {
   ],
 
   ctaHeadline: "Пришлите логотип и меню. Остальное на нас.",
-  ctaSubtitle: `Таблица, фото доски, сообщение в WhatsApp — подойдёт что угодно. Логотипа нет? Скажите, посчитаем отдельно. Всё остальное — это те самые ${P.setupPrice}.`,
+  ctaSubtitle: "Таблица, фото доски, сообщение в WhatsApp — подойдёт что угодно.",
   ctaButton: "WhatsApp",
   ctaButtonLine: "LINE",
-  pricingLine: `${P.setupPrice} установка · ${P.subscriptionMonthly}/месяц · отвечаем в тот же день, 9:00–20:00 по Пхукету`,
+  pricingLine: "Отвечаем в тот же день, 9:00–20:00 по Пхукету.",
 
   footerPrivacy: "Конфиденциальность",
 };
@@ -269,7 +315,7 @@ const th: PartnersDictionary = {
   blockPt33Subtitle: "พิมพ์ชื่อ แล้วดู PT.33 ประวัติ และทุกอย่างที่เขาเคยซื้อ ใช้เวลาประมาณห้าวินาที จากอุปกรณ์ใดก็ได้หลังเคาน์เตอร์",
 
   blockStorefrontTitle: "หน้าร้านของคุณ\nเปิดอยู่แล้ว",
-  blockStorefrontSubtitle: "หน้าเดียวภายใต้ชื่อร้านของคุณ สำหรับส่งให้ทุกคน ลูกค้าขอใบรับรอง PT.33 ของตัวเองที่นั่น แล้วเข้าสู่เมนูที่มีราคาสดทันที เปลี่ยนราคาหรือทำเครื่องหมายว่าสินค้าหมดเพียงครั้งเดียว มันจะเปลี่ยนบนหน้าจอในร้าน บนเว็บไซต์ และในลิงก์ที่พนักงานส่งทาง WhatsApp พร้อมกัน",
+  blockStorefrontSubtitle: "ลิงก์เดียวสำหรับลูกค้าทุกคน เขาขอใบรับรอง แล้วเข้าสู่เมนูวันนี้ที่มีราคาสด เปลี่ยนราคาครั้งเดียว แล้วมันเปลี่ยนทุกที่",
 
   ctaStaff: "เปิดแผงควบคุมพนักงาน",
   ctaStaffPending: "กำลังเข้าสู่ระบบเดโม…",
@@ -278,12 +324,12 @@ const th: PartnersDictionary = {
   ctaMenu: "เปิดเมนูสำหรับลูกค้า",
 
   offerTitle: "ราคาเท่าไหร่",
+  offerReadyLine: "ทุกอย่างที่คุณเพิ่งคลิกผ่านไปเสร็จสมบูรณ์แล้ว สิ่งใหม่มีอย่างเดียวคือตอนนี้มันวางขายแล้ว",
+  offerPriceEyebrow: `ถึงวันที่ ${P.launchDeadlineDay} กันยายน`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/เดือน`,
-  offerPriceNote: `เรากำลังตั้งค่าร้านแรก ๆ ทีละร้าน และตั้งราคาไว้ที่ ${P.setupPrice} ระหว่างนี้ ถึงวันที่ ${P.launchDeadlineDay} กันยายน`,
-  offerBody: "สิ่งที่คุณเพิ่งคลิกผ่านไปคือของจริง เสร็จสมบูรณ์แล้ว ไม่ใช่ต้นแบบ และคุณไม่ต้องทดสอบอะไรเลย — สิ่งใหม่มีอย่างเดียวคือตอนนี้มันวางขายแล้ว",
-  guaranteeLine: `จ่ายแค่ ${P.deposit} เพื่อเริ่มต้น ส่วนที่เหลือจ่ายเมื่อระบบทำงานแล้วและคุณได้ดูด้วยตัวเองแล้วเท่านั้น ระหว่างที่เราสร้างให้ ฝั่งคุณไม่มีอะไรถูกปิดใช้งาน`,
+  guaranteeLine: `จ่ายแค่ ${P.deposit} เพื่อเริ่มต้น ส่วนที่เหลือจ่ายเมื่อระบบทำงานแล้ว`,
 
   includedTitle: `รวมอยู่ในราคา ${P.setupPrice}`,
   includedItems: [
@@ -292,18 +338,18 @@ const th: PartnersDictionary = {
     "สินค้าของคุณถูกโหลดเข้าระบบ — สูงสุด 80 รายการ พร้อมราคา หมวดหมู่ และรูปภาพ",
     "โดเมน โฮสติ้ง และการตั้งค่า",
   ],
-  includedNote: "ส่งไฟล์สเปรดชีต รูปถ่ายกระดานเมนู หรือข้อความใน WhatsApp — มีอะไรส่งมาได้เลย",
 
-  addonsTitle: "เพิ่มเติมถ้าต้องการ",
+  addonsTitle: "ตัวเลือกเสริม",
   addonsItems: [
     { label: "โลโก้และอัตลักษณ์แบรนด์ สำหรับร้านที่ยังไม่มี", price: P.addonLogo },
     { label: "นำเข้าบัตร PT.33 ที่คุณมีอยู่แล้ว", price: P.addonPt33Cards },
-    { label: "ร้านที่สอง", price: `${P.addonSecondShopSetup} ตั้งค่า + ${P.addonSecondShopMonthly}/เดือน` },
     { label: "ให้เราอัปเดตเมนูให้คุณ", price: `${P.addonMenuUpkeepMonthly}/เดือน` },
+    { label: "ร้านที่สอง", price: `${P.addonSecondShopSetup} ตั้งค่า + ${P.addonSecondShopMonthly}/เดือน` },
   ],
 
-  subscriptionLine: `${P.subscriptionMonthly}/เดือน — โฮสติ้ง โดเมน สำรองข้อมูล อัปเดต และซัพพอร์ต ราคาคงที่: ร้านที่สมัครตอนนี้จ่าย ${P.subscriptionMonthly} ตลอดระยะเวลาที่ยังใช้งานกับเรา`,
-  subscriptionYearlyLine: `หรือจ่ายเป็นรายปีแทน — ${P.subscriptionYearly} ฟรี 2 เดือน`,
+  subscriptionEyebrow: "จากนั้น ทุกเดือน",
+  subscriptionLine: "ครอบคลุมโฮสติ้ง โดเมน สำรองข้อมูล อัปเดต และซัพพอร์ต ราคานี้ไม่ขึ้นตลอดเวลาที่คุณใช้งานกับเรา",
+  subscriptionYearlyLine: `หรือจ่ายเป็นรายปีแทน — ${P.subscriptionYearly} ประหยัด ${P.annualSavings}`,
 
   faqTitle: "คำถามที่พบบ่อย",
   faqItems: [
@@ -330,10 +376,10 @@ const th: PartnersDictionary = {
   ],
 
   ctaHeadline: "ส่งโลโก้และเมนูของคุณมา ที่เหลือเราจัดการเอง",
-  ctaSubtitle: `สเปรดชีต รูปถ่ายกระดานเมนู ข้อความใน WhatsApp — มีอะไรส่งมาได้เลย ไม่มีโลโก้ใช่ไหม? บอกเราได้เลย แล้วเราจะคิดราคาแยกให้ ส่วนที่เหลือทั้งหมดคือราคา ${P.setupPrice}`,
+  ctaSubtitle: "สเปรดชีต รูปถ่ายกระดานเมนู ข้อความใน WhatsApp — มีอะไรส่งมาได้เลย",
   ctaButton: "WhatsApp",
   ctaButtonLine: "LINE",
-  pricingLine: `${P.setupPrice} ค่าติดตั้ง · ${P.subscriptionMonthly}/เดือน · ตอบกลับภายในวันเดียวกัน 9:00–20:00 เวลาภูเก็ต`,
+  pricingLine: "ตอบกลับภายในวันเดียวกัน 9:00–20:00 เวลาภูเก็ต",
 
   footerPrivacy: "ความเป็นส่วนตัว",
 };
