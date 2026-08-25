@@ -18,7 +18,7 @@ const STATUS_FILTER_OPTIONS: { value: ClientListStatusFilter; label: string }[] 
   { value: "active", label: "Active" },
   { value: "expired", label: "Expired" },
   { value: "revoked", label: "Revoked" },
-  { value: "none", label: "No Rx" },
+  { value: "none", label: "No PT.33" },
 ];
 
 export function ClientDirectoryTable({ initial }: { initial: ClientListPage }) {

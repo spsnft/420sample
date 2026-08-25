@@ -2,7 +2,7 @@ import type { PrescriptionStatus } from "@/lib/staff/types"
 
 const STYLES: Record<PrescriptionStatus, string> = {
   active: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-  expired: "bg-red-500/15 text-red-400 border-red-500/30",
+  expired: "bg-brand-secondary/15 text-brand-secondary border-brand-secondary/30",
   revoked: "bg-red-500/15 text-red-400 border-red-500/30",
 };
 

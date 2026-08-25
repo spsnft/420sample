@@ -46,10 +46,6 @@ export interface PartnersDictionary {
   ctaMenu: string;
 
   offerTitle: string;
-  // ТЗ-4 §4.2: moved up to lead the section (was after the price, 30 words —
-  // now the section's opening move: "this is done" before "here's how
-  // much"). Shortened to two sentences.
-  offerReadyLine: string;
   // NEW (ТЗ-4 §4.3): small-caps eyebrow above the price, replacing the old
   // offerPriceNote ("we're setting up the first shops one at a time…") —
   // same claim (launch pricing, a deadline), compressed to a label instead
@@ -154,7 +150,7 @@ const en: PartnersDictionary = {
   heroPriceLine: `${P.setupPrice} · live in a few days`,
 
   blockPt33Title: "Your paperwork,\nalready done.",
-  blockPt33Subtitle: "Type a name, get their PT.33, their history and everything they've bought. About five seconds, from any device behind the counter.",
+  blockPt33Subtitle: "Type a name — get their PT.33 and their full purchase history. About five seconds, from any device behind the counter.",
 
   blockStorefrontTitle: "Your storefront,\nalready open.",
   // ТЗ-6 §2: "you give" dropped — the owner-as-subject framing (ТЗ-5 §2)
@@ -170,7 +166,6 @@ const en: PartnersDictionary = {
   ctaMenu: "Open the customer menu",
 
   offerTitle: "What it costs.",
-  offerReadyLine: "Everything you just clicked through is finished. Your version is the same, with your name on it.",
   // ТЗ-6 §3: "First five shops" dropped — a shop count isn't something the
   // reader can check, unlike the date, so it read as a claim taken on
   // faith rather than a fact. The eyebrow is now just the deadline.
@@ -241,7 +236,7 @@ const ru: PartnersDictionary = {
   heroPriceLine: `${P.setupPrice} · запуск за несколько дней`,
 
   blockPt33Title: "Документы —\nуже готовы.",
-  blockPt33Subtitle: "Впишите имя — получите его PT.33, историю и всё, что он покупал. Около пяти секунд с любого устройства за прилавком.",
+  blockPt33Subtitle: "Впишите имя — получите его PT.33 и полную историю покупок. Около пяти секунд с любого устройства за прилавком.",
 
   blockStorefrontTitle: "Витрина —\nуже открыта.",
   blockStorefrontSubtitle: "Одна ссылка для каждого клиента — ваши контакты, его запрос PT.33 и сегодняшнее меню с живыми ценами. Один адрес, который всегда работает, что бы ни случилось с остальными вашими страницами.",
@@ -253,7 +248,6 @@ const ru: PartnersDictionary = {
   ctaMenu: "Открыть меню для клиентов",
 
   offerTitle: "Сколько это стоит.",
-  offerReadyLine: "Всё, что вы только что посмотрели, — готово. Ваша версия будет точно такой же, только с вашим именем.",
   offerPriceEyebrow: `До ${P.launchDeadlineDay} сентября`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
@@ -297,7 +291,7 @@ const ru: PartnersDictionary = {
     },
     {
       q: "Что если я перестану платить?",
-      a: "Витрина и меню отключаются. Данные о клиентах никуда не деваются — попросите, и мы пришлём вам всё файлом в любой день.",
+      a: "Витрина и меню отключаются. Данные о клиентах никуда не пропадают — попросите, и мы пришлём вам всё файлом в любой день.",
     },
     {
       q: "Кто на самом деле это делает?",
@@ -321,7 +315,7 @@ const th: PartnersDictionary = {
   heroPriceLine: `${P.setupPrice} · เปิดใช้งานได้ในไม่กี่วัน`,
 
   blockPt33Title: "เอกสารของคุณ\nพร้อมอยู่แล้ว",
-  blockPt33Subtitle: "พิมพ์ชื่อ แล้วดู PT.33 ประวัติ และทุกอย่างที่เขาเคยซื้อ ใช้เวลาประมาณห้าวินาที จากอุปกรณ์ใดก็ได้หลังเคาน์เตอร์",
+  blockPt33Subtitle: "พิมพ์ชื่อ — ดู PT.33 และประวัติการซื้อทั้งหมด ใช้เวลาประมาณห้าวินาที จากอุปกรณ์ใดก็ได้หลังเคาน์เตอร์",
 
   blockStorefrontTitle: "หน้าร้านของคุณ\nเปิดอยู่แล้ว",
   blockStorefrontSubtitle: "ลิงก์เดียวสำหรับลูกค้าทุกคน — ข้อมูลติดต่อของคุณ คำขอ PT.33 ของเขา และเมนูวันนี้พร้อมราคาสด ที่อยู่เดียวที่ใช้งานได้เสมอ ไม่ว่าจะเกิดอะไรขึ้นกับหน้าอื่น ๆ ของคุณ",
@@ -333,7 +327,6 @@ const th: PartnersDictionary = {
   ctaMenu: "เปิดเมนูสำหรับลูกค้า",
 
   offerTitle: "ราคาเท่าไหร่",
-  offerReadyLine: "ทุกอย่างที่คุณเพิ่งคลิกผ่านไปเสร็จสมบูรณ์แล้ว เวอร์ชันของคุณก็เหมือนกันทุกอย่าง เพียงแค่ใส่ชื่อร้านของคุณ",
   offerPriceEyebrow: `ถึงวันที่ ${P.launchDeadlineDay} กันยายน`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,

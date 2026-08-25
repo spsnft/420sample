@@ -5,12 +5,12 @@ import type { ClientDirectoryEntry, PrescriptionStatus } from "@/lib/staff/types
 import { useScrollEdges } from "@/lib/use-scroll-edges"
 import { useClientRowNav } from "./useClientRowNav"
 
-// Same active=green / expired,revoked=red mapping as StatusPill, just as a
-// card tint instead of a pill — lets staff spot a lapsed client without
-// reading the (now-removed) status label on this strip.
+// Same active=green / expired=amber / revoked=red mapping as StatusPill,
+// just as a card tint instead of a pill — lets staff spot a lapsed client
+// without reading the (now-removed) status label on this strip.
 const STATUS_TINT: Record<PrescriptionStatus, string> = {
   active: "bg-emerald-500/10 border-emerald-500/25 hover:border-emerald-500/40",
-  expired: "bg-red-500/10 border-red-500/25 hover:border-red-500/40",
+  expired: "bg-brand-secondary/10 border-brand-secondary/25 hover:border-brand-secondary/40",
   revoked: "bg-red-500/10 border-red-500/25 hover:border-red-500/40",
 };
 const NEUTRAL_TINT = "surface-row hover:brightness-110 border-transparent";

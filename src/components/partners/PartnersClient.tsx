@@ -440,12 +440,6 @@ export default function PartnersClient() {
             {t.offerTitle}
           </p>
 
-          {/* Leads the section now (ТЗ-4 §4.2) — "this is done" before "here's
-              how much." Shortened from three sentences to two. */}
-          <p className="mt-4 text-[13px] font-medium text-brand-light/70 leading-relaxed">
-            {t.offerReadyLine}
-          </p>
-
           {/* SECTION 1 — the one-time purchase. The one moment on the page
               where a decision actually gets made, so the number gets its
               own block instead of living as a clause inside a paragraph.

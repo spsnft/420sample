@@ -73,7 +73,7 @@ export function NewPrescriptionModal({ clientId, clientName, onClose }: NewPresc
           <X size={18} />
         </button>
 
-        <h2 className="text-lg font-black uppercase tracking-tight text-brand-light mb-1">New Prescription</h2>
+        <h2 className="text-lg font-black uppercase tracking-tight text-brand-light mb-1">New PT.33</h2>
         <p className="text-[12px] text-brand-light/50 mb-4">{clientName}</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -96,7 +96,7 @@ export function NewPrescriptionModal({ clientId, clientName, onClose }: NewPresc
             className="w-full h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
           >
             <FilePlus size={18} />
-            {isSubmitting ? "Adding…" : "Add Prescription"}
+            {isSubmitting ? "Adding…" : "Add PT.33"}
           </button>
         </form>
       </motion.div>
