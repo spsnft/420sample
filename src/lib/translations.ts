@@ -75,6 +75,14 @@ export interface TranslationDictionary {
   addressLabel: string;
   hoursLabel: string;
   reviewsLabel: string;
+  // Live open/closed status shown beside the printed working hours (see
+  // HomeClient's shop-hours helpers) — computed client-side from the
+  // current time in Asia/Bangkok, not from the visitor's own clock.
+  // hoursClosedOpensAt's "{time}" is replaced with the opening time already
+  // in siteConfig.workingHours, so the printed hour never has to be typed
+  // twice.
+  hoursOpenNow: string;
+  hoursClosedOpensAt: string;
   // Same value in every locale, deliberately (audit ТЗ pitch-layout-2
   // №5.3) — it sits directly under the always-English tagline above it and
   // the two read as one bilingual-brand line together, not a translated
@@ -190,6 +198,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "Address",
     hoursLabel: "Working hours",
     reviewsLabel: "Reviews",
+    hoursOpenNow: "Open now",
+    hoursClosedOpensAt: "Closed · opens {time}",
     aboutLead: "Licensed dispensary. Full menu, live prices.",
     aboutPhotoLabel: "Photo coming soon",
     certSteps: [
@@ -270,6 +280,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "Адрес",
     hoursLabel: "Часы работы",
     reviewsLabel: "Отзывы",
+    hoursOpenNow: "Открыто",
+    hoursClosedOpensAt: "Закрыто · открытие в {time}",
     // Deliberately English, not translated — see the "en" entry above's
     // comment: it sits under the always-English "Flowers. Done properly."
     // tagline and reads as one bilingual-brand unit with it.
@@ -356,6 +368,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     addressLabel: "ที่อยู่",
     hoursLabel: "เวลาทำการ",
     reviewsLabel: "รีวิว",
+    hoursOpenNow: "เปิดอยู่",
+    hoursClosedOpensAt: "ปิดแล้ว · เปิดเวลา {time}",
     // Deliberately English, not translated — see the "en" entry's comment.
     aboutLead: "Licensed dispensary. Full menu, live prices.",
     aboutPhotoLabel: "ภาพร้าน — เร็วๆ นี้",

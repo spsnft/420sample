@@ -5,12 +5,39 @@ import { ChevronDown } from "lucide-react"
 // the questions themselves are visible ("What if I stop paying?") and do the
 // reassuring before anyone taps one open. No card, no gradient-ring: this is
 // a reference, not an argument the way the blocks above it are.
+//
+// linkHref + an item's own aLinkText: exactly one answer ("Who actually
+// builds this?") links out to the agency portfolio. aLinkText is the
+// substring of that answer to turn into a link; every other item leaves it
+// unset and renders as plain text.
+function renderAnswer(a: string, aLinkText: string | undefined, linkHref: string) {
+  if (!aLinkText) return a;
+  const idx = a.indexOf(aLinkText);
+  if (idx === -1) return a;
+  return (
+    <>
+      {a.slice(0, idx)}
+      <a
+        href={linkHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline underline-offset-2 hover:text-brand-light"
+      >
+        {aLinkText}
+      </a>
+      {a.slice(idx + aLinkText.length)}
+    </>
+  );
+}
+
 export function FaqSection({
   title,
   items,
+  linkHref,
 }: {
   title: string;
-  items: { q: string; a: string }[];
+  items: { q: string; a: string; aLinkText?: string }[];
+  linkHref: string;
 }) {
   return (
     <section className="px-2 pt-2">
@@ -18,7 +45,7 @@ export function FaqSection({
         {title}
       </p>
       <div className="divide-y divide-white/10 border-t border-white/10">
-        {items.map(({ q, a }) => (
+        {items.map(({ q, a, aLinkText }) => (
           <details key={q} className="group py-3">
             <summary
               className="flex items-center justify-between gap-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden text-[14px] font-black text-brand-light"
@@ -30,7 +57,7 @@ export function FaqSection({
               />
             </summary>
             <p className="mt-2 text-[13px] font-medium text-brand-light/70 leading-relaxed">
-              {a}
+              {renderAnswer(a, aLinkText, linkHref)}
             </p>
           </details>
         ))}

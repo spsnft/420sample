@@ -97,8 +97,8 @@ export function NewSaleModal({ client, prescription, onClose, onSuccess }: NewSa
         {isBlocked ? (
           <div className="p-4 rounded-button bg-red-500/10 border border-red-500/30 text-red-400 text-[13px] font-bold">
             {prescription.status === "revoked"
-              ? "This prescription is revoked. Sale blocked."
-              : "This prescription has expired. Sale blocked."}
+              ? "This PT.33 is revoked. Sale blocked."
+              : "This PT.33 has expired. Sale blocked."}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

@@ -23,6 +23,10 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
   const [isNewClientOpen, setIsNewClientOpen] = React.useState(false);
   const requestId = React.useRef(0);
   const { navigate, isRowPending } = useClientRowNav();
+  const top5ClientIds = React.useMemo(
+    () => new Set(clientsList.rows.slice(0, 5).map((r) => r.client_id)),
+    [clientsList.rows]
+  );
 
   React.useEffect(() => {
     const trimmed = query.trim();
@@ -112,7 +116,16 @@ export function SearchScreen({ recentlyViewed, clientsList }: SearchScreenProps)
         <EmptyClientState />
       ) : (
         <div className="space-y-6">
-          <RecentlyViewedRow clients={recentlyViewed} />
+          {/* Redundant once every recently-viewed client is already sitting
+              in the list's own first 5 rows — hide the whole strip rather
+              than show a row that just repeats what's right below it.
+              Checked against clientsList's initial top 5 (the default
+              "Last visit" order), not whatever ClientDirectoryTable's own
+              sort/filter state currently shows — recentlyViewed itself
+              doesn't react to those either. */}
+          {recentlyViewed.some((c) => !top5ClientIds.has(c.client_id)) && (
+            <RecentlyViewedRow clients={recentlyViewed} />
+          )}
           <ClientDirectoryTable initial={clientsList} />
         </div>
       )}

@@ -44,11 +44,14 @@ function formatBaht(amount: number): string {
 // label's own weight puts them back below the PT.33 card and its quota.
 function StatTile({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="p-3 rounded-card surface text-center flex flex-col">
+    // px-1.5 (was px-3): the larger value below needs the width back — the
+    // label keeps its own size/spacing untouched, only the shared tile
+    // padding around both of them narrows.
+    <div className="px-1.5 py-3 rounded-card surface text-center flex flex-col">
       <p className="text-[9px] font-black uppercase tracking-wide text-brand-light/40 leading-tight min-h-[2.5em]">
         {label}
       </p>
-      <p className="text-[12px] font-bold text-brand-light/60 mt-auto pt-1 truncate">{value}</p>
+      <p className="text-[14px] font-bold text-brand-light/60 mt-auto pt-1 truncate">{value}</p>
     </div>
   );
 }
@@ -64,7 +67,7 @@ export function ClientStats({ lifetimeSpent, purchaseCount, firstVisitDate }: Cl
   const avgPerVisit = purchaseCount > 0 ? Math.round(lifetimeSpent / purchaseCount) : null;
 
   return (
-    <div className="grid grid-cols-4 gap-2">
+    <div className="grid grid-cols-4 gap-1.5">
       <StatTile label="Lifetime Spent" value={<>{formatBaht(lifetimeSpent)}<Baht /></>} />
       <StatTile label="Purchases" value={purchaseCount.toLocaleString("en-US")} />
       <StatTile label="Client Since" value={months === 0 ? "New" : `${months} mo`} />

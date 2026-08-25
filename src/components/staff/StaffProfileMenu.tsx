@@ -5,7 +5,7 @@ import { ChevronDown, Users, Ticket, LogOut } from "lucide-react"
 import { signOut } from "@/app/staff/actions"
 import type { StaffProfile } from "@/lib/staff/types"
 
-export function StaffProfileMenu({ staff }: { staff: StaffProfile }) {
+export function StaffProfileMenu({ staff, demoInstance = false }: { staff: StaffProfile; demoInstance?: boolean }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -26,6 +26,18 @@ export function StaffProfileMenu({ staff }: { staff: StaffProfile }) {
       document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen]);
+
+  // Demo instance: no real account behind the button — a static label reads
+  // honestly, where a chevron and a dropdown that opens onto Clients/Invites/
+  // Sign out (a session that isn't really this visitor's to sign out of)
+  // would promise controls that don't do anything meaningful here.
+  if (demoInstance) {
+    return (
+      <div className="flex items-center h-8 pl-3 pr-3 rounded-button surface-row text-[11px] font-bold text-brand-light/70">
+        <span className="truncate max-w-[120px]">Demo Acc</span>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} className="relative">

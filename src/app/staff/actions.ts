@@ -235,7 +235,7 @@ export async function createPurchase(input: CreatePurchaseInput): Promise<{ erro
     .single();
 
   if (!rx || rx.status !== "active") {
-    return { error: "This prescription is not active. Sale blocked." };
+    return { error: "This PT.33 is not active. Sale blocked." };
   }
 
   const { error } = await supabase.from("purchases").insert({

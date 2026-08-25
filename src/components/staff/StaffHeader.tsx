@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site"
 import { StaffProfileMenu } from "./StaffProfileMenu"
 import type { StaffProfile } from "@/lib/staff/types"
 
-export function StaffHeader({ staff }: { staff: StaffProfile }) {
+export function StaffHeader({ staff, demoInstance = false }: { staff: StaffProfile; demoInstance?: boolean }) {
   return (
     <header className="surface-header border-b border-white/10">
       <div className="max-w-2xl mx-auto flex items-center justify-between gap-3 px-4 py-3">
@@ -15,7 +15,7 @@ export function StaffHeader({ staff }: { staff: StaffProfile }) {
           </span>
         </Link>
 
-        <StaffProfileMenu staff={staff} />
+        <StaffProfileMenu staff={staff} demoInstance={demoInstance} />
       </div>
     </header>
   );
