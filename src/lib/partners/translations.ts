@@ -163,7 +163,7 @@ const en: PartnersDictionary = {
   ctaStaffPending: "Signing in to demo…",
   ctaStaffErrorNotConfigured: "The demo isn't set up yet. Message us and we'll show you the panel directly.",
   ctaStaffErrorFailed: "Couldn't open the demo. Try again or message us.",
-  ctaMenu: "Open the customer menu",
+  ctaMenu: "Open the customer storefront",
 
   offerTitle: "What it costs.",
   // ТЗ-6 §3: "First five shops" dropped — a shop count isn't something the
@@ -245,7 +245,7 @@ const ru: PartnersDictionary = {
   ctaStaffPending: "Вход в демо…",
   ctaStaffErrorNotConfigured: "Демо ещё не настроено. Напишите нам, и мы покажем панель напрямую.",
   ctaStaffErrorFailed: "Не удалось открыть демо. Попробуйте ещё раз или напишите нам.",
-  ctaMenu: "Открыть меню для клиентов",
+  ctaMenu: "Открыть витрину для клиентов",
 
   offerTitle: "Сколько это стоит.",
   offerPriceEyebrow: `До ${P.launchDeadlineDay} сентября`,
@@ -324,7 +324,7 @@ const th: PartnersDictionary = {
   ctaStaffPending: "กำลังเข้าสู่ระบบเดโม…",
   ctaStaffErrorNotConfigured: "เดโมยังไม่ได้ตั้งค่า ทักหาเรา แล้วเราจะโชว์แผงควบคุมให้ดูโดยตรง",
   ctaStaffErrorFailed: "เปิดเดโมไม่สำเร็จ ลองใหม่อีกครั้งหรือทักหาเรา",
-  ctaMenu: "เปิดเมนูสำหรับลูกค้า",
+  ctaMenu: "เปิดหน้าร้านสำหรับลูกค้า",
 
   offerTitle: "ราคาเท่าไหร่",
   offerPriceEyebrow: `ถึงวันที่ ${P.launchDeadlineDay} กันยายน`,

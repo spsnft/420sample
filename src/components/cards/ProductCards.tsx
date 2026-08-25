@@ -16,7 +16,7 @@ export const BadgeIcon = React.memo(({ type, isSmall }: { type: string, isSmall?
   if (!type) return null;
   const iconSize = isSmall ? 13 : 18;
   const colorClass = {
-    NEW: "text-blue-400",
+    NEW: "text-emerald-400",
     SALE: "text-brand-secondary",
     HIT: "text-orange-400"
   }[type.toUpperCase()] || "text-brand-light";
@@ -53,13 +53,13 @@ export const FOCUS_RING =
 // coloured words separated by a dot, the line reads as one strip of
 // attributes: "Indica · New".
 //
-// Blue for new is the colour the New row's icon already uses; gold for sale is
-// the brand's own. Neither collides with a strain colour, which green or red
-// would.
+// Emerald for new is the same token /staff uses for an ACTIVE prescription
+// (see StatusPill) — in the project's palette rather than the old off-brand
+// blue; gold for sale is the brand's own.
 export const StatusTag = React.memo(({ label, kind }: { label: string; kind: 'new' | 'sale' }) => (
   <span className="flex items-center gap-2 shrink-0">
     <span aria-hidden className="text-brand-light/25 text-[11px] leading-none">·</span>
-    <span className={`text-[11px] font-black uppercase tracking-normal ${kind === 'new' ? 'text-blue-300' : 'text-brand-secondary'}`}>
+    <span className={`text-[11px] font-black uppercase tracking-normal ${kind === 'new' ? 'text-emerald-400' : 'text-brand-secondary'}`}>
       {label}
     </span>
   </span>
@@ -137,7 +137,7 @@ export const HighlightCard = React.memo(({ item, onClick, priority, sizes = GRID
             // In a category grid there is no row heading to say a product is
             // new or reduced, so the slot the category label would occupy
             // carries the status instead.
-            <span className={`text-[9px] font-black uppercase tracking-wide leading-none truncate ${item.discountPercent > 0 ? 'text-brand-secondary' : 'text-blue-300'}`}>
+            <span className={`text-[9px] font-black uppercase tracking-wide leading-none truncate ${item.discountPercent > 0 ? 'text-brand-secondary' : 'text-emerald-400'}`}>
               {statusLabel}
             </span>
           ) : null}

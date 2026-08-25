@@ -91,7 +91,7 @@ export async function getProducts(): Promise<{
     const response = await fetch(SCRIPT_URL, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 60 },
+      next: { revalidate: 120 },
       signal: controller.signal,
     });
 

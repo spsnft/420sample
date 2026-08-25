@@ -5,7 +5,7 @@ import { getProducts } from "@/lib/product"
 import { AGE_COOKIE } from "@/lib/age-gate"
 import { isDemoInstance } from "@/lib/demo"
 
-export const revalidate = 60;
+export const revalidate = 120;
 
 export const metadata: Metadata = {
   title: "Menu",
@@ -23,7 +23,7 @@ export default async function MenuPage({
   const { products, descriptions, categories, failed } = await getProducts();
 
   // Reading the cookie makes this page render per request. The catalogue fetch
-  // is still cached for a minute, so the sheet is not hit any harder — what
+  // is still cached for two minutes, so the sheet is not hit any harder — what
   // changes is that the age gate is decided before a byte of menu is sent.
   const ageVerified = cookies().get(AGE_COOKIE)?.value === "1";
 

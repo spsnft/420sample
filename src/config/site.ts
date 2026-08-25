@@ -41,10 +41,7 @@ export const siteConfig = {
   themeColor: "#161819",
   locale: "en_US",
 
-  address: "Bang Tao Beach, Thalang, Phuket 83110, Thailand",
-  // Same address, short enough not to wrap onto a second line in the
-  // storefront's collapsed info strip on a narrow phone.
-  addressShort: "Bang Tao Beach, Thalang, Phuket",
+  address: "Bang Tao Beach, Phuket",
   workingHours: "12:00 — 00:00",
 
   // Deliberately blank on the demo instance: these used to be a real, live
@@ -81,7 +78,7 @@ export const siteConfig = {
   // it would link out to that shop's own Google listing).
   trustBadge: {
     rating: "4.8",
-    reviews: "130+ Google reviews",
+    reviews: "130+ reviews",
   },
 
   // Neutral public landmark for the homepage map — not the exact coordinates
