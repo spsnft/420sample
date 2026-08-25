@@ -23,6 +23,29 @@ import { triggerHaptic } from "@/lib/utils"
 // printed as text — only ever the FT.Agency name, which both links sign.
 const AGENCY_PORTFOLIO_URL = siteConfig.partners.agencyUrl;
 
+// ctaSubtitle names three ways to send a product list; the brand name in the
+// third ("WhatsApp") wraps onto its own line in portrait if left to a plain
+// space, splitting it from the word next to it mid-phrase. WRAP_UNITS names
+// that phrase per locale (word order around the brand name differs by
+// language) so it can be kept on one line with a nowrap span.
+const WRAP_UNITS: Record<Language, string> = {
+  en: "WhatsApp message",
+  ru: "в WhatsApp",
+  th: "ข้อความใน WhatsApp",
+};
+
+function withNoWrapUnit(text: string, unit: string) {
+  const idx = text.indexOf(unit);
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <span className="whitespace-nowrap">{unit}</span>
+      {text.slice(idx + unit.length)}
+    </>
+  );
+}
+
 // Blocks 01 and 02 are the page's argument: the same product seen by the two
 // audiences a shop owner cares about — their own record-keeping, then their
 // customers. They are built from one shell so the pair reads as a matched
@@ -453,6 +476,9 @@ export default function PartnersClient() {
           <p className="mt-4 text-[13px] font-bold text-brand-light">
             {t.guaranteeLine}
           </p>
+          <p className="mt-1.5 text-[13px] font-bold text-brand-light">
+            {t.liveInDaysLine}
+          </p>
 
           {/* Included list stays nested inside section 1 — it's what the
               ฿9,000 above buys, not a section of its own, so it keeps the
@@ -527,7 +553,7 @@ export default function PartnersClient() {
             up to the price section's 32px total (0.5rem base overridden to
             2rem there) rather than doubling a second padding on top of it. */}
         <div className="max-w-prose mx-auto lg:mx-0 lg:pl-6">
-          <FaqSection title={t.faqTitle} items={t.faqItems} />
+          <FaqSection title={t.faqTitle} items={t.faqItems} linkHref={AGENCY_PORTFOLIO_URL} />
         </div>
 
         {/* No card around this one. The blocks above are cards because each
@@ -545,7 +571,7 @@ export default function PartnersClient() {
             {t.ctaHeadline}
           </p>
           <p className="mt-2 text-[13px] font-bold text-brand-light/70 leading-relaxed text-balance sm:text-center">
-            {t.ctaSubtitle}
+            {withNoWrapUnit(t.ctaSubtitle, WRAP_UNITS[safeLang])}
           </p>
           {/* Moved above the button row (ТЗ pitch-layout №5) — it used to sit
               under both buttons, reading as an afterthought instead of the

@@ -35,7 +35,7 @@ export const partnersPricing = {
   // rarely changes independently of the day anyway.
   launchDeadlineDay: 6,
   addonLogo: "฿6,000",
-  addonPt33Cards: "฿2,500 per 300",
+  addonPt33Cards: "฿2,500 per 300 cards",
   addonSecondShopSetup: "฿4,000",
   addonSecondShopMonthly: "฿1,200",
   addonMenuUpkeepMonthly: "฿1,200",

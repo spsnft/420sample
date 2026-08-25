@@ -81,6 +81,9 @@ export interface PartnersDictionary {
   // haven't looked yet"), where "when it's running" alone is already an
   // objectively checkable condition and needs no witness clause.
   guaranteeLine: string;
+  // Second guarantee line, same weight as guaranteeLine directly above it —
+  // a timeline commitment (7 days) alongside the existing payment one.
+  liveInDaysLine: string;
 
   includedTitle: string;
   includedItems: string[];
@@ -118,7 +121,9 @@ export interface PartnersDictionary {
   // FAQ. Order goes from deal mechanics to risk: the first question
   // answers "what happens if I message you", the last is "who are you".
   faqTitle: string;
-  faqItems: { q: string; a: string }[];
+  // aLinkText, when set, is a substring of `a` that renders as a link to
+  // the agency portfolio (the only FAQ answer that links out).
+  faqItems: { q: string; a: string; aLinkText?: string }[];
 
   // Final CTA. Replaces "Tell us what you have. We'll tell you the final
   // price." — that headline told the reader, last thing on the page, that
@@ -145,7 +150,7 @@ const en: PartnersDictionary = {
   // client panel" read as a second, competing use of the word right next
   // to "customer storefront." "running as one" tightened to "working as
   // one system" (ТЗ-4 §1.1).
-  heroSubtitle: "A customer storefront, a live menu and a PT.33 panel — working as one system. Have a click through it yourself.",
+  heroSubtitle: "A customer storefront, a live menu and a PT.33 panel — working as one system. Click through it yourself.",
   heroPriceLine: `${P.setupPrice} · live in a few days`,
 
   blockPt33Title: "Your paperwork,\nalready done.",
@@ -165,7 +170,7 @@ const en: PartnersDictionary = {
   ctaMenu: "Open the customer menu",
 
   offerTitle: "What it costs.",
-  offerReadyLine: "Everything you just clicked through is finished. The only new thing here is that it's for sale.",
+  offerReadyLine: "Everything you just clicked through is finished.",
   // ТЗ-6 §3: "First five shops" dropped — a shop count isn't something the
   // reader can check, unlike the date, so it read as a claim taken on
   // faith rather than a fact. The eyebrow is now just the deadline.
@@ -174,6 +179,7 @@ const en: PartnersDictionary = {
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/month`,
   guaranteeLine: `You pay ${P.deposit} to start. The rest when it's running.`,
+  liveInDaysLine: `Live in 7 days or your ${P.deposit} back.`,
 
   includedTitle: `Included at ${P.setupPrice}`,
   includedItems: [
@@ -186,20 +192,20 @@ const en: PartnersDictionary = {
   addonsTitle: "Optional extras",
   addonsItems: [
     { label: "A logo and identity, if you don't have one", price: P.addonLogo },
-    { label: "Your existing PT.33 cards entered", price: P.addonPt33Cards },
+    { label: "Your existing PT.33 entered", price: P.addonPt33Cards },
     { label: "We keep the menu updated for you", price: `${P.addonMenuUpkeepMonthly}/month` },
     { label: "A second shop", price: `${P.addonSecondShopSetup} setup + ${P.addonSecondShopMonthly}/month` },
   ],
 
   subscriptionEyebrow: "Then, every month",
-  subscriptionLine: "Covers hosting, domain, backups, updates and support. That doesn't go up while you're with us.",
+  subscriptionLine: "Covers hosting, domain, backups, updates and support.",
   subscriptionYearlyLine: `Pay for the year instead — ${P.subscriptionYearly}. You save ${P.annualSavings}.`,
 
   faqTitle: "Questions",
   faqItems: [
     {
       q: "What happens after I message you?",
-      a: "We reply the same day. You tell us what you already have and we quote it. You pay half, send the logo and the product list, and we build. Most shops are running within a few days — it depends on how much of it we're typing up for you.",
+      a: "We reply the same day. You tell us what you already have and we quote it. You pay half, send the logo and the product list, and we build. Most shops are running within a few days — it depends on how much of it we're typing up for you. The 7 days start when we have your logo and your product list.",
     },
     {
       q: "My staff don't read English.",
@@ -215,7 +221,8 @@ const en: PartnersDictionary = {
     },
     {
       q: "Who actually builds this?",
-      a: "FT.Agency, on Phuket. Small team, and you'll be dealing with the person doing the work rather than a manager.",
+      a: "FT.Agency, on Phuket. Marketing and web work since 2016 — see the portfolio. Small team, and you'll be dealing with the person doing the work rather than a manager. We'll come to your shop if you'd rather talk in person.",
+      aLinkText: "the portfolio",
     },
   ],
 
@@ -246,12 +253,13 @@ const ru: PartnersDictionary = {
   ctaMenu: "Открыть меню для клиентов",
 
   offerTitle: "Сколько это стоит.",
-  offerReadyLine: "Всё, что вы только что посмотрели, — готово. Единственное новое здесь — то, что это можно купить.",
+  offerReadyLine: "Всё, что вы только что посмотрели, — готово.",
   offerPriceEyebrow: `До ${P.launchDeadlineDay} сентября`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/мес`,
   guaranteeLine: `На старте вы платите ${P.deposit}. Остальное — когда всё работает.`,
+  liveInDaysLine: `Заработает за 7 дней — или мы вернём ${P.deposit}.`,
 
   includedTitle: `Что входит за ${P.setupPrice}`,
   includedItems: [
@@ -264,20 +272,20 @@ const ru: PartnersDictionary = {
   addonsTitle: "Дополнительно",
   addonsItems: [
     { label: "Логотип и айдентика, если своих ещё нет", price: P.addonLogo },
-    { label: "Перенос ваших действующих карт PT.33", price: P.addonPt33Cards },
+    { label: "Перенос ваших действующих PT.33", price: P.addonPt33Cards },
     { label: "Мы сами обновляем меню за вас", price: `${P.addonMenuUpkeepMonthly}/мес` },
     { label: "Второй магазин", price: `${P.addonSecondShopSetup} настройка + ${P.addonSecondShopMonthly}/мес` },
   ],
 
   subscriptionEyebrow: "Потом — каждый месяц",
-  subscriptionLine: "Покрывает хостинг, домен, бэкапы, обновления и поддержку. Эта цена не растёт, пока вы с нами.",
+  subscriptionLine: "Покрывает хостинг, домен, бэкапы, обновления и поддержку.",
   subscriptionYearlyLine: `Можно оплатить год — ${P.subscriptionYearly}. Экономия ${P.annualSavings}.`,
 
   faqTitle: "Вопросы",
   faqItems: [
     {
       q: "Что будет после того, как я вам напишу?",
-      a: "Отвечаем в тот же день. Вы рассказываете, что у вас уже есть, мы называем цену. Платите половину, присылаете логотип и список товаров — мы делаем. Большинство магазинов работает через несколько дней; зависит от того, сколько за вас набирать.",
+      a: "Отвечаем в тот же день. Вы рассказываете, что у вас уже есть, мы называем цену. Платите половину, присылаете логотип и список товаров — мы делаем. Большинство магазинов работает через несколько дней; зависит от того, сколько за вас набирать. Эти 7 дней начинаются, когда у нас есть ваш логотип и список товаров.",
     },
     {
       q: "Мой персонал не читает по-английски.",
@@ -293,7 +301,8 @@ const ru: PartnersDictionary = {
     },
     {
       q: "Кто на самом деле это делает?",
-      a: "FT.Agency, на Пхукете. Небольшая команда — вы будете общаться с тем, кто непосредственно делает работу, а не с менеджером.",
+      a: "FT.Agency, на Пхукете. Маркетинг и веб-разработка с 2016 года — смотрите портфолио. Небольшая команда — вы будете общаться с тем, кто непосредственно делает работу, а не с менеджером. Если удобнее поговорить лично, приедем к вам в магазин.",
+      aLinkText: "портфолио",
     },
   ],
 
@@ -308,7 +317,7 @@ const ru: PartnersDictionary = {
 
 const th: PartnersDictionary = {
   heroTitle: "พร้อมใช้งานแล้ว เหลือแค่ใส่ชื่อร้านของคุณ",
-  heroSubtitle: "หน้าร้านสำหรับลูกค้า เมนูที่อัปเดตสด และแผงควบคุม PT.33 — ทำงานเป็นระบบเดียวกัน ลองคลิกดูด้วยตัวเองได้เลย",
+  heroSubtitle: "หน้าร้านสำหรับลูกค้า เมนูที่อัปเดตสด และแผงควบคุม PT.33 — ทำงานเป็นระบบเดียวกัน คลิกดูด้วยตัวเองได้เลย",
   heroPriceLine: `${P.setupPrice} · เปิดใช้งานได้ในไม่กี่วัน`,
 
   blockPt33Title: "เอกสารของคุณ\nพร้อมอยู่แล้ว",
@@ -324,12 +333,13 @@ const th: PartnersDictionary = {
   ctaMenu: "เปิดเมนูสำหรับลูกค้า",
 
   offerTitle: "ราคาเท่าไหร่",
-  offerReadyLine: "ทุกอย่างที่คุณเพิ่งคลิกผ่านไปเสร็จสมบูรณ์แล้ว สิ่งใหม่มีอย่างเดียวคือตอนนี้มันวางขายแล้ว",
+  offerReadyLine: "ทุกอย่างที่คุณเพิ่งคลิกผ่านไปเสร็จสมบูรณ์แล้ว",
   offerPriceEyebrow: `ถึงวันที่ ${P.launchDeadlineDay} กันยายน`,
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/เดือน`,
   guaranteeLine: `จ่ายแค่ ${P.deposit} เพื่อเริ่มต้น ส่วนที่เหลือจ่ายเมื่อระบบทำงานแล้ว`,
+  liveInDaysLine: `เริ่มใช้งานได้ภายใน 7 วัน หรือคืนเงิน ${P.deposit} ให้เต็มจำนวน`,
 
   includedTitle: `รวมอยู่ในราคา ${P.setupPrice}`,
   includedItems: [
@@ -342,20 +352,20 @@ const th: PartnersDictionary = {
   addonsTitle: "ตัวเลือกเสริม",
   addonsItems: [
     { label: "โลโก้และอัตลักษณ์แบรนด์ สำหรับร้านที่ยังไม่มี", price: P.addonLogo },
-    { label: "นำเข้าบัตร PT.33 ที่คุณมีอยู่แล้ว", price: P.addonPt33Cards },
+    { label: "นำเข้า PT.33 ที่คุณมีอยู่แล้ว", price: P.addonPt33Cards },
     { label: "ให้เราอัปเดตเมนูให้คุณ", price: `${P.addonMenuUpkeepMonthly}/เดือน` },
     { label: "ร้านที่สอง", price: `${P.addonSecondShopSetup} ตั้งค่า + ${P.addonSecondShopMonthly}/เดือน` },
   ],
 
   subscriptionEyebrow: "จากนั้น ทุกเดือน",
-  subscriptionLine: "ครอบคลุมโฮสติ้ง โดเมน สำรองข้อมูล อัปเดต และซัพพอร์ต ราคานี้ไม่ขึ้นตลอดเวลาที่คุณใช้งานกับเรา",
+  subscriptionLine: "ครอบคลุมโฮสติ้ง โดเมน สำรองข้อมูล อัปเดต และซัพพอร์ต",
   subscriptionYearlyLine: `หรือจ่ายเป็นรายปีแทน — ${P.subscriptionYearly} ประหยัด ${P.annualSavings}`,
 
   faqTitle: "คำถามที่พบบ่อย",
   faqItems: [
     {
       q: "หลังจากที่ทักหาแล้วจะเกิดอะไรขึ้น?",
-      a: "เราตอบกลับภายในวันเดียวกัน คุณบอกเราว่ามีอะไรอยู่แล้วบ้าง เราจะเสนอราคาให้ คุณจ่ายครึ่งหนึ่ง ส่งโลโก้และรายการสินค้า แล้วเราจะเริ่มสร้าง ร้านส่วนใหญ่พร้อมใช้งานภายในไม่กี่วัน ขึ้นอยู่กับว่าเราต้องพิมพ์ข้อมูลให้คุณมากแค่ไหน",
+      a: "เราตอบกลับภายในวันเดียวกัน คุณบอกเราว่ามีอะไรอยู่แล้วบ้าง เราจะเสนอราคาให้ คุณจ่ายครึ่งหนึ่ง ส่งโลโก้และรายการสินค้า แล้วเราจะเริ่มสร้าง ร้านส่วนใหญ่พร้อมใช้งานภายในไม่กี่วัน ขึ้นอยู่กับว่าเราต้องพิมพ์ข้อมูลให้คุณมากแค่ไหน 7 วันนี้เริ่มนับตั้งแต่วันที่เราได้รับโลโก้และรายการสินค้าของคุณ",
     },
     {
       q: "พนักงานของฉันอ่านภาษาอังกฤษไม่ออก",
@@ -371,7 +381,8 @@ const th: PartnersDictionary = {
     },
     {
       q: "ใครเป็นคนสร้างระบบนี้จริง ๆ?",
-      a: "FT.Agency ที่ภูเก็ต ทีมงานขนาดเล็ก คุณจะได้คุยกับคนที่ลงมือทำงานจริง ไม่ใช่ผู้จัดการ",
+      a: "FT.Agency ที่ภูเก็ต ทำงานด้านการตลาดและเว็บไซต์มาตั้งแต่ปี 2016 — ดูผลงานได้ที่นี่ ทีมงานขนาดเล็ก คุณจะได้คุยกับคนที่ลงมือทำงานจริง ไม่ใช่ผู้จัดการ หากสะดวกคุยกันต่อหน้า เรายินดีไปที่ร้านของคุณ",
+      aLinkText: "ผลงาน",
     },
   ],
 
