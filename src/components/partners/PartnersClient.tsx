@@ -351,16 +351,20 @@ export default function PartnersClient() {
             scan for card colour): the "EXPLORE TODAY'S MENU" card's own
             bottom sat at ~353 reference px against a window 533 tall,
             leaving a visible gap before the window's own bottom edge.
-            translateYPx={22} closes most of that gap (card bottom lands
+            translateYPx={22} closed most of that gap (card bottom lands
             around ~375, matching the shared fade band's own start) and
-            is the confirmed, settled value — see ТЗ-9/ТЗ-10 (commit
+            was the confirmed, settled value — see ТЗ-9/ТЗ-10 (commit
             6df5ddf). ТЗ-11 and ТЗ-12 tried larger values (101, then 50)
             to close the remaining gap further; each pushed a *new* gap
             above the header ("YOUR STORE") that read as worse than the
-            one it fixed, so both were reverted. translateYPx is LOCKED
-            at 22 as of ТЗ-13 — do not retune it, or WINDOW_H_PX,
-            MASK_IMAGE or FADE_OVERLAY_BG, without an explicit separate
-            ask. Any remaining gap around the mockup is handled with a
+            one it fixed, so both were reverted, and translateYPx was
+            locked at 22 as of ТЗ-13. ТЗ-14 (commit 6fdf283) got the
+            explicit separate ask that lock called for and overrode it
+            back to 101 — a direct, single-line instruction, not a
+            retune of this geometry. translateYPx is 101 as of ТЗ-14;
+            WINDOW_H_PX, MASK_IMAGE and FADE_OVERLAY_BG remain locked,
+            untouched by that override, pending their own explicit ask.
+            Any remaining gap around the mockup is handled with a
             plain external margin instead (see the mockup wrapper's own
             className below) — a layout knob outside PhoneMockup, not
             another pass at this constant.

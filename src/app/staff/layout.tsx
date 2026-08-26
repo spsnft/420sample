@@ -47,7 +47,7 @@ export default async function StaffLayout({ children }: { children: ReactNode })
           down to the bar's own height, breaking the stickiness itself — see
           PageBackdrop for the other half of that fix. */}
       {demoInstance && (
-        <DemoBar bleed={false} label="DEMO STAFF PANEL — sample data" cta="Back to buds.digital" />
+        <DemoBar bleed={false} label="DEMO PANEL — sample data" cta="Back to buds.digital" />
       )}
       {staff && <StaffHeader staff={staff} demoInstance={demoInstance} />}
       <main className="max-w-2xl mx-auto p-4">{children}</main>
