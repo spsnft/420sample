@@ -1,7 +1,7 @@
-// Every number and date printed on the pitch page ("/") lives here, once,
-// so a price or deadline change is a one-line edit instead of a hunt through
-// three locales' worth of JSX-embedded strings. translations.ts interpolates
-// these into each locale's copy rather than hardcoding them again.
+// Every number printed on the pitch page ("/") lives here, once, so a price
+// change is a one-line edit instead of a hunt through three locales' worth
+// of JSX-embedded strings. translations.ts interpolates these into each
+// locale's copy rather than hardcoding them again.
 // Raw numbers behind the formatted subscription strings below, kept only so
 // annualSavings can be computed rather than hardcoded (ТЗ-4 §4.6: 12 ×
 // monthly − yearly must stay derived, since either input can move). Not
@@ -18,22 +18,14 @@ function formatThb(n: number): string {
 }
 
 export const partnersPricing = {
-  setupPrice: "฿9,000",
-  setupPriceWas: "฿12,000",
-  deposit: "฿4,500",
+  setupPrice: "฿15,000",
+  setupPriceWas: "฿20,000",
   subscriptionMonthly: "฿2,400",
   subscriptionYearly: "฿24,000",
   // ТЗ-4 §4.6 — "two months off" made concrete: 12 months at the monthly
   // rate minus the annual price. Derived so it can't drift out of sync with
   // subscriptionMonthly/subscriptionYearly above if either changes.
   annualSavings: formatThb(SUBSCRIPTION_MONTHLY_VALUE * 12 - SUBSCRIPTION_YEARLY_VALUE),
-  // Just the day-of-month — the number that actually moves. The month name
-  // stays written out per locale in translations.ts rather than run through
-  // Intl.DateTimeFormat: three languages' worth of month names is a small,
-  // stable set, and it sidesteps Intl's own quirks (Thai's Buddhist-era
-  // year, English's day/month order varying by region) for one number that
-  // rarely changes independently of the day anyway.
-  launchDeadlineDay: 6,
   addonLogo: "฿6,000",
   addonPt33Cards: "฿2,500 per 300 cards",
   addonSecondShopSetup: "฿4,000",

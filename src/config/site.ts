@@ -62,6 +62,7 @@ export const siteConfig = {
   // owners, not the personal LINE/WhatsApp used on the storefront demo.
   partners: {
     whatsapp: "https://wa.me/66650255229",
+    line: "https://line.me/ti/p/tgrupaFTHp",
     // The site's own bare origin — pitch and demo now share it, one path
     // apart. Used for canonical metadata, the sitemap and robots.txt; in-app
     // links between the two are relative paths, not built from this.

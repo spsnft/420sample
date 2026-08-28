@@ -1,9 +1,10 @@
 import type { Metadata } from "next"
 import PartnersClient from "@/components/partners/PartnersClient"
 import { siteConfig } from "@/config/site"
+import { partnersPricing } from "@/lib/partners/pricing"
 
 const TITLE = "buds.digital — Storefront, live menu & PT.33 records"
-const DESCRIPTION = "A ready-made storefront, live menu and PT.33 client panel for your dispensary on Phuket. From ฿9,000."
+const DESCRIPTION = `A ready-made storefront, live menu and PT.33 client panel for your dispensary on Phuket. From ${partnersPricing.setupPrice}.`
 
 // B2B pitch page for dispensary/vape shop owners, served at buds.digital's
 // own apex — the product's main marketing surface, meant to be found by
