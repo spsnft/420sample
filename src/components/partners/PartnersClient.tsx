@@ -584,12 +584,10 @@ export default function PartnersClient() {
               <WhatsAppIcon size={18} />
               {t.ctaButton}
             </Link>
-            {/* TODO(LINE OA): points at the same WhatsApp line until this
-                product's own LINE Official Account is set up. */}
             <Link
-              href={siteConfig.partners.whatsapp}
+              href={siteConfig.partners.line}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               aria-label={t.ctaButtonLine}
               onClick={() => triggerHaptic('medium')}
               className="h-14 btn-metal font-black uppercase tracking-widest text-[13px] rounded-button active:scale-95 transition-all flex items-center justify-center gap-2"
