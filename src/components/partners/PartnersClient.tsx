@@ -447,14 +447,12 @@ export default function PartnersClient() {
           {/* SECTION 1 — the one-time purchase. The one moment on the page
               where a decision actually gets made, so the number gets its
               own block instead of living as a clause inside a paragraph.
-              The eyebrow (ТЗ-4 §4.3) replaces the old full-sentence "one at
-              a time" note — same claim, same size treatment as
-              includedTitle below it. Both conditions in it (shop count,
-              deadline) apply only to this price, never to the subscription
-              in section 2. offerPriceMonthly no longer sits under this
-              price (ТЗ-5 §3) — typesetting a standing ฿2,400/month as a
-              footnote of the ฿9,000 made it read as a detail of the setup
-              purchase rather than a second, separate obligation. */}
+              The eyebrow, same size treatment as includedTitle below it,
+              applies only to this price, never to the subscription in
+              section 2. offerPriceMonthly no longer sits under this price
+              (ТЗ-5 §3) — typesetting a standing ฿2,400/month as a footnote
+              of the ฿9,000 made it read as a detail of the setup purchase
+              rather than a second, separate obligation. */}
           <div className="mt-5">
             <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-1.5">
               {t.offerPriceEyebrow}
@@ -469,13 +467,15 @@ export default function PartnersClient() {
             </div>
           </div>
 
-          {/* The page's one guarantee, right under the price where a reader
-              is actually weighing the risk (ТЗ rewrite §5.5). */}
-          <p className="mt-4 text-[13px] font-bold text-brand-light">
-            {t.guaranteeLine}
+          {/* Reason line, muted like the block's other secondary lines
+              (not bold, unlike guaranteeLine right below it). */}
+          <p className="mt-4 text-[13px] font-semibold text-brand-light/55">
+            {t.reviewLine}
           </p>
+          {/* The page's one guarantee, right under reviewLine where a
+              reader is actually weighing the risk (ТЗ rewrite §5.5). */}
           <p className="mt-1.5 text-[13px] font-bold text-brand-light">
-            {t.liveInDaysLine}
+            {t.guaranteeLine}
           </p>
 
           {/* Included list stays nested inside section 1 — it's what the

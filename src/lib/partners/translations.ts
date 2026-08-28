@@ -46,14 +46,10 @@ export interface PartnersDictionary {
   ctaMenu: string;
 
   offerTitle: string;
-  // NEW (ТЗ-4 §4.3): small-caps eyebrow above the price, replacing the old
-  // offerPriceNote ("we're setting up the first shops one at a time…") —
-  // same claim (launch pricing, a deadline), compressed to a label instead
-  // of a sentence. Applies only to the setup price, never to the
-  // subscription. ТЗ-6 §3 dropped the "first five shops" half of the claim
-  // entirely (here and everywhere else on the page, all locales) — a shop
-  // count isn't something the reader can verify, unlike the date, and
-  // leaving it in read as a number they had to take on faith.
+  // Small-caps eyebrow above the price. Applies only to the setup price,
+  // never to the subscription. The old launch-deadline date ("Until 6
+  // September") is gone — there's no date-driven logic left anywhere on
+  // the page — replaced by a scarcity claim (first three shops).
   offerPriceEyebrow: string;
   // Standalone price block — the page's one moment of decision gets its own
   // typographic weight instead of living as a clause inside a paragraph.
@@ -66,20 +62,20 @@ export interface PartnersDictionary {
   offerPriceNow: string;
   offerPriceWas: string;
   offerPriceMonthly: string;
-  // The page's one guarantee (the old 50/50 split) — bold, body-text size,
-  // right under the price where a reader is actually weighing the risk
-  // (ТЗ rewrite §5.5, position confirmed unchanged by ТЗ-4 §4.4). The old
-  // second sentence ("nothing on your side switches off while we build")
-  // is gone — ТЗ-4 §4.4: unclear what it referred to, and at this point in
-  // the pitch the reader has nothing running yet to switch off. ТЗ-6 §4
-  // also dropped "...and you've looked at it yourself" from the end: it
-  // gave the reader a pretext to stall the second half indefinitely ("I
-  // haven't looked yet"), where "when it's running" alone is already an
-  // objectively checkable condition and needs no witness clause.
+  // Reason line, directly under the price and above guaranteeLine — muted,
+  // same weight as the block's other secondary lines (not bold, unlike
+  // guaranteeLine right below it).
+  reviewLine: string;
+  // The page's one guarantee (the 50/50 split) — bold, body-text size,
+  // right under reviewLine where a reader is actually weighing the risk
+  // (ТЗ rewrite §5.5, position confirmed unchanged by ТЗ-4 §4.4). No longer
+  // names the deposit amount — just the split, so it stays true regardless
+  // of what the setup price is. The old second sentence ("nothing on your
+  // side switches off while we build") is gone — ТЗ-4 §4.4: unclear what it
+  // referred to, and at this point in the pitch the reader has nothing
+  // running yet to switch off. The old 7-day money-back guarantee line that
+  // used to follow this one is gone too, page-wide.
   guaranteeLine: string;
-  // Second guarantee line, same weight as guaranteeLine directly above it —
-  // a timeline commitment (7 days) alongside the existing payment one.
-  liveInDaysLine: string;
 
   includedTitle: string;
   includedItems: string[];
@@ -166,17 +162,14 @@ const en: PartnersDictionary = {
   ctaMenu: "Open the customer storefront",
 
   offerTitle: "What it costs.",
-  // ТЗ-6 §3: "First five shops" dropped — a shop count isn't something the
-  // reader can check, unlike the date, so it read as a claim taken on
-  // faith rather than a fact. The eyebrow is now just the deadline.
-  offerPriceEyebrow: `Until ${P.launchDeadlineDay} September`,
+  offerPriceEyebrow: "First three shops",
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/month`,
-  guaranteeLine: `You pay ${P.deposit} to start. The rest when it's running.`,
-  liveInDaysLine: "Live in 7 days or your money back.",
+  reviewLine: "For a review on this site",
+  guaranteeLine: "Half at the start, the rest when everything works.",
 
-  includedTitle: `Included at ${P.setupPrice}`,
+  includedTitle: "What's included",
   includedItems: [
     "Your storefront, your live menu and your PT.33 panel, running as one system",
     "Your logo, name and colours across all three",
@@ -200,7 +193,7 @@ const en: PartnersDictionary = {
   faqItems: [
     {
       q: "What happens after I message you?",
-      a: "We reply the same day. You tell us what you already have and we quote it. You pay half, send the logo and the product list, and we build. Most shops are running within a few days. The 7 days start when we have your logo and your product list.",
+      a: "We reply the same day. You tell us what you already have and we quote it. You pay half, send the logo and the product list, and we build. Most shops are running within a few days.",
     },
     {
       q: "My staff don't read English.",
@@ -248,14 +241,14 @@ const ru: PartnersDictionary = {
   ctaMenu: "Открыть витрину для клиентов",
 
   offerTitle: "Сколько это стоит.",
-  offerPriceEyebrow: `До ${P.launchDeadlineDay} сентября`,
+  offerPriceEyebrow: "Первым трём магазинам",
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/мес`,
-  guaranteeLine: `На старте вы платите ${P.deposit}. Остальное — когда всё работает.`,
-  liveInDaysLine: "Заработает за 7 дней — или мы вернём деньги.",
+  reviewLine: "За отзыв на этом сайте",
+  guaranteeLine: "Половину на старте, остальное когда всё работает.",
 
-  includedTitle: `Что входит за ${P.setupPrice}`,
+  includedTitle: "Что входит",
   includedItems: [
     "Витрина, живое меню и панель PT.33 — одной системой",
     "Ваш логотип, название и цвета во всех трёх",
@@ -279,7 +272,7 @@ const ru: PartnersDictionary = {
   faqItems: [
     {
       q: "Что будет после того, как я вам напишу?",
-      a: "Отвечаем в тот же день. Вы рассказываете, что у вас уже есть, мы называем цену. Платите половину, присылаете логотип и список товаров — мы делаем. Большинство магазинов работает через несколько дней. Эти 7 дней начинаются, когда у нас есть ваш логотип и список товаров.",
+      a: "Отвечаем в тот же день. Вы рассказываете, что у вас уже есть, мы называем цену. Платите половину, присылаете логотип и список товаров — мы делаем. Большинство магазинов работает через несколько дней.",
     },
     {
       q: "Мой персонал не читает по-английски.",
@@ -327,14 +320,14 @@ const th: PartnersDictionary = {
   ctaMenu: "เปิดหน้าร้านสำหรับลูกค้า",
 
   offerTitle: "ราคาเท่าไหร่",
-  offerPriceEyebrow: `ถึงวันที่ ${P.launchDeadlineDay} กันยายน`,
+  offerPriceEyebrow: "สำหรับร้านค้า 3 ร้านแรก",
   offerPriceNow: P.setupPrice,
   offerPriceWas: P.setupPriceWas,
   offerPriceMonthly: `${P.subscriptionMonthly}/เดือน`,
-  guaranteeLine: `จ่ายแค่ ${P.deposit} เพื่อเริ่มต้น ส่วนที่เหลือจ่ายเมื่อระบบทำงานแล้ว`,
-  liveInDaysLine: "เริ่มใช้งานได้ภายใน 7 วัน หรือคืนเงินให้เต็มจำนวน",
+  reviewLine: "สำหรับรีวิวบนเว็บไซต์นี้",
+  guaranteeLine: "ครึ่งหนึ่งตอนเริ่ม ส่วนที่เหลือเมื่อทุกอย่างใช้งานได้",
 
-  includedTitle: `รวมอยู่ในราคา ${P.setupPrice}`,
+  includedTitle: "สิ่งที่รวมอยู่",
   includedItems: [
     "หน้าร้าน เมนูสด และแผงควบคุม PT.33 — ทำงานเป็นระบบเดียวกัน",
     "โลโก้ ชื่อร้าน และสีของคุณ ในทั้งสามระบบ",
@@ -358,7 +351,7 @@ const th: PartnersDictionary = {
   faqItems: [
     {
       q: "หลังจากที่ทักหาแล้วจะเกิดอะไรขึ้น?",
-      a: "เราตอบกลับภายในวันเดียวกัน คุณบอกเราว่ามีอะไรอยู่แล้วบ้าง เราจะเสนอราคาให้ คุณจ่ายครึ่งหนึ่ง ส่งโลโก้และรายการสินค้า แล้วเราจะเริ่มสร้าง ร้านส่วนใหญ่พร้อมใช้งานภายในไม่กี่วัน 7 วันนี้เริ่มนับตั้งแต่วันที่เราได้รับโลโก้และรายการสินค้าของคุณ",
+      a: "เราตอบกลับภายในวันเดียวกัน คุณบอกเราว่ามีอะไรอยู่แล้วบ้าง เราจะเสนอราคาให้ คุณจ่ายครึ่งหนึ่ง ส่งโลโก้และรายการสินค้า แล้วเราจะเริ่มสร้าง ร้านส่วนใหญ่พร้อมใช้งานภายในไม่กี่วัน",
     },
     {
       q: "พนักงานของฉันอ่านภาษาอังกฤษไม่ออก",
