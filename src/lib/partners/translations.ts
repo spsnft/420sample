@@ -203,7 +203,7 @@ const en: PartnersDictionary = {
       a: "The system is yours — you bought it. If you stop paying for the service, we hand over the logins to everything: domain, hosting, database, menu sheet. The site keeps running on your own accounts and you take it from there. What stops is our side — updates, support and the hosting we covered.",
     },
     {
-      q: "Who actually builds this?",
+      q: "Who builds this?",
       a: "FT.Agency, on Phuket. Marketing and web work since 2016 — see the portfolio. We'll come to your shop if you'd rather talk in person.",
       aLinkText: "the portfolio",
     },
@@ -219,7 +219,7 @@ const en: PartnersDictionary = {
 };
 
 const ru: PartnersDictionary = {
-  heroTitle: "Уже готово. Осталось только поставить ваше имя.",
+  heroTitle: "Система готова. Впишите своё имя.",
   heroSubtitle: "Витрина для клиентов, живое меню и панель PT.33 — работают как одна система. Попробуйте сами.",
 
   blockPt33Title: "Документы —\nуже готовы.",
@@ -281,7 +281,7 @@ const ru: PartnersDictionary = {
       a: "Система ваша — вы её купили. Перестанете платить за ведение — передаём вам доступы ко всему: домен, хостинг, база, таблица меню. Сайт продолжает работать на ваших аккаунтах, дальше вы ведёте его сами. Пропадает только наше обслуживание — обновления, поддержка и оплаченный нами хостинг.",
     },
     {
-      q: "Кто на самом деле это делает?",
+      q: "Кто это делает?",
       a: "FT.Agency, на Пхукете. Маркетинг и веб-разработка с 2016 года — смотрите портфолио. Если удобнее поговорить лично, приедем к вам в магазин.",
       aLinkText: "портфолио",
     },
@@ -297,7 +297,7 @@ const ru: PartnersDictionary = {
 };
 
 const th: PartnersDictionary = {
-  heroTitle: "พร้อมใช้งานแล้ว เหลือแค่ใส่ชื่อร้านของคุณ",
+  heroTitle: "ระบบพร้อมแล้ว ใส่ชื่อร้านของคุณเลย",
   heroSubtitle: "หน้าร้านสำหรับลูกค้า เมนูที่อัปเดตสด และแผงควบคุม PT.33 — ทำงานเป็นระบบเดียวกัน คลิกดูด้วยตัวเองได้เลย",
 
   blockPt33Title: "เอกสารของคุณ\nพร้อมอยู่แล้ว",
@@ -359,7 +359,7 @@ const th: PartnersDictionary = {
       a: "ระบบนี้เป็นของคุณ — คุณซื้อมันแล้ว ถ้าคุณหยุดจ่ายค่าดูแลระบบ เราจะส่งมอบสิทธิ์เข้าถึงทั้งหมดให้คุณ ทั้งโดเมน โฮสติ้ง ฐานข้อมูล และตารางเมนู เว็บไซต์จะยังทำงานต่อไปบนบัญชีของคุณเอง จากนั้นคุณดูแลต่อเอง สิ่งที่หายไปมีแค่ฝั่งการดูแลของเรา — อัปเดต ซัพพอร์ต และค่าโฮสติ้งที่เราเคยออกให้",
     },
     {
-      q: "ใครเป็นคนสร้างระบบนี้จริง ๆ?",
+      q: "ใครเป็นคนสร้างระบบนี้?",
       a: "FT.Agency ที่ภูเก็ต ทำงานด้านการตลาดและเว็บไซต์มาตั้งแต่ปี 2016 — ดูผลงานได้ที่นี่ หากสะดวกคุยกันต่อหน้า เรายินดีไปที่ร้านของคุณ",
       aLinkText: "ผลงาน",
     },
