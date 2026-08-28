@@ -18,8 +18,8 @@ function formatThb(n: number): string {
 }
 
 export const partnersPricing = {
-  setupPrice: "฿9,000",
-  setupPriceWas: "฿12,000",
+  setupPrice: "฿15,000",
+  setupPriceWas: "฿20,000",
   subscriptionMonthly: "฿2,400",
   subscriptionYearly: "฿24,000",
   // ТЗ-4 §4.6 — "two months off" made concrete: 12 months at the monthly

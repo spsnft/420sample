@@ -11,16 +11,12 @@ export interface PartnersDictionary {
   // appears on the page at all: it's mentioned exactly once, in the FAQ,
   // as an observation rather than a commitment.
   heroTitle: string;
-  // Subtitle: sits between the H1 and the price line, quieter than both.
-  // The H1 says the system is ready; this line names the three parts of it
-  // and sends the reader into the demo.
+  // Subtitle: sits right under the H1, quieter than it. The H1 says the
+  // system is ready; this line names the three parts of it and sends the
+  // reader into the demo. The old price line that used to sit below this
+  // (ТЗ buds-price-block-2 §1) is gone — the price now appears for the
+  // first time in the offer section further down the page.
   heroSubtitle: string;
-  // Replaces the old two-pill row (ТЗ rewrite pitch-page §2.1): a single
-  // small, muted, letter-spaced line under the subtitle. No "From"/"от" —
-  // deliberate, see the dictionaries below. No standalone CTA here either:
-  // blocks 01/02 already carry the two real ones, and a third, generic
-  // button here would only blur which of them to press.
-  heroPriceLine: string;
 
   // Block 01 — the PT.33 panel, the compliance record the shop is actually
   // buying, so it leads. Headings are the client's approved "set A" — see
@@ -93,8 +89,8 @@ export interface PartnersDictionary {
 
   // The price block's second section (ТЗ-5 §3): a standing obligation
   // (฿2,400/month, forever) was previously typeset as a footnote under the
-  // one-time ฿9,000, reading as a detail of the setup purchase rather than
-  // a second, separate commitment. subscriptionEyebrow ("Then, every
+  // one-time setup price, reading as a detail of the setup purchase rather
+  // than a second, separate commitment. subscriptionEyebrow ("Then, every
   // month") is what lets offerPriceMonthly sit in its own section, set at
   // the same weight as offerPriceNow, without the number looking orphaned —
   // the word "then" is what tells the reader everything above was one-time.
@@ -143,7 +139,6 @@ const en: PartnersDictionary = {
   // to "customer storefront." "running as one" tightened to "working as
   // one system" (ТЗ-4 §1.1).
   heroSubtitle: "A customer storefront, a live menu and a PT.33 panel — working as one system. Click through it yourself.",
-  heroPriceLine: `${P.setupPrice} · live in a few days`,
 
   blockPt33Title: "Your paperwork,\nalready done.",
   blockPt33Subtitle: "Type a name — get their PT.33 and their full purchase history. About five seconds, from any device behind the counter.",
@@ -193,7 +188,7 @@ const en: PartnersDictionary = {
   faqItems: [
     {
       q: "What happens after I message you?",
-      a: "We reply the same day. You tell us what you already have and we quote it. You pay half, send the logo and the product list, and we build. Most shops are running within a few days.",
+      a: "We reply the same day. You tell us what you already have and we quote it. You pay half, send the logo and the product list, and we build. Most shops are running within a few days. A standard .com or .store is included. A premium or taken domain — at cost, nothing on top.",
     },
     {
       q: "My staff don't read English.",
@@ -205,7 +200,7 @@ const en: PartnersDictionary = {
     },
     {
       q: "What if I stop paying?",
-      a: "The storefront and menu go offline. Your client records don't go anywhere — ask and we send you the lot as a file, any day.",
+      a: "The system is yours — you bought it. If you stop paying for the service, we hand over the logins to everything: domain, hosting, database, menu sheet. The site keeps running on your own accounts and you take it from there. What stops is our side — updates, support and the hosting we covered.",
     },
     {
       q: "Who actually builds this?",
@@ -226,7 +221,6 @@ const en: PartnersDictionary = {
 const ru: PartnersDictionary = {
   heroTitle: "Уже готово. Осталось только поставить ваше имя.",
   heroSubtitle: "Витрина для клиентов, живое меню и панель PT.33 — работают как одна система. Попробуйте сами.",
-  heroPriceLine: `${P.setupPrice} · запуск за несколько дней`,
 
   blockPt33Title: "Документы —\nуже готовы.",
   blockPt33Subtitle: "Впишите имя — получите его PT.33 и полную историю покупок. Около пяти секунд с любого устройства за прилавком.",
@@ -272,7 +266,7 @@ const ru: PartnersDictionary = {
   faqItems: [
     {
       q: "Что будет после того, как я вам напишу?",
-      a: "Отвечаем в тот же день. Вы рассказываете, что у вас уже есть, мы называем цену. Платите половину, присылаете логотип и список товаров — мы делаем. Большинство магазинов работает через несколько дней.",
+      a: "Отвечаем в тот же день. Вы рассказываете, что у вас уже есть, мы называем цену. Платите половину, присылаете логотип и список товаров — мы делаем. Большинство магазинов работает через несколько дней. Стандартный .com или .store входит в цену. Премиальный или занятый — по себестоимости, без наценки.",
     },
     {
       q: "Мой персонал не читает по-английски.",
@@ -284,7 +278,7 @@ const ru: PartnersDictionary = {
     },
     {
       q: "Что если я перестану платить?",
-      a: "Витрина и меню отключаются. Данные о клиентах никуда не пропадают — попросите, и мы пришлём вам всё файлом в любой день.",
+      a: "Система ваша — вы её купили. Перестанете платить за ведение — передаём вам доступы ко всему: домен, хостинг, база, таблица меню. Сайт продолжает работать на ваших аккаунтах, дальше вы ведёте его сами. Пропадает только наше обслуживание — обновления, поддержка и оплаченный нами хостинг.",
     },
     {
       q: "Кто на самом деле это делает?",
@@ -305,7 +299,6 @@ const ru: PartnersDictionary = {
 const th: PartnersDictionary = {
   heroTitle: "พร้อมใช้งานแล้ว เหลือแค่ใส่ชื่อร้านของคุณ",
   heroSubtitle: "หน้าร้านสำหรับลูกค้า เมนูที่อัปเดตสด และแผงควบคุม PT.33 — ทำงานเป็นระบบเดียวกัน คลิกดูด้วยตัวเองได้เลย",
-  heroPriceLine: `${P.setupPrice} · เปิดใช้งานได้ในไม่กี่วัน`,
 
   blockPt33Title: "เอกสารของคุณ\nพร้อมอยู่แล้ว",
   blockPt33Subtitle: "พิมพ์ชื่อ — ดู PT.33 และประวัติการซื้อทั้งหมด ใช้เวลาประมาณห้าวินาที จากอุปกรณ์ใดก็ได้หลังเคาน์เตอร์",
@@ -351,7 +344,7 @@ const th: PartnersDictionary = {
   faqItems: [
     {
       q: "หลังจากที่ทักหาแล้วจะเกิดอะไรขึ้น?",
-      a: "เราตอบกลับภายในวันเดียวกัน คุณบอกเราว่ามีอะไรอยู่แล้วบ้าง เราจะเสนอราคาให้ คุณจ่ายครึ่งหนึ่ง ส่งโลโก้และรายการสินค้า แล้วเราจะเริ่มสร้าง ร้านส่วนใหญ่พร้อมใช้งานภายในไม่กี่วัน",
+      a: "เราตอบกลับภายในวันเดียวกัน คุณบอกเราว่ามีอะไรอยู่แล้วบ้าง เราจะเสนอราคาให้ คุณจ่ายครึ่งหนึ่ง ส่งโลโก้และรายการสินค้า แล้วเราจะเริ่มสร้าง ร้านส่วนใหญ่พร้อมใช้งานภายในไม่กี่วัน โดเมน .com หรือ .store แบบมาตรฐานรวมอยู่ในราคาแล้ว ส่วนโดเมนพรีเมียมหรือโดเมนที่มีเจ้าของอยู่แล้ว คิดตามราคาต้นทุนจริง ไม่มีการบวกเพิ่ม",
     },
     {
       q: "พนักงานของฉันอ่านภาษาอังกฤษไม่ออก",
@@ -363,7 +356,7 @@ const th: PartnersDictionary = {
     },
     {
       q: "ถ้าฉันหยุดจ่ายเงินจะเป็นอย่างไร?",
-      a: "หน้าร้านและเมนูจะออฟไลน์ แต่ข้อมูลลูกค้าของคุณไม่หายไปไหน แจ้งมาได้ทุกวัน แล้วเราจะส่งข้อมูลทั้งหมดให้เป็นไฟล์",
+      a: "ระบบนี้เป็นของคุณ — คุณซื้อมันแล้ว ถ้าคุณหยุดจ่ายค่าดูแลระบบ เราจะส่งมอบสิทธิ์เข้าถึงทั้งหมดให้คุณ ทั้งโดเมน โฮสติ้ง ฐานข้อมูล และตารางเมนู เว็บไซต์จะยังทำงานต่อไปบนบัญชีของคุณเอง จากนั้นคุณดูแลต่อเอง สิ่งที่หายไปมีแค่ฝั่งการดูแลของเรา — อัปเดต ซัพพอร์ต และค่าโฮสติ้งที่เราเคยออกให้",
     },
     {
       q: "ใครเป็นคนสร้างระบบนี้จริง ๆ?",

@@ -235,24 +235,13 @@ export default function PartnersClient() {
       <main className="max-w-xl lg:max-w-5xl mx-auto space-y-6 pb-10">
         {/* Hero and the final CTA are the page's two direct-address moments,
             centred as whole blocks at every width, with everything
-            argumentative between them left-aligned (ТЗ-4 §1.2 — previously
-            three different axes across four lines here: H1 centred, lead
-            left, price line centred again). H1 stays the one thing centred
-            on mobile per the earlier ТЗ; §1.2 just adds the lead and price
-            line to that same axis rather than carving out an exception. */}
+            argumentative between them left-aligned (ТЗ-4 §1.2). */}
         <section className="max-w-prose mx-auto py-4 text-center">
           <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight leading-tight text-balance text-brand-light">
             {t.heroTitle}
           </h1>
           <p className="mt-3 text-[14px] sm:text-[15px] font-normal text-brand-light/75 text-balance">
             {t.heroSubtitle}
-          </p>
-          {/* Replaces the old two-pill row: gold there meant "press this",
-              and a gold-filled, unclickable pill sitting in the page's most
-              visible spot taught the wrong rule (ТЗ rewrite §2.1). Plain
-              text, no button — blocks 01/02 already carry the two real CTAs. */}
-          <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.14em] text-brand-light/45">
-            {t.heroPriceLine}
           </p>
         </section>
 
@@ -451,8 +440,8 @@ export default function PartnersClient() {
               applies only to this price, never to the subscription in
               section 2. offerPriceMonthly no longer sits under this price
               (ТЗ-5 §3) — typesetting a standing ฿2,400/month as a footnote
-              of the ฿9,000 made it read as a detail of the setup purchase
-              rather than a second, separate obligation. */}
+              of the setup price made it read as a detail of the setup
+              purchase rather than a second, separate obligation. */}
           <div className="mt-5">
             <p className="text-[10px] font-black uppercase tracking-wide text-brand-light/35 mb-1.5">
               {t.offerPriceEyebrow}
@@ -479,7 +468,7 @@ export default function PartnersClient() {
           </p>
 
           {/* Included list stays nested inside section 1 — it's what the
-              ฿9,000 above buys, not a section of its own, so it keeps the
+              setup price above buys, not a section of its own, so it keeps the
               same muted /35 label weight as the eyebrow above it rather
               than the brighter /45 that opens sections 2 and 3 below
               (ТЗ-5 §3.1: the two need to read as different levels, not two
